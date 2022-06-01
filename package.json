@@ -1,0 +1,35 @@
+{
+  "name": "ims-clop",
+  "version": "0.0.1",
+  "description": "Inventory-Management-System",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"webpack -w\" \"ts-node-dev --project ./src/server/tsconfig.json src/server/main.ts\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oszmann/ims-clop.git"
+  },
+  "author": "Fabian Vizi",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/oszmann/ims-clop/issues"
+  },
+  "homepage": "https://github.com/oszmann/ims-clop#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.38",
+    "@types/webpack": "^5.28.0",
+    "concurrently": "^7.2.1",
+    "ts-loader": "^9.3.0",
+    "ts-node": "^10.8.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.7.2",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2"
+  }
+}
