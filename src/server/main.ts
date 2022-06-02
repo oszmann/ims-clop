@@ -3,7 +3,7 @@ import path from 'path';
 import { DataSource, EntityManager } from 'typeorm';
 import { Item } from './entities/item';
 import "reflect-metadata"
-import { ItemH } from '../common/item-helper'
+import { ItemH } from '../common/util'
 
 // -------------------firing express app
 const app = express();
@@ -53,7 +53,6 @@ app.get('/api/remove/:item', async (req: Request, res: Response) => {
         console.log(await getItems(AppDataSource))
         res.json(await getItems(AppDataSource));
     });
-    
 });
 
 

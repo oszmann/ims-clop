@@ -1,20 +1,7 @@
-import {a} from "../common/util";
-import { ItemH } from "../common/item-helper";
-export {}
+import { ItemH } from "../common/util";
+import { createDummyButton, deleteButton, Routes } from "./util";
 
-//HTML CONSTS
-const createDummyButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("button");
-const itemsDiv: HTMLDivElement = <HTMLDivElement>document.getElementById("items");
-const deleteButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("delete");
 
-//API ROUTES
-//change if needed.
-enum Routes {
-    C = "http://localhost:3000/api/set",
-    R = "http://localhost:3000/api/get",
-    U = "http://localhost:3000/api/set",
-    D = "http://localhost:3000/api/remove"
-}
 
 //BUTTON LISTENERS
 createDummyButton.addEventListener("click", () => {
@@ -56,8 +43,6 @@ async function main() {
 
     });
 
-
-
     async function update() {
         doUpdate = false;
     }
@@ -66,3 +51,4 @@ async function main() {
     }
 }
 main();
+export {}
