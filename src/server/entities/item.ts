@@ -3,11 +3,14 @@ import { BaseEntity, Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } fro
 @Entity()
 export class Item extends BaseEntity {
     @PrimaryGeneratedColumn("uuid")
-    id: number;
+    id: string;
     //
     @Column("text")
-    description: string | null;
+    name: string;
+    //
+    @Column("text")
+    description: string;
     //
     @Column("double precision")
-    cost: number | null;
+    cost: number;
 }

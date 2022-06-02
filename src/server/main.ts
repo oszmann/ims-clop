@@ -28,8 +28,7 @@ app.get('/api', (req: Request, res: Response) => {
 app.get('/api/get', async (req: Request, res: Response) => {
     console.log(req.url);
     console.log(req.query);
-    const items = await getItems(AppDataSource);
-    res.json(JSON.stringify(items));
+    res.json(await getItems(AppDataSource));
 });
 
 app.get('/api/set', async (req: Request, res: Response) => {
@@ -39,10 +38,11 @@ app.get('/api/set', async (req: Request, res: Response) => {
     res.json({ message: 'setting!' });
 });
 
-app.get('/api/remove', async (req: Request, res: Response) => {
+app.get('/api/remove/:item', async (req: Request, res: Response) => {
     console.log(req.url);
-    console.log(req.query);
-    //TODO
+    console.log(req.params.item);
+    const item: string = req.params.item;
+    removeItem(AppDataSource, item)
     res.json({ message: 'removed!' });
 });
 
@@ -90,6 +90,20 @@ async function insertItem() {
 
 async function getItems(source: DataSource): Promise<Item[]> {
     return source.manager.find(Item);
+}
+
+async function removeItem(source: DataSource, req: string) {
+    if (req === "all") {
+        const items = await getItems(source)
+        items.forEach(item => {
+            source.manager.delete(Item, { id: item.id });
+        })
+        console.log("deleted all items");
+    }
+    else {
+        await source.manager.delete(Item, { id: req });
+        console.log("deleted one item")
+    }
 }
 
 function toNumber(input?: string, radix = 10) {
