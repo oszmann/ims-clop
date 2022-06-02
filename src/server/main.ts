@@ -1,7 +1,7 @@
 import express , { Request, Response } from 'express';
 import path from 'path';
-import { DataSource } from 'typeorm';
-import { Item } from './entities/Item.entity';
+import { DataSource, EntityManager } from 'typeorm';
+import { Item } from './entities/item';
 import "reflect-metadata"
 
 // -------------------firing express app
@@ -14,15 +14,36 @@ app.use('/js', express.static(path.join(process.cwd(), "dist", "client")));
 
 
 // -------------------routes
-app.get('/home', (request: Request, response: Response)=>{
-    console.log(request.url);
-    response.json({ message: `a!` });
+app.get('/home', (req: Request, res: Response)=>{
+    console.log(req.url);
+    res.json({ message: `a!` });
 });
 
-app.get('/api', (request: Request, res: Response) => {
-    console.log(request.url);
-    insertItem();
+app.get('/api', (req: Request, res: Response) => {
+    console.log(req.query);
+    console.log(req.url);
     res.json({ message: 'recieved!' });
+});
+
+app.get('/api/get', async (req: Request, res: Response) => {
+    console.log(req.url);
+    console.log(req.query);
+    const items = await getItems(AppDataSource);
+    res.json(JSON.stringify(items));
+});
+
+app.get('/api/set', async (req: Request, res: Response) => {
+    console.log(req.url);
+    console.log(req.query);
+    //TODO
+    res.json({ message: 'setting!' });
+});
+
+app.get('/api/remove', async (req: Request, res: Response) => {
+    console.log(req.url);
+    console.log(req.query);
+    //TODO
+    res.json({ message: 'removed!' });
 });
 
 
@@ -38,13 +59,6 @@ console.log("Hello World!");
  * Database
  */
 
-function toNumber(input?: string, radix = 10) {
-    if (input === undefined || input === null) {
-    return undefined;
-    }
-    return parseInt(input, radix);
-}
-
 const DB_HOST: string | undefined = process.env.DB_HOST;
 const DB_PORT: number | undefined = toNumber(process.env.DB_PORT, 10);
 
@@ -59,10 +73,9 @@ export const AppDataSource = new DataSource({
     synchronize: true,
     logging: false,
 });
-console.log("bruh")
+
 AppDataSource.initialize().then(async () => {
-    console.log(AppDataSource.isInitialized);
-    insertItem()
+    console.log("There are " + await AppDataSource.manager.count(Item) + " items in the database.");
 }).catch((error) => console.log("error: ", error));
 
 
@@ -73,4 +86,15 @@ async function insertItem() {
     item.cost = 23;
     await AppDataSource.manager.save(item);
     console.log(`item has been saved. id: ${item.id}`);
+}
+
+async function getItems(source: DataSource): Promise<Item[]> {
+    return source.manager.find(Item);
+}
+
+function toNumber(input?: string, radix = 10) {
+    if (input === undefined || input === null) {
+    return undefined;
+    }
+    return parseInt(input, radix);
 }
