@@ -3,6 +3,7 @@ import path from 'path';
 import { DataSource, EntityManager } from 'typeorm';
 import { Item } from './entities/item';
 import "reflect-metadata"
+import { ItemH } from '../common/item-helper'
 
 // -------------------firing express app
 const app = express();
@@ -31,19 +32,28 @@ app.get('/api/get', async (req: Request, res: Response) => {
     res.json(await getItems(AppDataSource));
 });
 
-app.get('/api/set', async (req: Request, res: Response) => {
+app.get('/api/set/:item', async (req: Request, res: Response) => {
     console.log(req.url);
-    console.log(req.query);
+    console.log(req.params.item);
     //TODO
-    res.json({ message: 'setting!' });
+    const a: ItemH = JSON.parse(req.params.item);
+    setItem(itemFromItemH(a))
+    .then(async () => {
+        res.json(await getItems(AppDataSource));
+    });
+    
 });
 
 app.get('/api/remove/:item', async (req: Request, res: Response) => {
     console.log(req.url);
     console.log(req.params.item);
-    const item: string = req.params.item;
-    removeItem(AppDataSource, item)
-    res.json({ message: 'removed!' });
+    deleteItem(AppDataSource, req.params.item)
+    .then(async () => {
+        console.log("res");
+        console.log(await getItems(AppDataSource))
+        res.json(await getItems(AppDataSource));
+    });
+    
 });
 
 
@@ -79,30 +89,45 @@ AppDataSource.initialize().then(async () => {
 }).catch((error) => console.log("error: ", error));
 
 
-async function insertItem() {
-    const item = new Item();
-
-    item.description = "test item";
-    item.cost = 23;
+async function setItem(item: Item) {
     await AppDataSource.manager.save(item);
     console.log(`item has been saved. id: ${item.id}`);
+}
+
+function itemFromItemH(itemH: ItemH): Item {
+    const item: Item = new Item();
+    //ID IS AUTOMATICALLY SET WITH UUID
+    item.name = itemH.name;
+    item.description = itemH.description;
+    item.cost = itemH.cost;
+    return item;
 }
 
 async function getItems(source: DataSource): Promise<Item[]> {
     return source.manager.find(Item);
 }
 
-async function removeItem(source: DataSource, req: string) {
+async function deleteItem(source: DataSource, req: string): Promise<boolean> {
     if (req === "all") {
-        const items = await getItems(source)
-        items.forEach(item => {
-            source.manager.delete(Item, { id: item.id });
-        })
-        console.log("deleted all items");
+        const ids: string[] = [];
+        getItems(source).then((items) => {
+            items.forEach((item => {
+                ids.push(item.id);
+            }));
+        }).then(() => {
+            if(ids.length !== 0) {
+                source.manager.delete(Item, ids);
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
     }
     else {
         await source.manager.delete(Item, { id: req });
-        console.log("deleted one item")
+        console.log("deleted one item");
+        return true;
     }
 }
 
