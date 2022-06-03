@@ -47,10 +47,9 @@ app.get('/api/set/:item', async (req: Request, res: Response) => {
 app.get('/api/remove/:item', async (req: Request, res: Response) => {
     console.log(req.url);
     console.log(req.params.item);
-    deleteItem(AppDataSource, req.params.item)
+    await deleteItem(AppDataSource, req.params.item)
     .then(async () => {
         console.log("res");
-        console.log(await getItems(AppDataSource))
         res.json(await getItems(AppDataSource));
     });
 });
@@ -106,28 +105,19 @@ async function getItems(source: DataSource): Promise<Item[]> {
     return source.manager.find(Item);
 }
 
-async function deleteItem(source: DataSource, req: string): Promise<boolean> {
-    if (req === "all") {
-        const ids: string[] = [];
-        getItems(source).then((items) => {
-            items.forEach((item => {
-                ids.push(item.id);
-            }));
-        }).then(() => {
-            if(ids.length !== 0) {
-                source.manager.delete(Item, ids);
-                return true;
-            }
-            else {
-                return false;
-            }
-        });
+async function deleteItem(source: DataSource, req: string): Promise<any> {
+    const items: Item[] = await getItems(source);
+    if (items.length != 0) {
+        if (req === "all") {
+            return await source.manager.delete(Item, items);
+        }  
+        else {
+            return await source.manager.delete(Item, items.find(x => x.id === req));
+        }
     }
-    else {
-        await source.manager.delete(Item, { id: req });
-        console.log("deleted one item");
-        return true;
-    }
+}
+async function getAllIds(source: DataSource): Promise<string[]> {
+    return (await getItems(source)).map(x => x.id);
 }
 
 function toNumber(input?: string, radix = 10) {
