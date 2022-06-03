@@ -97,10 +97,16 @@ export const AppDataSource = new DataSource({
     logging: false,
 });
 
-AppDataSource.initialize().then(async () => {
-    console.log("There are " + await AppDataSource.manager.count(Item) + " items in the database.");
-}).catch((error) => console.log("error: ", error));
+function init(source: DataSource) {
+    source.initialize().then(async () => {
+        console.log("There are " + await source.manager.count(Item) + " items in the database.");
+    }).catch((error) => {
+        console.log("error: ", error);
+        init(source);
+    });
+}
 
+init(AppDataSource)
 
 async function setItem(source: DataSource, item: Item) {
     await source.manager.save(item);
