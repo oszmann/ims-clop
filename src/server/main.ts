@@ -35,13 +35,28 @@ app.get('/api/get', async (req: Request, res: Response) => {
 app.get('/api/set/:item', async (req: Request, res: Response) => {
     console.log(req.url);
     console.log(req.params.item);
-    //TODO
-    const a: ItemH = JSON.parse(req.params.item);
-    setItem(itemFromItemH(a))
+    setItem(AppDataSource, itemFromItemH(JSON.parse(req.params.item)))
     .then(async () => {
         res.json(await getItems(AppDataSource));
     });
+});
+
+app.get('/api/update/:item', async (req: Request, res: Response) => {
+    console.log(req.url);
+    console.log(req.params.item);
+    const temp = itemFromItemH(JSON.parse(req.params.item));
+    temp.id = JSON.parse(req.params.item).id;
+    const a = await getItems(AppDataSource)
     
+    console.log("updating")
+    if (a.map(x => x.id).includes(temp.id)) {
+        console.log("updating")
+        setItem(AppDataSource, temp)
+        .then(async () => {
+            res.json(await getItems(AppDataSource));
+        });
+    }
+    //console.log(a)
 });
 
 app.get('/api/remove/:item', async (req: Request, res: Response) => {
@@ -87,18 +102,9 @@ AppDataSource.initialize().then(async () => {
 }).catch((error) => console.log("error: ", error));
 
 
-async function setItem(item: Item) {
-    await AppDataSource.manager.save(item);
+async function setItem(source: DataSource, item: Item) {
+    await source.manager.save(item);
     console.log(`item has been saved. id: ${item.id}`);
-}
-
-function itemFromItemH(itemH: ItemH): Item {
-    const item: Item = new Item();
-    //ID IS AUTOMATICALLY SET WITH UUID
-    item.name = itemH.name;
-    item.description = itemH.description;
-    item.cost = itemH.cost;
-    return item;
 }
 
 async function getItems(source: DataSource): Promise<Item[]> {
@@ -116,8 +122,14 @@ async function deleteItem(source: DataSource, req: string): Promise<any> {
         }
     }
 }
-async function getAllIds(source: DataSource): Promise<string[]> {
-    return (await getItems(source)).map(x => x.id);
+
+function itemFromItemH(itemH: ItemH): Item {
+    const item: Item = new Item();
+    //ID IS AUTOMATICALLY SET WITH UUID
+    item.name = itemH.name;
+    item.description = itemH.description;
+    item.cost = itemH.cost;
+    return item;
 }
 
 function toNumber(input?: string, radix = 10) {

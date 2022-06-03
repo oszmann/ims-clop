@@ -9,14 +9,14 @@ createDummyButton.addEventListener("click", () => {
     makeRequest(Routes.C, JSON.stringify(createItem()))
     .then(resp => {
         console.log(resp);
-        updateItems(resp)
+        updateItems(resp);
     });
 });
 deleteButton.addEventListener("click", () => {
     makeRequest(Routes.D, "all")
     .then(resp => {
         console.log(resp);
-        updateItems(resp)
+        updateItems(resp);
 
     });
 });
@@ -53,11 +53,13 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     cost.innerText = item.cost.toString();
     id.innerText = item.id;
 
-    //TODO
+    //TODO make butiful
     editButton.innerText = "Edit";
     deleteButton.innerText = "Delete";
-    editButton.addEventListener("click", () => {
-        //TODO
+    editButton.addEventListener("click", async () => {
+        const temp = createItem(name.value, description.value, parseInt(cost.value));
+        temp.id = item.id;
+        updateItems(await makeRequest(Routes.U, JSON.stringify(temp)));
     });
     deleteButton.addEventListener("click", async () => {
         updateItems(await makeRequest(Routes.D, item.id));
@@ -74,24 +76,26 @@ function createItemDiv(item: ItemH): HTMLDivElement {
 }
 
 function updateItems(newItems: ItemH[]) {
-    const toBeRemoved: ItemH[] = items.filter(x => !newItems.includes(x))
-    const ids: string[] = toBeRemoved.map(x => x.id);
-    const toBeAdded: ItemH[] = newItems.filter(x => !items.includes(x));
-    
+    const toBeRemoved: string[] = items.map(x => x.id).filter(x => !newItems.map(x => x.id).includes(x))
+    const toBeAdded: string[] = newItems.map(x => x.id).filter(x => !items.map(x => x.id).includes(x));
     //Remove items from display and internal array
     for (let i = 0; i < itemsDiv.children.length; i++) {
-        if (ids.includes(itemsDiv.children[i].id)) {
+        if (toBeRemoved.includes(itemsDiv.children[i].id)) {
             itemsDiv.children[i].remove();
             i--;
         }
     }
-    toBeRemoved.forEach(item => items.splice(items.indexOf(item), 1));
+    toBeRemoved.forEach(item => items.splice(items.indexOf(items.find(i => i.id === item)), 1));
 
     //Add items to display and internal array
     toBeAdded.forEach(item => {
-        itemsDiv.appendChild(createItemDiv(item))
-        items.push(item);
+        itemsDiv.appendChild(createItemDiv(newItems.find(i => i.id === item)))
+        items.push(newItems.find(i => i.id === item));
     });
+    //update contents
+    for (let i = 0; i < itemsDiv.children.length; i++) {
+        //TODO UPDATE
+    }
 }
 
 async function main() {
