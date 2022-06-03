@@ -59,8 +59,8 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     editButton.addEventListener("click", () => {
         //TODO
     });
-    deleteButton.addEventListener("click", () => {
-        //TODO
+    deleteButton.addEventListener("click", async () => {
+        updateItems(await makeRequest(Routes.D, item.id));
     })
 
     div.appendChild(name);
@@ -74,29 +74,28 @@ function createItemDiv(item: ItemH): HTMLDivElement {
 }
 
 function updateItems(newItems: ItemH[]) {
-    const displayed: string[] = []
+    const toBeRemoved: ItemH[] = items.filter(x => !newItems.includes(x))
+    const ids: string[] = toBeRemoved.map(x => x.id);
+    const toBeAdded: ItemH[] = newItems.filter(x => !items.includes(x));
+    
+    //Remove items from display and internal array
     for (let i = 0; i < itemsDiv.children.length; i++) {
-        displayed.push(itemsDiv.children[i].id);
-    }
-    const toBeRemoved: string[] = [];
-    newItems.forEach(item => {
-        if (!displayed.includes(item.id)) {
-            itemsDiv.appendChild(createItemDiv(item));
-        }
-        else {
-            displayed.splice(displayed.indexOf(item.id), 1);
-        }
-    });
-    for (let i = 0; i < itemsDiv.children.length; i++) {
-        if (displayed.includes(itemsDiv.children[i].id)) {
-            itemsDiv.children[i].remove()
+        if (ids.includes(itemsDiv.children[i].id)) {
+            itemsDiv.children[i].remove();
             i--;
         }
     }
+    toBeRemoved.forEach(item => items.splice(items.indexOf(item), 1));
+
+    //Add items to display and internal array
+    toBeAdded.forEach(item => {
+        itemsDiv.appendChild(createItemDiv(item))
+        items.push(item);
+    });
 }
 
 async function main() {
-
+    updateItems(await makeRequest(Routes.R));
     async function update() {
         doUpdate = false;
     }
