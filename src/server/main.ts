@@ -46,11 +46,10 @@ app.get('/api/update/:item', async (req: Request, res: Response) => {
     console.log(req.params.item);
     const temp = itemFromItemH(JSON.parse(req.params.item));
     temp.id = JSON.parse(req.params.item).id;
-    const a = await getItems(AppDataSource)
+    const items = await getItems(AppDataSource);
     
-    console.log("updating")
-    if (a.map(x => x.id).includes(temp.id)) {
-        console.log("updating")
+    if (items.find(x => x.id === temp.id)) {
+        console.log("updating");
         setItem(AppDataSource, temp)
         .then(async () => {
             res.json(await getItems(AppDataSource));

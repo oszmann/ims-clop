@@ -47,10 +47,17 @@ function createItemDiv(item: ItemH): HTMLDivElement {
 
     const editButton: HTMLButtonElement = document.createElement("button");
     const deleteButton: HTMLButtonElement = document.createElement("button");
+    
 
-    name.innerText = item.name;
-    description.innerText = item.description;
-    cost.innerText = item.cost.toString();
+    name.id = item.id + "name";
+    description.id = item.id + "desc";
+    cost.id = item.id + "cost";
+    id.id = item.id + "id";
+
+
+    name.value = item.name;
+    description.value = item.description;
+    cost.value = item.cost.toString();
     id.innerText = item.id;
 
     //TODO make butiful
@@ -85,16 +92,34 @@ function updateItems(newItems: ItemH[]) {
             i--;
         }
     }
-    toBeRemoved.forEach(item => items.splice(items.indexOf(items.find(i => i.id === item)), 1));
+    toBeRemoved.forEach(id => items.splice(items.indexOf(items.find(x => x.id === id)), 1));
 
     //Add items to display and internal array
-    toBeAdded.forEach(item => {
-        itemsDiv.appendChild(createItemDiv(newItems.find(i => i.id === item)))
-        items.push(newItems.find(i => i.id === item));
+    toBeAdded.forEach(id => {
+        const newItem = newItems.find(x => x.id === id);
+        items.push(newItem);
+        itemsDiv.appendChild(createItemDiv(newItem));
     });
+    
     //update contents
-    for (let i = 0; i < itemsDiv.children.length; i++) {
-        //TODO UPDATE
+    for (let i = 0; i < items.length; i++) {
+        const index: number = newItems.indexOf(newItems.find(x => x.id === items[i].id));
+        console.log("Indexes in items and newItems are equal: ", i === index);
+        if (items[i].name !== newItems[index].name) {
+            const name = <HTMLTextAreaElement>document.getElementById(items[i].id + "name");
+            name.value = newItems[index].name;
+            items[i].name = newItems[index].name;
+        }
+        if (items[i].description !== newItems[index].description) {
+            const description = <HTMLTextAreaElement>document.getElementById(items[i].id + "desc");
+            description.value = newItems[index].description;
+            items[i].description = newItems[index].description;
+        }
+        if (items[i].cost !== newItems[index].cost) {
+            const cost = <HTMLTextAreaElement>document.getElementById(items[i].id + "cost");
+            cost.value = newItems[index].cost.toString();
+            items[i].cost = newItems[index].cost;
+        }
     }
 }
 
