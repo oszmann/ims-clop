@@ -50,7 +50,7 @@ app.get('/api/update/:item', async (req: Request, res: Response) => {
     
     if (items.find(x => x.id === temp.id)) {
         console.log("updating");
-        setItem(AppDataSource, temp)
+        updateItem(AppDataSource, temp)
         .then(async () => {
             res.json(await getItems(AppDataSource));
         });
@@ -99,6 +99,7 @@ export const AppDataSource = new DataSource({
 function init(source: DataSource) {
     source.initialize().then(async () => {
         console.log("There are " + await source.manager.count(Item) + " items in the database.");
+        console.log(await getItems(source));
     }).catch((error) => {
         console.log("error: ", error);
         init(source);
@@ -110,6 +111,14 @@ init(AppDataSource)
 async function setItem(source: DataSource, item: Item) {
     await source.manager.save(item);
     console.log(`item has been saved. id: ${item.id}`);
+}
+
+async function updateItem(source: DataSource, item: Item) {
+    source.manager.createQueryBuilder().update(Item)
+        .set({ name: item.name, description: item.description, cost: item.cost })
+        .where("id = :id", { id: item.id })
+    .execute();
+    console.log("updated item", item.id);
 }
 
 async function getItems(source: DataSource): Promise<Item[]> {

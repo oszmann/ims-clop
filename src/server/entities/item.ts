@@ -2,6 +2,9 @@ import { BaseEntity, Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } fro
 
 @Entity()
 export class Item extends BaseEntity {
+    @PrimaryGeneratedColumn()
+    order: number;
+
     @PrimaryGeneratedColumn("uuid")
     id: string;
     //

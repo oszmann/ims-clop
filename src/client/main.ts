@@ -104,7 +104,7 @@ function updateItems(newItems: ItemH[]) {
     //update contents
     for (let i = 0; i < items.length; i++) {
         const index: number = newItems.indexOf(newItems.find(x => x.id === items[i].id));
-        console.log("Indexes in items and newItems are equal: ", i === index);
+        console.log("Indexes in items and newItems are equal: ", i, index);
         if (items[i].name !== newItems[index].name) {
             const name = <HTMLTextAreaElement>document.getElementById(items[i].id + "name");
             name.value = newItems[index].name;
