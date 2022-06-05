@@ -1,10 +1,7 @@
-import { BaseEntity, Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Item extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    order: number;
-
     @PrimaryGeneratedColumn("uuid")
     id: string;
     //
@@ -16,4 +13,10 @@ export class Item extends BaseEntity {
     //
     @Column("double precision")
     cost: number;
+
+    @CreateDateColumn()
+    created_at: Date;
+
+    @UpdateDateColumn()
+    updated_at: Date;
 }

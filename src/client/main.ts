@@ -5,7 +5,7 @@ const savedItems: ItemH[] = [];
 
 //BUTTON LISTENERS
 createDummyButton.addEventListener("click", () => {
-    const item = 
+    console.log("clicked");
     makeRequest(Routes.C, JSON.stringify(createItem()))
     .then(resp => {
         console.log(resp);
@@ -44,6 +44,8 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     const description: HTMLTextAreaElement = document.createElement("textarea");
     const cost: HTMLTextAreaElement = document.createElement("textarea");
     const id: HTMLElement = document.createElement("i");
+    const created: HTMLElement = document.createElement("i");
+    const updated: HTMLElement = document.createElement("i");
 
     const editButton: HTMLButtonElement = document.createElement("button");
     const deleteButton: HTMLButtonElement = document.createElement("button");
@@ -53,12 +55,15 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     description.id = item.id + "desc";
     cost.id = item.id + "cost";
     id.id = item.id + "id";
+    updated.id = item.id + "updated";
 
 
     name.value = item.name;
     description.value = item.description;
     cost.value = item.cost.toString();
     id.innerText = item.id;
+    created.innerText = item.created_at.toString();
+    updated.innerText = item.updated_at.toString();
 
     //TODO make butiful
     editButton.innerText = "Edit";
@@ -68,7 +73,7 @@ function createItemDiv(item: ItemH): HTMLDivElement {
         temp.id = item.id;
         updateItems(await makeRequest(Routes.U, JSON.stringify(temp)));
     });
-    deleteButton.addEventListener("click", async () => {
+    deleteButton.addEventListener("click", async () => {console.log(item.id)
         updateItems(await makeRequest(Routes.D, item.id));
     })
 
@@ -76,9 +81,11 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     div.appendChild(description);
     div.appendChild(cost);
     div.appendChild(id);
+    div.appendChild(created);
+    div.appendChild(updated);
     div.appendChild(editButton);
     div.appendChild(deleteButton);
-    console.log("created div")
+    //console.log("created div")
     return div
 }
 
@@ -104,7 +111,6 @@ function updateItems(newItems: ItemH[]) {
     //update contents
     for (let i = 0; i < items.length; i++) {
         const index: number = newItems.indexOf(newItems.find(x => x.id === items[i].id));
-        console.log("Indexes in items and newItems are equal: ", i, index);
         if (items[i].name !== newItems[index].name) {
             const name = <HTMLTextAreaElement>document.getElementById(items[i].id + "name");
             name.value = newItems[index].name;
@@ -119,6 +125,13 @@ function updateItems(newItems: ItemH[]) {
             const cost = <HTMLTextAreaElement>document.getElementById(items[i].id + "cost");
             cost.value = newItems[index].cost.toString();
             items[i].cost = newItems[index].cost;
+        }
+        if (items[i].updated_at !== newItems[index].updated_at) {
+            const updated = <HTMLElement>document.getElementById(items[i].id + "updated")
+            items[i].updated_at = newItems[index].updated_at;
+        }
+        if (items[i].created_at !== newItems[index].created_at) {
+            console.warn("witchcraft", items[i].created_at, newItems[index].created_at)
         }
     }
 }
