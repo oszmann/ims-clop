@@ -129,10 +129,11 @@ async function deleteItem(source: DataSource, req: string): Promise<any> {
     const items: Item[] = await getItems(source);
     if (items.length != 0) {
         if (req === "all") {
-            return await source.manager.delete(Item, items);
+            return await source.manager.remove(Item, items);
         }  
         else {
-            return await source.manager.delete(Item, items.find(x => x.id === req));
+            console.log("deleting", items.find(x => x.id === req))
+            return await source.manager.remove(Item, items.find(x => x.id === req));
         }
     }
 }
