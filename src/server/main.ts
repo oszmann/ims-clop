@@ -4,6 +4,8 @@ import { DataSource, EntityManager } from 'typeorm';
 import { Item } from './entities/item';
 import "reflect-metadata"
 import { ItemH } from '../common/util'
+import { Location } from './entities/location';
+import { Position } from './entities/position';
 
 // -------------------firing express app
 const app = express();
@@ -91,7 +93,7 @@ export const AppDataSource = new DataSource({
     username: "postgres",
     password: "3221",
     database: "postgres",
-    entities: [Item],
+    entities: [Item, Location, Position],
     synchronize: true,
     logging: false,
 });
