@@ -1,3 +1,21 @@
+#insert-item {
+    width: 100%;
+    display: none;
+}
+
+#items {
+    max-height: calc(100vh - 20px);
+    overflow: auto;
+}
+
 #items i {
     border: 5px solid black;
+}
+
+.add-item-open {
+    max-height: calc(100vh - 100px) !important;    
+}
+
+textarea {
+    resize: none;
 }
