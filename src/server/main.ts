@@ -44,10 +44,7 @@ app.get('/api/set/:item', async (req: Request, res: Response) => {
 app.get('/api/update/:item', async (req: Request, res: Response) => {
     console.log(req.url);
     console.log(req.params.item);
-    console.log("updating");
     res.json(await updateItem(AppDataSource, itemFromItemH(JSON.parse(req.params.item), true)));
-    
-    //console.log(a)
 });
 
 app.get('/api/remove/:item', async (req: Request, res: Response) => {
