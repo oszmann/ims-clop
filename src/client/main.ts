@@ -166,6 +166,7 @@ function updateItems(newItems: ItemH[]) {
         if (items[i].updated_at !== newItems[index].updated_at) {
             const updated = <HTMLElement>document.getElementById(items[i].id + "updated")
             items[i].updated_at = newItems[index].updated_at;
+            updated.innerText = newItems[index].updated_at.toString();
         }
         if (items[i].created_at !== newItems[index].created_at) {
             console.warn("witchcraft", items[i].created_at, newItems[index].created_at)
