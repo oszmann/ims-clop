@@ -14,6 +14,7 @@ app.use(express.json());
 //app.use(express.urlencoded({extended:false}));
 app.use('/', express.static(path.join(process.cwd(), "public")));
 app.use('/js', express.static(path.join(process.cwd(), "dist", "client")));
+app.use('/bs', express.static(path.join(process.cwd(), "node_modules/bootstrap")))
 
 
 
