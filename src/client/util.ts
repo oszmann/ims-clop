@@ -6,13 +6,20 @@ export enum Routes {
     D = "http://localhost:3000/api/remove"
 }
 
+export enum SortBy {
+    DATE_INSERT,
+    DATE_UPDATE,
+    PART_NO,
+    DESCRIPTION
+}
+
 //STATIC
 export const openAddItem = <HTMLButtonElement>$("button");
 export const itemsDiv = <HTMLDivElement>$("items");
 export const deleteButton = <HTMLButtonElement>$("delete");
 export const addItemDiv = <HTMLDivElement>$("insert-item");
 export const addItemButton = <HTMLButtonElement>$("add-button");
-export const addName = <HTMLTextAreaElement>$("insert-name");
+export const addPartNumber = <HTMLTextAreaElement>$("insert-part-no");
 export const addDesc = <HTMLTextAreaElement>$("insert-desc");
 export const addCost = <HTMLTextAreaElement>$("insert-cost");
 

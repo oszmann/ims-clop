@@ -1,5 +1,5 @@
 import { ItemH } from "../common/util";
-import { openAddItem, addItemDiv, deleteButton, itemsDiv, Routes, addItemButton, addName, addDesc, addCost } from "./util";
+import { openAddItem, addItemDiv, deleteButton, itemsDiv, Routes, addItemButton, addPartNumber, addDesc, addCost } from "./util";
 
 const savedItems: ItemH[] = []; 
 
@@ -20,13 +20,13 @@ deleteButton.addEventListener("click", () => {
 });
 
 addItemButton.addEventListener("click", () => {
-    makeRequest(Routes.C, JSON.stringify(createItem(addName.value, addDesc.value, addCost.value)))
+    makeRequest(Routes.C, JSON.stringify(createItem(addPartNumber.value, addDesc.value, addCost.value)))
     .then(resp => {
         console.log(resp);
         updateItems(resp);
     });
     setMenu(false);
-    addName.value = "";
+    addPartNumber.value = "";
     addDesc.value = "";
     addCost.value = "";
 })
@@ -42,9 +42,9 @@ function setMenu(setOn: boolean) {
 }
 
 //Create a new ItemH item, even a dummy
-function createItem(name: string, desc: string, cost: string): ItemH {
-    if (name === "") {
-        name = "test item";
+function createItem(partNumber: string, desc: string, cost: string): ItemH {
+    if (partNumber === "") {
+        partNumber = "test item";
     }
     if (desc === "") {
         desc = "This is a dummy item.";
@@ -52,7 +52,7 @@ function createItem(name: string, desc: string, cost: string): ItemH {
     if (cost === "") {
         cost = "0";
     }
-    return new ItemH(name, desc, parseInt(cost));
+    return new ItemH(partNumber, desc, parseInt(cost));
 
 }
 
@@ -70,7 +70,7 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     div.id = item.id;
     div.classList.add("item-outer-div");
 
-    const name: HTMLTextAreaElement = document.createElement("textarea");
+    const partNumber: HTMLTextAreaElement = document.createElement("textarea");
     const description: HTMLTextAreaElement = document.createElement("textarea");
     const cost: HTMLTextAreaElement = document.createElement("textarea");
     const id: HTMLElement = document.createElement("i");
@@ -81,21 +81,21 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     const deleteButton: HTMLButtonElement = document.createElement("button");
     
 
-    name.id = item.id + "name";
+    partNumber.id = item.id + "part-number";
     description.id = item.id + "desc";
     cost.id = item.id + "cost";
     id.id = item.id + "id";
     updated.id = item.id + "updated";
 
-    name.rows = 1;
+    partNumber.rows = 1;
     description.rows = 1;
     cost.rows = 1;
 
-    name.placeholder = "name";
+    partNumber.placeholder = "part-number";
     description.placeholder = "desc";
     cost.placeholder = "cost";
 
-    name.value = item.name;
+    partNumber.value = item.partNumber;
     description.value = item.description;
     cost.value = item.cost.toString();
     id.innerText = item.id;
@@ -106,7 +106,7 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     editButton.innerText = "Edit";
     deleteButton.innerText = "Delete";
     editButton.addEventListener("click", async () => {
-        const temp = createItem(name.value, description.value, cost.value);
+        const temp = createItem(partNumber.value, description.value, cost.value);
         temp.id = item.id;
         updateItems(await makeRequest(Routes.U, JSON.stringify(temp)));
     });
@@ -114,7 +114,7 @@ function createItemDiv(item: ItemH): HTMLDivElement {
         updateItems(await makeRequest(Routes.D, item.id));
     })
 
-    div.appendChild(name);
+    div.appendChild(partNumber);
     div.appendChild(description);
     div.appendChild(cost);
     div.appendChild(id);
@@ -148,10 +148,10 @@ function updateItems(newItems: ItemH[]) {
     //update contents
     for (let i = 0; i < items.length; i++) {
         const index: number = newItems.indexOf(newItems.find(x => x.id === items[i].id));
-        if (items[i].name !== newItems[index].name) {
-            const name = <HTMLTextAreaElement>document.getElementById(items[i].id + "name");
-            name.value = newItems[index].name;
-            items[i].name = newItems[index].name;
+        if (items[i].partNumber !== newItems[index].partNumber) {
+            const partNumber = <HTMLTextAreaElement>document.getElementById(items[i].id + "part-number");
+            partNumber.value = newItems[index].partNumber;
+            items[i].partNumber = newItems[index].partNumber;
         }
         if (items[i].description !== newItems[index].description) {
             const description = <HTMLTextAreaElement>document.getElementById(items[i].id + "desc");

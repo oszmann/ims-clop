@@ -1,5 +1,4 @@
 import { DataSource } from "typeorm";
-import { ItemH } from "../common/util";
 import { Item } from "./entities/item";
 
 export function init(source: DataSource) {

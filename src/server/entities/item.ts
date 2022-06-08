@@ -7,7 +7,7 @@ export class Item extends BaseEntity {
     id: string;
     //
     @Column("text")
-    name: string;
+    partNumber: string;
     //
     @Column("text")
     description: string;

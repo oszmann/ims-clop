@@ -4,7 +4,7 @@ import { Item } from "./entities/item";
 export function itemFromItemH(itemH: ItemH, update: boolean = false): Item {
     const item: Item = new Item();
     //ID IS AUTOMATICALLY SET WITH UUID
-    item.name = itemH.name;
+    item.partNumber = itemH.partNumber;
     item.description = itemH.description;
     item.cost = itemH.cost;
     if (update) {
