@@ -1,5 +1,4 @@
 //API ROUTES
-//change if needed.
 export enum Routes {
     C = "http://localhost:3000/api/set",
     R = "http://localhost:3000/api/get",
@@ -7,7 +6,17 @@ export enum Routes {
     D = "http://localhost:3000/api/remove"
 }
 
-//HTML CONSTS
-export const createDummyButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("button");
-export const itemsDiv: HTMLDivElement = <HTMLDivElement>document.getElementById("items");
-export const deleteButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("delete");
+//STATIC
+export const openAddItem = <HTMLButtonElement>$("button");
+export const itemsDiv = <HTMLDivElement>$("items");
+export const deleteButton = <HTMLButtonElement>$("delete");
+export const addItemDiv = <HTMLDivElement>$("insert-item");
+export const addItemButton = <HTMLButtonElement>$("add-button");
+export const addName = <HTMLTextAreaElement>$("insert-name");
+export const addDesc = <HTMLTextAreaElement>$("insert-desc");
+export const addCost = <HTMLTextAreaElement>$("insert-cost");
+
+
+export function $<T extends HTMLElement>(id: string): T {
+    return <T>document.getElementById(id);
+}

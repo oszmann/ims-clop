@@ -1,16 +1,12 @@
 import { ItemH } from "../common/util";
-import { createDummyButton, deleteButton, itemsDiv, Routes } from "./util";
+import { openAddItem, addItemDiv, deleteButton, itemsDiv, Routes, addItemButton, addName, addDesc, addCost } from "./util";
 
 const savedItems: ItemH[] = []; 
 
 //BUTTON LISTENERS
-createDummyButton.addEventListener("click", () => {
+openAddItem.addEventListener("click", () => {
     console.log("clicked");
-    makeRequest(Routes.C, JSON.stringify(createItem()))
-    .then(resp => {
-        console.log(resp);
-        updateItems(resp);
-    });
+    setMenu(true);
 });
 deleteButton.addEventListener("click", () => {
     makeRequest(Routes.D, "all")
@@ -19,11 +15,45 @@ deleteButton.addEventListener("click", () => {
         updateItems(resp);
 
     });
+    itemsDiv.classList.remove("add-item-open");
+    addItemDiv.style.display = "none";
 });
 
+addItemButton.addEventListener("click", () => {
+    makeRequest(Routes.C, JSON.stringify(createItem(addName.value, addDesc.value, addCost.value)))
+    .then(resp => {
+        console.log(resp);
+        updateItems(resp);
+    });
+    setMenu(false);
+    addName.value = "";
+    addDesc.value = "";
+    addCost.value = "";
+})
+
+function setMenu(setOn: boolean) {
+    if (setOn) {
+        itemsDiv.classList.add("add-item-open");
+        addItemDiv.style.display = "block";
+    } else {
+        itemsDiv.classList.remove("add-item-open");
+        addItemDiv.style.display = "none";
+    }
+}
+
 //Create a new ItemH item, even a dummy
-function createItem(name: string = "test item", desc: string = "This is only a dummy item.", cost: number = 0): ItemH {
-    return new ItemH(name, desc, cost);
+function createItem(name: string, desc: string, cost: string): ItemH {
+    if (name === "") {
+        name = "test item";
+    }
+    if (desc === "") {
+        desc = "This is a dummy item.";
+    }
+    if (cost === "") {
+        cost = "0";
+    }
+    return new ItemH(name, desc, parseInt(cost));
+
 }
 
 let doUpdate: boolean = true; 
@@ -57,6 +87,13 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     id.id = item.id + "id";
     updated.id = item.id + "updated";
 
+    name.rows = 1;
+    description.rows = 1;
+    cost.rows = 1;
+
+    name.placeholder = "name";
+    description.placeholder = "desc";
+    cost.placeholder = "cost";
 
     name.value = item.name;
     description.value = item.description;
@@ -69,7 +106,7 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     editButton.innerText = "Edit";
     deleteButton.innerText = "Delete";
     editButton.addEventListener("click", async () => {
-        const temp = createItem(name.value, description.value, parseInt(cost.value));
+        const temp = createItem(name.value, description.value, cost.value);
         temp.id = item.id;
         updateItems(await makeRequest(Routes.U, JSON.stringify(temp)));
     });
