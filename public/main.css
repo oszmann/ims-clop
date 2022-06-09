@@ -13,7 +13,7 @@
 }
 
 .add-item-open {
-    max-height: calc(100vh - 100px) !important;    
+    max-height: calc(100vh - 100px) !important;
 }
 
 textarea {

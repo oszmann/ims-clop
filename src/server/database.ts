@@ -2,13 +2,16 @@ import { DataSource } from "typeorm";
 import { Item } from "./entities/item";
 
 export function init(source: DataSource) {
-    source.initialize().then(async () => {
-        console.log("There are " + await source.manager.count(Item) + " items in the database.");
-        console.log(await getItems(source));
-    }).catch((error) => {
-        console.log("error: ", error);
-        init(source);
-    });
+    source
+        .initialize()
+        .then(async () => {
+            console.log("There are " + (await source.manager.count(Item)) + " items in the database.");
+            console.log(await getItems(source));
+        })
+        .catch(error => {
+            console.log("error: ", error);
+            init(source);
+        });
 }
 
 export async function setItem(source: DataSource, item: Item) {
@@ -33,12 +36,19 @@ export async function deleteItem(source: DataSource, req: string): Promise<any> 
             return await source.manager.remove(Item, items).then(async () => {
                 return getItems(source);
             });
-        }  
-        else {
-            console.log("deleting", items.find(x => x.id === req))
-            return source.manager.remove(Item, items.find(x => x.id === req)).then(async () => {
-                return await getItems(source);
-            });
+        } else {
+            console.log(
+                "deleting",
+                items.find(x => x.id === req)
+            );
+            return source.manager
+                .remove(
+                    Item,
+                    items.find(x => x.id === req)
+                )
+                .then(async () => {
+                    return await getItems(source);
+                });
         }
     }
 }

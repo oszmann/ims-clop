@@ -19,9 +19,9 @@ export class Position {
     @Column("int")
     amount!: number;
 
-    @ManyToOne(() => Item, (item) => item.position)
+    @ManyToOne(() => Item, item => item.position)
     item: Item;
 
-    @ManyToOne(() => Location, (location) => location.position)
+    @ManyToOne(() => Location, location => location.position)
     location: Location;
 }

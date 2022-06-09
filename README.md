@@ -6,4 +6,4 @@ To use this, you need to have a PostgreSQL database running on the device with t
 
     username: "postgres"
     password: "3221"
-    database: "postgres" 
+    database: "postgres"

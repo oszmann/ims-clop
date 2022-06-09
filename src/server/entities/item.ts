@@ -1,4 +1,13 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    OneToMany,
+    PrimaryColumn,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from "typeorm";
 import { Position } from "./position";
 
 @Entity()
@@ -21,6 +30,6 @@ export class Item extends BaseEntity {
     @UpdateDateColumn()
     updated_at: Date;
 
-    @OneToMany(() => Position, (position) => position.item)
+    @OneToMany(() => Position, position => position.item)
     position: Position[];
 }

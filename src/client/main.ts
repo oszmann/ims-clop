@@ -1,7 +1,17 @@
 import { ItemH } from "../common/util";
-import { openAddItem, addItemDiv, deleteButton, itemsDiv, Routes, addItemButton, addPartNumber, addDesc, addCost } from "./util";
+import {
+    openAddItem,
+    addItemDiv,
+    deleteButton,
+    itemsDiv,
+    Routes,
+    addItemButton,
+    addPartNumber,
+    addDesc,
+    addCost,
+} from "./util";
 
-const savedItems: ItemH[] = []; 
+const savedItems: ItemH[] = [];
 
 //BUTTON LISTENERS
 openAddItem.addEventListener("click", () => {
@@ -9,19 +19,16 @@ openAddItem.addEventListener("click", () => {
     setMenu(true);
 });
 deleteButton.addEventListener("click", () => {
-    makeRequest(Routes.D, "all")
-    .then(resp => {
+    makeRequest(Routes.D, "all").then(resp => {
         console.log(resp);
         updateItems(resp);
-
     });
     itemsDiv.classList.remove("add-item-open");
     addItemDiv.style.display = "none";
 });
 
 addItemButton.addEventListener("click", () => {
-    makeRequest(Routes.C, JSON.stringify(createItem(addPartNumber.value, addDesc.value, addCost.value)))
-    .then(resp => {
+    makeRequest(Routes.C, JSON.stringify(createItem(addPartNumber.value, addDesc.value, addCost.value))).then(resp => {
         console.log(resp);
         updateItems(resp);
     });
@@ -29,7 +36,7 @@ addItemButton.addEventListener("click", () => {
     addPartNumber.value = "";
     addDesc.value = "";
     addCost.value = "";
-})
+});
 
 function setMenu(setOn: boolean) {
     if (setOn) {
@@ -53,18 +60,17 @@ function createItem(partNumber: string, desc: string, cost: string): ItemH {
         cost = "0";
     }
     return new ItemH(partNumber, desc, parseInt(cost));
-
 }
 
-let doUpdate: boolean = true; 
+let doUpdate: boolean = true;
 //Maybe use this?
 let items: ItemH[] = [];
 
-async function makeRequest(type: Routes, request: string = ""): Promise<ItemH[]>{
-    return <ItemH[]> await (await fetch(type + "/" + request)).json();
+async function makeRequest(type: Routes, request: string = ""): Promise<ItemH[]> {
+    return <ItemH[]>await (await fetch(type + "/" + request)).json();
 }
 
-//Return a proper Div for a given ItemH object. 
+//Return a proper Div for a given ItemH object.
 function createItemDiv(item: ItemH): HTMLDivElement {
     const div: HTMLDivElement = document.createElement("div");
     div.id = item.id;
@@ -79,7 +85,6 @@ function createItemDiv(item: ItemH): HTMLDivElement {
 
     const editButton: HTMLButtonElement = document.createElement("button");
     const deleteButton: HTMLButtonElement = document.createElement("button");
-    
 
     partNumber.id = item.id + "part-number";
     description.id = item.id + "desc";
@@ -110,9 +115,10 @@ function createItemDiv(item: ItemH): HTMLDivElement {
         temp.id = item.id;
         updateItems(await makeRequest(Routes.U, JSON.stringify(temp)));
     });
-    deleteButton.addEventListener("click", async () => {console.log(item.id)
+    deleteButton.addEventListener("click", async () => {
+        console.log(item.id);
         updateItems(await makeRequest(Routes.D, item.id));
-    })
+    });
 
     div.appendChild(partNumber);
     div.appendChild(description);
@@ -123,11 +129,11 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     div.appendChild(editButton);
     div.appendChild(deleteButton);
     //console.log("created div")
-    return div
+    return div;
 }
 
 function updateItems(newItems: ItemH[]) {
-    const toBeRemoved: string[] = items.map(x => x.id).filter(x => !newItems.map(x => x.id).includes(x))
+    const toBeRemoved: string[] = items.map(x => x.id).filter(x => !newItems.map(x => x.id).includes(x));
     const toBeAdded: string[] = newItems.map(x => x.id).filter(x => !items.map(x => x.id).includes(x));
     //Remove items from display and internal array
     for (let i = 0; i < itemsDiv.children.length; i++) {
@@ -144,7 +150,7 @@ function updateItems(newItems: ItemH[]) {
         items.push(newItem);
         itemsDiv.appendChild(createItemDiv(newItem));
     });
-    
+
     //update contents
     for (let i = 0; i < items.length; i++) {
         const index: number = newItems.indexOf(newItems.find(x => x.id === items[i].id));
@@ -164,12 +170,12 @@ function updateItems(newItems: ItemH[]) {
             items[i].cost = newItems[index].cost;
         }
         if (items[i].updated_at !== newItems[index].updated_at) {
-            const updated = <HTMLElement>document.getElementById(items[i].id + "updated")
+            const updated = <HTMLElement>document.getElementById(items[i].id + "updated");
             items[i].updated_at = newItems[index].updated_at;
             updated.innerText = newItems[index].updated_at.toString();
         }
         if (items[i].created_at !== newItems[index].created_at) {
-            console.warn("witchcraft", items[i].created_at, newItems[index].created_at)
+            console.warn("witchcraft", items[i].created_at, newItems[index].created_at);
         }
     }
 }
@@ -180,8 +186,8 @@ async function main() {
         doUpdate = false;
     }
     if (doUpdate) {
-        update()
+        update();
     }
 }
 main();
-export {}
+export {};

@@ -19,8 +19,8 @@ export class Location extends BaseEntity {
     shelf: number;
 
     @Column("int", { nullable: true })
-    pos: number
+    pos: number;
 
-    @OneToMany(() => Position, (position) => position.location)
+    @OneToMany(() => Position, position => position.location)
     position: Position[];
 }

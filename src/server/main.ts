@@ -1,67 +1,63 @@
-import express , { Request, Response } from 'express';
-import path from 'path';
-import { DataSource, EntityManager } from 'typeorm';
-import { Item } from './entities/item';
-import "reflect-metadata"
-import { Location } from './entities/location';
-import { Position } from './entities/position';
-import { deleteItem, getItems, init, setItem, updateItem } from './database';
-import { itemFromItemH, toNumber } from './util';
+import express, { Request, Response } from "express";
+import path from "path";
+import { DataSource, EntityManager } from "typeorm";
+import { Item } from "./entities/item";
+import "reflect-metadata";
+import { Location } from "./entities/location";
+import { Position } from "./entities/position";
+import { deleteItem, getItems, init, setItem, updateItem } from "./database";
+import { itemFromItemH, toNumber } from "./util";
 
 // -------------------firing express app
 const app = express();
 app.use(express.json());
 //app.use(express.urlencoded({extended:false}));
-app.use('/', express.static(path.join(process.cwd(), "public")));
-app.use('/js', express.static(path.join(process.cwd(), "dist", "client")));
-app.use('/bs', express.static(path.join(process.cwd(), "node_modules/bootstrap")))
-
-
+app.use("/", express.static(path.join(process.cwd(), "public")));
+app.use("/js", express.static(path.join(process.cwd(), "dist", "client")));
+app.use("/bs", express.static(path.join(process.cwd(), "node_modules/bootstrap")));
 
 // -------------------routes
-app.get('/home', (req: Request, res: Response)=>{
+app.get("/home", (req: Request, res: Response) => {
     console.log(req.url);
     res.json({ message: `a!` });
 });
 
-app.get('/api', (req: Request, res: Response) => {
+app.get("/api", (req: Request, res: Response) => {
     console.log(req.query);
     console.log(req.url);
-    res.json({ message: 'recieved!' });
+    res.json({ message: "recieved!" });
 });
 
-app.get('/api/get', async (req: Request, res: Response) => {
+app.get("/api/get", async (req: Request, res: Response) => {
     console.log(req.url);
     console.log(req.query);
     res.json(await getItems(AppDataSource));
 });
 
-app.get('/api/set/:item', async (req: Request, res: Response) => {
+app.get("/api/set/:item", async (req: Request, res: Response) => {
     console.log(req.url);
     console.log(req.params.item);
     res.json(await setItem(AppDataSource, itemFromItemH(JSON.parse(req.params.item))));
 });
 
-app.get('/api/update/:item', async (req: Request, res: Response) => {
+app.get("/api/update/:item", async (req: Request, res: Response) => {
     console.log(req.url);
     console.log(req.params.item);
     res.json(await updateItem(AppDataSource, itemFromItemH(JSON.parse(req.params.item), true)));
 });
 
-app.get('/api/remove/:item', async (req: Request, res: Response) => {
+app.get("/api/remove/:item", async (req: Request, res: Response) => {
     console.log(req.url);
     console.log(req.params.item);
     res.json(await deleteItem(AppDataSource, req.params.item));
 });
 
-
 // --------------------Listen
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, ()=>{
-    console.log(`Server running on  http://localhost:${ PORT }`);
+app.listen(PORT, () => {
+    console.log(`Server running on  http://localhost:${PORT}`);
 });
 console.log("Hello World!");
-
 
 /**
  * Database

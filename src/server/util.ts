@@ -8,14 +8,14 @@ export function itemFromItemH(itemH: ItemH, update: boolean = false): Item {
     item.description = itemH.description;
     item.cost = itemH.cost;
     if (update) {
-        item.id = itemH.id
+        item.id = itemH.id;
     }
     return item;
 }
 
 export function toNumber(input?: string, radix = 10) {
     if (input === undefined || input === null) {
-    return undefined;
+        return undefined;
     }
     return parseInt(input, radix);
 }
