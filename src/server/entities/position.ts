@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Item } from "./item";
 import { Location } from "./location";
 
@@ -7,7 +7,7 @@ import { Location } from "./location";
  */
 @Entity()
 export class Position {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn("uuid")
     id: number;
 
     @Column("text")
@@ -17,7 +17,13 @@ export class Position {
     locationId!: string;
 
     @Column("int")
-    amount!: number;
+    minAmount!: number;
+
+    @CreateDateColumn()
+    created_at: Date;
+
+    @UpdateDateColumn()
+    updated_at: Date;
 
     @ManyToOne(() => Item, item => item.position)
     item: Item;
