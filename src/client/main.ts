@@ -59,7 +59,14 @@ function createItem(partNumber: string, desc: string, cost: string): ItemH {
     if (cost === "") {
         cost = "0";
     }
-    return new ItemH(partNumber, desc, parseInt(cost));
+
+    const itemH = new ItemH();
+
+    itemH.partNumber = partNumber;
+    itemH.description = desc;
+    itemH.cost = parseInt(cost);
+
+    return itemH;
 }
 
 let doUpdate: boolean = true;

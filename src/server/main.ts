@@ -1,17 +1,18 @@
-import express, { Request, Response } from "express";
-import path from "path";
-import { DataSource, EntityManager } from "typeorm";
-import { Item } from "./entities/item";
 import "reflect-metadata";
+import path from "path";
+import express, { Request, Response } from "express";
+import { DataSource } from "typeorm";
+import { Item } from "./entities/item";
 import { Location } from "./entities/location";
 import { Position } from "./entities/position";
-import { deleteItem, getItems, init, setItem, updateItem } from "./database";
+import { deleteItem, getEntities, init, insertPosition, Objects, setItem, updateItem } from "./database";
 import { itemFromItemH, toNumber } from "./util";
 
 // -------------------firing express app
 const app = express();
 app.use(express.json());
-//app.use(express.urlencoded({extended:false}));
+
+//Serve stuff
 app.use("/", express.static(path.join(process.cwd(), "public")));
 app.use("/js", express.static(path.join(process.cwd(), "dist", "client")));
 app.use("/bs", express.static(path.join(process.cwd(), "node_modules/bootstrap")));
@@ -22,16 +23,16 @@ app.get("/home", (req: Request, res: Response) => {
     res.json({ message: `a!` });
 });
 
-app.get("/api", (req: Request, res: Response) => {
+app.get("/api", async (req: Request, res: Response) => {
     console.log(req.query);
     console.log(req.url);
-    res.json({ message: "recieved!" });
+    res.json(await insertPosition(AppDataSource));
 });
 
 app.get("/api/get", async (req: Request, res: Response) => {
     console.log(req.url);
     console.log(req.query);
-    res.json(await getItems(AppDataSource));
+    res.json(await getEntities(AppDataSource, Objects.ITEMS));
 });
 
 app.get("/api/set/:item", async (req: Request, res: Response) => {
