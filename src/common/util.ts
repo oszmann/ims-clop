@@ -1,3 +1,6 @@
+/**
+ * Helper Classes for Communication
+ */
 export class ItemH {
     id: string;
     partNumber: string;
@@ -5,11 +8,24 @@ export class ItemH {
     cost: number;
     created_at: Date;
     updated_at: Date;
+}
 
-    constructor(partNumber: string, description: string, cost: number) {
-        //ID AND ORDER GENERATED IN DATABASE
-        this.partNumber = partNumber;
-        this.description = description;
-        this.cost = cost;
-    }
+export class PositionH {
+    id: string;
+    itemId: string;
+    locationId: string;
+    minAmount: number;
+    created_at: Date;
+    updated_at: Date;
+    item: ItemH;
+    location: LocationH;
+}
+
+export class LocationH {
+    id: string;
+    warehouse: string;
+    row: number;
+    rack: number;
+    shelf: number;
+    pos: number;
 }
