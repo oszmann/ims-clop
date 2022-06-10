@@ -23,11 +23,13 @@ export enum SortBy {
 export const openAddItem = <HTMLButtonElement>$("button");
 export const itemsDiv = <HTMLDivElement>$("items");
 export const deleteButton = <HTMLButtonElement>$("delete");
-export const addItemDiv = <HTMLDivElement>$("insert-item");
+export const addItemDiv = <HTMLDivElement>$("insert-div");
 export const addItemButton = <HTMLButtonElement>$("add-button");
-export const addPartNumber = <HTMLTextAreaElement>$("insert-part-no");
-export const addDesc = <HTMLTextAreaElement>$("insert-desc");
-export const addCost = <HTMLTextAreaElement>$("insert-cost");
+export const add0 = <HTMLTextAreaElement>$("insert-0");
+export const add1 = <HTMLTextAreaElement>$("insert-1");
+export const add2 = <HTMLTextAreaElement>$("insert-2");
+export const add3 = <HTMLTextAreaElement>$("insert-3");
+export const addLocationButton = <HTMLButtonElement>$("insert-location");
 
 export function $<T extends HTMLElement>(id: string): T {
     return <T>document.getElementById(id);

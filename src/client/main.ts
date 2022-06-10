@@ -6,10 +6,11 @@ import {
     itemsDiv,
     Route,
     addItemButton,
-    addPartNumber,
-    addDesc,
-    addCost,
+    add0,
+    add1,
+    add2,
     VarType,
+    addLocationButton,
 } from "./util";
 
 const savedItems: ItemH[] = [];
@@ -29,18 +30,24 @@ deleteButton.addEventListener("click", () => {
 });
 
 addItemButton.addEventListener("click", () => {
-    const itemH: ItemH = createItem(addPartNumber.value, addDesc.value, addCost.value);
+    const itemH: ItemH = createItem(add0.value, add1.value, add2.value);
     makeRequest(Route.C, assembleRequest(JSON.stringify(itemH), "", "")).then(resp => {
         console.log(resp);
         updateItems(resp);
     });
     setMenu(false);
-    addPartNumber.value = "";
-    addDesc.value = "";
-    addCost.value = "";
+    add0.value = "";
+    add1.value = "";
+    add2.value = "";
+});
+
+addLocationButton.addEventListener("click", () => {
+    //TODO
 });
 
 function setMenu(setOn: boolean) {
+    //TODO: Change boolean to string, options for off, location and item
+    //!! DISABLE UNUSED TEXTAREA (insert-4) IF NOT NEEDED, CHANGE PLACEHOLDER!!
     if (setOn) {
         itemsDiv.classList.add("add-item-open");
         addItemDiv.style.display = "flex";
