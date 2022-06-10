@@ -1,9 +1,15 @@
 //API ROUTES
-export enum Routes {
+export enum Route {
     C = "http://localhost:3000/api/set",
     R = "http://localhost:3000/api/get",
     U = "http://localhost:3000/api/update",
     D = "http://localhost:3000/api/remove",
+}
+
+export enum VarType {
+    item = "?item=",
+    location = "&loc=",
+    position = "&pos=",
 }
 
 export enum SortBy {

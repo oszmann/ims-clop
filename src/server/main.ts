@@ -29,28 +29,34 @@ app.get("/api", async (req: Request, res: Response) => {
     res.json(await insertPosition(AppDataSource));
 });
 
+app.get("/api/", async (req: Request, res: Response) => {
+    console.log(req.query);
+    console.log(req.url);
+    res.json(await insertPosition(AppDataSource));
+});
+
 app.get("/api/get", async (req: Request, res: Response) => {
     console.log(req.url);
     console.log(req.query);
     res.json(await getEntities(AppDataSource, Objects.ITEMS));
 });
 
-app.get("/api/set/:item", async (req: Request, res: Response) => {
+app.get("/api/set/", async (req: Request, res: Response) => {
     console.log(req.url);
-    console.log(req.params.item);
-    res.json(await setItem(AppDataSource, itemFromItemH(JSON.parse(req.params.item))));
+    console.log(req.query.item);
+    res.json(await setItem(AppDataSource, itemFromItemH(JSON.parse(req.query.item.toString()))));
 });
 
-app.get("/api/update/:item", async (req: Request, res: Response) => {
+app.get("/api/update/", async (req: Request, res: Response) => {
     console.log(req.url);
-    console.log(req.params.item);
-    res.json(await updateItem(AppDataSource, itemFromItemH(JSON.parse(req.params.item), true)));
+    console.log(req.query.item);
+    res.json(await updateItem(AppDataSource, itemFromItemH(JSON.parse(req.query.item.toString()), true)));
 });
 
-app.get("/api/remove/:item", async (req: Request, res: Response) => {
+app.get("/api/remove/", async (req: Request, res: Response) => {
     console.log(req.url);
-    console.log(req.params.item);
-    res.json(await deleteItem(AppDataSource, req.params.item));
+    console.log(req.query.item);
+    res.json(await deleteItem(AppDataSource, req.query.item.toString()));
 });
 
 // --------------------Listen

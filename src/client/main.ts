@@ -4,11 +4,12 @@ import {
     addItemDiv,
     deleteButton,
     itemsDiv,
-    Routes,
+    Route,
     addItemButton,
     addPartNumber,
     addDesc,
     addCost,
+    VarType,
 } from "./util";
 
 const savedItems: ItemH[] = [];
@@ -19,7 +20,7 @@ openAddItem.addEventListener("click", () => {
     setMenu(true);
 });
 deleteButton.addEventListener("click", () => {
-    makeRequest(Routes.D, "all").then(resp => {
+    makeRequest(Route.D, assembleRequest("all", "", "")).then(resp => {
         console.log(resp);
         updateItems(resp);
     });
@@ -28,7 +29,8 @@ deleteButton.addEventListener("click", () => {
 });
 
 addItemButton.addEventListener("click", () => {
-    makeRequest(Routes.C, JSON.stringify(createItem(addPartNumber.value, addDesc.value, addCost.value))).then(resp => {
+    const itemH: ItemH = createItem(addPartNumber.value, addDesc.value, addCost.value);
+    makeRequest(Route.C, assembleRequest(JSON.stringify(itemH), "", "")).then(resp => {
         console.log(resp);
         updateItems(resp);
     });
@@ -41,7 +43,7 @@ addItemButton.addEventListener("click", () => {
 function setMenu(setOn: boolean) {
     if (setOn) {
         itemsDiv.classList.add("add-item-open");
-        addItemDiv.style.display = "block";
+        addItemDiv.style.display = "flex";
     } else {
         itemsDiv.classList.remove("add-item-open");
         addItemDiv.style.display = "none";
@@ -73,8 +75,12 @@ let doUpdate: boolean = true;
 //Maybe use this?
 let items: ItemH[] = [];
 
-async function makeRequest(type: Routes, request: string = ""): Promise<ItemH[]> {
-    return <ItemH[]>await (await fetch(type + "/" + request)).json();
+function assembleRequest(item: string, location: string, position: string): string {
+    return VarType.item + item + VarType.location + location + VarType.position + position;
+}
+
+async function makeRequest(route: Route, request: string = ""): Promise<ItemH[]> {
+    return <ItemH[]>await (await fetch(route + "/" + request)).json();
 }
 
 //Return a proper Div for a given ItemH object.
@@ -120,11 +126,11 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     editButton.addEventListener("click", async () => {
         const temp = createItem(partNumber.value, description.value, cost.value);
         temp.id = item.id;
-        updateItems(await makeRequest(Routes.U, JSON.stringify(temp)));
+        updateItems(await makeRequest(Route.U, assembleRequest(JSON.stringify(temp), "", "")));
     });
     deleteButton.addEventListener("click", async () => {
         console.log(item.id);
-        updateItems(await makeRequest(Routes.D, item.id));
+        updateItems(await makeRequest(Route.D, assembleRequest(item.id, "", "")));
     });
 
     div.appendChild(partNumber);
@@ -188,7 +194,7 @@ function updateItems(newItems: ItemH[]) {
 }
 
 async function main() {
-    updateItems(await makeRequest(Routes.R));
+    updateItems(await makeRequest(Route.R));
     async function update() {
         doUpdate = false;
     }
