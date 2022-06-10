@@ -8,8 +8,9 @@ export function init(source: DataSource) {
         .initialize()
         .then(async () => {
             console.log("There are " + (await source.manager.count(Item)) + " items in the database.");
-            console.log(await getEntities(source, Objects.ITEMS));
-            await insertPosition(source);
+            console.log("There are " + (await source.manager.count(Location)) + " locations in the database.");
+            console.log("There are " + (await source.manager.count(Position)) + " positions in the database.");
+            //await insertPosition(source);
         })
         .catch(error => {
             console.log("error: ", error);
@@ -33,29 +34,37 @@ export async function getEntities(source: DataSource, type: Objects): Promise<an
         case Objects.ITEMS:
             return source.manager.find(Item);
         case Objects.LOCATIONS:
-            return source.manager.find(Position);
-        case Objects.POSITIONS:
             return source.manager.find(Location);
+        case Objects.POSITIONS:
+            return source.manager.find(Position);
     }
 }
 
 export async function deleteItem(source: DataSource, req: string): Promise<Item[]> {
     const items: Item[] = await getEntities(source, Objects.ITEMS);
+    const positions: Position[] = await getEntities(source, Objects.POSITIONS);
+    const locations: Location[] = await getEntities(source, Objects.LOCATIONS);
+    console.log("positions", locations);
     if (items.length != 0) {
         if (req === "all") {
-            return await source.manager.remove(Item, items).then(async () => {
-                return getEntities(source, Objects.ITEMS);
+            return source.manager.remove(Position, positions).then(() => {
+                return source.manager.remove(Item, items).then(() => {
+                    return source.manager.remove(Location, locations).then(async () => {
+                        return await getEntities(source, Objects.ITEMS);
+                    });
+                });
             });
-        } else {
+        } else { //delete item and positions it is in
             console.log("deleting" + items.find(x => x.id === req));
-            return source.manager
-                .remove(
-                    Item,
-                    items.find(x => x.id === req)
-                )
-                .then(async () => {
+            const i: Item = items.find(x => x.id === req)
+            const positionsToDelete: Position[] = await source.manager.findBy(Position, {
+                itemId: i.id,
+            });
+            return source.manager.remove(Position, positionsToDelete).then(async () => {
+                return source.manager.remove(Item, i).then(async() => {
                     return await getEntities(source, Objects.ITEMS);
                 });
+            });
         }
     }
 }
@@ -79,14 +88,25 @@ export async function insertPosition(source: DataSource) {
     console.log("hi1");
     const i = await source.manager.save(item);
     console.log("hi2");
+    const loc = findLocation(source, location);
     const l = await source.manager.save(location);
     pos.itemId = i.id;
     pos.locationId = l.id;
     pos.item = i;
+    pos.position = 0; //should count positions with locations, then add 1
     pos.location = l;
     pos.minAmount = 4;
     console.log(await source.manager.save(pos));
     return await source.manager.find(Position);
+}
+
+export async function findLocation(source: DataSource, l: Location): Promise<Location[]> {
+    return await source.manager.findBy(Location, {
+        warehouse: l.warehouse,
+        id: l.id,
+        rack: l.rack,
+        shelf: l.shelf,
+    });
 }
 
 export enum Objects {
