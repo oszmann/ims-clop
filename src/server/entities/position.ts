@@ -19,6 +19,9 @@ export class Position {
     @Column("int")
     minAmount!: number;
 
+    @Column("int")
+    position!: number;
+
     @CreateDateColumn()
     created_at: Date;
 

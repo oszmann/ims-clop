@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Position } from "./position";
 
 @Entity()
@@ -17,9 +17,6 @@ export class Location extends BaseEntity {
 
     @Column("int")
     shelf: number;
-
-    @Column("int", { nullable: true })
-    pos: number;
 
     @OneToMany(() => Position, position => position.location)
     position: Position[];
