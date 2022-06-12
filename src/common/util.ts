@@ -27,5 +27,4 @@ export class LocationH {
     row: number;
     rack: number;
     shelf: number;
-    pos: number;
 }

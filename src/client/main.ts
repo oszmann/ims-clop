@@ -1,27 +1,33 @@
-import { ItemH } from "../common/util";
+import { ItemH, LocationH } from "../common/util";
 import {
     openAddItem,
     addItemDiv,
     deleteButton,
     itemsDiv,
     Route,
-    addItemButton,
+    addButton,
     add0,
     add1,
     add2,
     VarType,
-    addLocationButton,
+    openAddLocation,
+    add3,
 } from "./util";
 
-const savedItems: ItemH[] = [];
+let addType: string;
 
 //BUTTON LISTENERS
 openAddItem.addEventListener("click", () => {
     console.log("clicked");
-    setMenu(true);
+    setMenu("item");
 });
+
+openAddLocation.addEventListener("click", () => {
+    setMenu("location")
+});
+
 deleteButton.addEventListener("click", () => {
-    makeRequest(Route.D, assembleRequest("all", "", "")).then(resp => {
+    makeItemRequest(Route.D, "all").then(resp => {
         console.log(resp);
         updateItems(resp);
     });
@@ -29,31 +35,68 @@ deleteButton.addEventListener("click", () => {
     addItemDiv.style.display = "none";
 });
 
-addItemButton.addEventListener("click", () => {
-    const itemH: ItemH = createItem(add0.value, add1.value, add2.value);
-    makeRequest(Route.C, assembleRequest(JSON.stringify(itemH), "", "")).then(resp => {
-        console.log(resp);
-        updateItems(resp);
-    });
-    setMenu(false);
-    add0.value = "";
-    add1.value = "";
-    add2.value = "";
+addButton.addEventListener("click", () => {
+    if (add3.style.display === "none") {
+        makeItemRequest(Route.C, JSON.stringify(createItem(add0.value, add1.value, add2.value))).then(resp => {
+            console.log(resp);
+            updateItems(resp);
+        });
+    }
+    else {
+        console.log(JSON.parse(JSON.stringify(createLocation(add0.value, add1.value, add2.value, add3.value))))
+        makeLocationRequest(Route.C, JSON.stringify(createLocation(add0.value, add1.value, add2.value, add3.value))).then(resp => {
+            
+            console.log(resp);
+            updateLocations(resp);
+        })
+    }
+    
+    setMenu("off");
 });
 
-addLocationButton.addEventListener("click", () => {
-    //TODO
-});
 
-function setMenu(setOn: boolean) {
+function setMenu(setTo: string) {
     //TODO: Change boolean to string, options for off, location and item
-    //!! DISABLE UNUSED TEXTAREA (insert-4) IF NOT NEEDED, CHANGE PLACEHOLDER!!
-    if (setOn) {
-        itemsDiv.classList.add("add-item-open");
-        addItemDiv.style.display = "flex";
-    } else {
-        itemsDiv.classList.remove("add-item-open");
-        addItemDiv.style.display = "none";
+    //!! DISABLE UNUSED TEXTAREA (insert-3) IF NOT NEEDED, CHANGE PLACEHOLDER!!
+    switch (setTo) {
+        case "off":
+            itemsDiv.classList.remove("add-item-open");
+            addItemDiv.style.display = "none";
+            break;
+        case "item":
+            if (add3.style.display === "none" && addItemDiv.style.display === "flex") {
+                break;
+            }
+            itemsDiv.classList.add("add-item-open");
+            addItemDiv.style.display = "flex";
+            add3.style.display = "none";
+            add0.value = "";
+            add1.value = "";
+            add2.value = "";
+            add0.placeholder = "Part Number";
+            add1.placeholder = "Description";
+            add2.placeholder = "Cost (number)";
+            addButton.innerText = "Insert Item";
+            break;
+        case "location":
+            if (add3.style.display === "" && addItemDiv.style.display === "flex") {
+                break;
+            }
+            itemsDiv.classList.add("add-item-open");
+            addItemDiv.style.display = "flex";
+            add3.style.display = "";
+            add0.value = "";
+            add1.value = "";
+            add2.value = "";
+            add3.value = "";
+            add0.placeholder = "Warehouse (or nothing)";
+            add1.placeholder = "Row (number)";
+            add2.placeholder = "Rack (number)";
+            addButton.innerText = "Insert Location";
+            break;
+        default:
+            console.log("Menu option not specified");
+            break;
     }
 }
 
@@ -78,16 +121,45 @@ function createItem(partNumber: string, desc: string, cost: string): ItemH {
     return itemH;
 }
 
+function createLocation(warehouse: string, row: string, rack: string, shelf: string): LocationH {
+    if (row === "") {
+        row = "0";
+    }
+    if (rack === "") {
+        rack = "0";
+    }
+    if (shelf === "") {
+        shelf = "0";
+    }
+    if (warehouse === "") {
+        warehouse = "a";
+    }
+
+    const locationH = new LocationH();
+
+    locationH.warehouse = warehouse;
+    locationH.row = parseInt(row);
+    locationH.rack = parseInt(rack);
+    locationH.shelf = parseInt(shelf);
+
+    return locationH;
+}
+
 let doUpdate: boolean = true;
 //Maybe use this?
 let items: ItemH[] = [];
+let locations: LocationH[] = [];
 
-function assembleRequest(item: string, location: string, position: string): string {
-    return VarType.item + item + VarType.location + location + VarType.position + position;
+// function assembleRequest(item: string, location: string, position: string): string {
+//     return VarType.item + item + VarType.location + location + VarType.position + position;
+// }
+
+async function makeItemRequest(route: Route, request: string = ""): Promise<ItemH[]> {
+    return <ItemH[]>await (await fetch(route + "/" + VarType.item + request + VarType.location + VarType.position)).json();
 }
 
-async function makeRequest(route: Route, request: string = ""): Promise<ItemH[]> {
-    return <ItemH[]>await (await fetch(route + "/" + request)).json();
+async function makeLocationRequest(route: Route, request: string = ""): Promise<LocationH[]> {
+    return <LocationH[]>await (await fetch(route + "/" + VarType.item + VarType.location + request + VarType.position)).json();
 }
 
 //Return a proper Div for a given ItemH object.
@@ -133,11 +205,11 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     editButton.addEventListener("click", async () => {
         const temp = createItem(partNumber.value, description.value, cost.value);
         temp.id = item.id;
-        updateItems(await makeRequest(Route.U, assembleRequest(JSON.stringify(temp), "", "")));
+        updateItems(await makeItemRequest(Route.U, JSON.stringify(temp)));
     });
     deleteButton.addEventListener("click", async () => {
         console.log(item.id);
-        updateItems(await makeRequest(Route.D, assembleRequest(item.id, "", "")));
+        updateItems(await makeItemRequest(Route.D, item.id));
     });
 
     div.appendChild(partNumber);
@@ -200,8 +272,12 @@ function updateItems(newItems: ItemH[]) {
     }
 }
 
+function updateLocations(newLocations: LocationH[]) {
+    locations = newLocations;
+}
+
 async function main() {
-    updateItems(await makeRequest(Route.R));
+    updateItems(await makeItemRequest(Route.R));
     async function update() {
         doUpdate = false;
     }

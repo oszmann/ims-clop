@@ -1,5 +1,6 @@
-import { ItemH } from "../common/util";
+import { ItemH, LocationH } from "../common/util";
 import { Item } from "./entities/item";
+import { Location } from "./entities/location";
 
 export function itemFromItemH(itemH: ItemH, update: boolean = false): Item {
     const item: Item = new Item();
@@ -11,6 +12,15 @@ export function itemFromItemH(itemH: ItemH, update: boolean = false): Item {
         item.id = itemH.id;
     }
     return item;
+}
+
+export function locationFromLocationH(locationH: LocationH): Location {
+    const location = new Location();
+    location.warehouse = locationH.warehouse;
+    location.row = locationH.row;
+    location.rack = locationH.rack;
+    location.shelf = locationH.shelf;
+    return location;
 }
 
 export function toNumber(input?: string, radix = 10) {

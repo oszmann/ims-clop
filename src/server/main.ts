@@ -5,7 +5,7 @@ import { DataSource } from "typeorm";
 import { Item } from "./entities/item";
 import { Location } from "./entities/location";
 import { Position } from "./entities/position";
-import { deleteItem, getEntities, init, insertPosition, Objects, setItem, updateItem } from "./database";
+import { deleteItem, getEntities, init, insertPosition, Objects, setEntity, setItem, updateItem } from "./database";
 import { itemFromItemH, toNumber } from "./util";
 
 // -------------------firing express app
@@ -44,7 +44,7 @@ app.get("/api/get", async (req: Request, res: Response) => {
 app.get("/api/set/", async (req: Request, res: Response) => {
     console.log(req.url);
     console.log(req.query.item);
-    res.json(await setItem(AppDataSource, itemFromItemH(JSON.parse(req.query.item.toString()))));
+    res.json(await setEntity(AppDataSource, req));
 });
 
 app.get("/api/update/", async (req: Request, res: Response) => {

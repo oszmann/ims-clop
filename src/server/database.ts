@@ -1,7 +1,9 @@
+import { Request } from "express";
 import { DataSource } from "typeorm";
 import { Item } from "./entities/item";
 import { Location } from "./entities/location";
 import { Position } from "./entities/position";
+import { itemFromItemH, locationFromLocationH } from "./util";
 
 export function init(source: DataSource) {
     source
@@ -10,12 +12,28 @@ export function init(source: DataSource) {
             console.log("There are " + (await source.manager.count(Item)) + " items in the database.");
             console.log("There are " + (await source.manager.count(Location)) + " locations in the database.");
             console.log("There are " + (await source.manager.count(Position)) + " positions in the database.");
-            //await insertPosition(source);
+            //insertPosition(source);
         })
         .catch(error => {
             console.log("error: ", error);
             init(source);
         });
+}
+
+export async function setEntity(source: DataSource, req: Request) {
+    if (req.query.item !== "") {
+        console.log("inserting item");
+        return await setItem(source, itemFromItemH(JSON.parse(req.query.item.toString())));
+    } else if (req.query.loc !== "") {
+        console.log("inserting location");
+        return getOrCreateLocation(source, locationFromLocationH(JSON.parse(req.query.loc.toString()))).then(async () => {
+            return await getEntities(source, Objects.LOCATIONS);
+            
+        });
+    } else if (req.query.pos !== "") {
+        console.log("inserting position");
+        return await getEntities(source, Objects.POSITIONS);
+    }
 }
 
 export async function setItem(source: DataSource, item: Item): Promise<Item[]> {
@@ -69,9 +87,26 @@ export async function deleteItem(source: DataSource, req: string): Promise<Item[
     }
 }
 
-export async function insertLocation(source: DataSource, a: string) {
-    const locations: Location[] = await getEntities(source, Objects.LOCATIONS);
-    const items: Item[] = await getEntities(source, Objects.ITEMS);
+export async function getOrCreateLocation(source: DataSource, l: Location): Promise<Location> {
+    console.log("l", l)
+    const a: Location[] = await source.manager.find(Location, {
+        where: {
+            warehouse: l.warehouse,
+            row: l.row,
+            rack: l.rack,
+            shelf: l.shelf,
+        },
+    });
+    console.log("Location: ", a);
+    if (a[0]) {
+        console.log("found")
+        return a[0];
+    }
+    return await source.manager.save(Location, l);
+}
+
+export async function getOrCreateItem(source: DataSource, i: Item): Promise<Item> {
+    return
 }
 
 export async function insertPosition(source: DataSource) {
@@ -81,15 +116,14 @@ export async function insertPosition(source: DataSource) {
     item.cost = 0;
     item.partNumber = "123";
     item.description = "abc";
-    const location = new Location();
+    let location = new Location();
     location.row = 0;
     location.rack = 0;
     location.shelf = 0;
     console.log("hi1");
     const i = await source.manager.save(item);
     console.log("hi2");
-    const loc = findLocation(source, location);
-    const l = await source.manager.save(location);
+    const l = await getOrCreateLocation(source, location);
     pos.itemId = i.id;
     pos.locationId = l.id;
     pos.item = i;
