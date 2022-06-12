@@ -20,16 +20,16 @@ export enum SortBy {
 }
 
 //STATIC
-export const openAddItem = <HTMLButtonElement>$("button");
-export const itemsDiv = <HTMLDivElement>$("items");
-export const deleteButton = <HTMLButtonElement>$("delete");
 export const addItemDiv = <HTMLDivElement>$("insert-div");
-export const addItemButton = <HTMLButtonElement>$("add-button");
 export const add0 = <HTMLTextAreaElement>$("insert-0");
 export const add1 = <HTMLTextAreaElement>$("insert-1");
 export const add2 = <HTMLTextAreaElement>$("insert-2");
 export const add3 = <HTMLTextAreaElement>$("insert-3");
-export const addLocationButton = <HTMLButtonElement>$("insert-location");
+export const addButton = <HTMLButtonElement>$("add-button");
+export const openAddItem = <HTMLButtonElement>$("button");
+export const deleteButton = <HTMLButtonElement>$("delete");
+export const openAddLocation = <HTMLButtonElement>$("insert-location");
+export const itemsDiv = <HTMLDivElement>$("items");
 
 export function $<T extends HTMLElement>(id: string): T {
     return <T>document.getElementById(id);
