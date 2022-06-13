@@ -121,36 +121,6 @@ function init() {
 
 init();
 
-function setMenu(setTo: string) {
-    //TODO: Change boolean to string, options for off, location and item
-    //!! DISABLE UNUSED TEXTAREA (insert-3) IF NOT NEEDED, CHANGE PLACEHOLDER!!
-    switch (setTo) {
-        case "off":
-            itemsDiv.classList.remove("add-item-open");
-            break;
-        case "item":
-            itemsDiv.classList.add("add-item-open");
-            addPartNo.placeholder = "";
-            addDescription.placeholder = "";
-            addCost.placeholder = "";
-            addItemButton.innerText = "Insert Item";
-            break;
-        case "location":
-            itemsDiv.classList.add("add-item-open");
-            addPartNo.value = "";
-            addDescription.value = "";
-            addCost.value = "";
-            addPartNo.placeholder = "Warehouse (or nothing)";
-            addDescription.placeholder = "Row (number)";
-            addCost.placeholder = "Rack (number)";
-            addItemButton.innerText = "Insert Location";
-            break;
-        default:
-            console.log("Menu option not specified");
-            break;
-    }
-}
-
 //Create a new ItemH item, even a dummy
 function createItem(partNumber: string, desc: string, cost: string): ItemH {
     if (partNumber === "") {
@@ -221,9 +191,11 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     const partNumber: HTMLTextAreaElement = document.createElement("textarea");
     const description: HTMLTextAreaElement = document.createElement("textarea");
     const cost: HTMLTextAreaElement = document.createElement("textarea");
-    const id: HTMLElement = document.createElement("i");
     const created: HTMLElement = document.createElement("i");
     const updated: HTMLElement = document.createElement("i");
+    
+    const span: HTMLSpanElement = document.createElement("span");
+    const id: HTMLElement = document.createElement("i");
 
     const editButton: HTMLButtonElement = document.createElement("button");
     const deleteButton: HTMLButtonElement = document.createElement("button");
@@ -245,9 +217,14 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     partNumber.value = item.partNumber;
     description.value = item.description;
     cost.value = item.cost.toString();
-    id.innerText = item.id;
+    id.innerText = "id";
     created.innerText = item.created_at.toString();
     updated.innerText = item.updated_at.toString();
+
+    span.classList.add("tooltip-span");
+    span.innerText = item.id;
+
+    id.appendChild(span)
 
     //TODO make butiful
     editButton.innerText = "Edit";
@@ -261,11 +238,12 @@ function createItemDiv(item: ItemH): HTMLDivElement {
         console.log(item.id);
         updateItems(await makeItemRequest(Route.D, item.id));
     });
+    id.classList.add("hover-me");
 
+    div.appendChild(id);
     div.appendChild(partNumber);
     div.appendChild(description);
     div.appendChild(cost);
-    div.appendChild(id);
     div.appendChild(created);
     div.appendChild(updated);
     div.appendChild(editButton);

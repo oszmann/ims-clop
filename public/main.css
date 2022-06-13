@@ -5,6 +5,7 @@ button {
 }
 
 #insert-item-div {
+    display: flex;
     width: 100%;
     background-color: red;
     justify-content: center;
@@ -20,12 +21,28 @@ button {
 }
 
 #items-div {
-    max-height: calc(100vh - 40px);
+    max-height: calc(100vh - 100px);
     overflow: auto;
 }
 
 #items-div i {
-    border: 5px solid black;
+    border: 2px solid black;
+    max-width: 200px;
+    overflow: auto;
+    display: inline-block;
+    line-break: strict;
+}
+
+.tooltip-span {
+    visibility: hidden;
+    background-color: white;
+    border: 1px solid black;
+    position: absolute;
+    transform: translate(-10px, 100%);
+}
+
+i:hover .tooltip-span {
+    visibility: visible;
 }
 
 textarea {
