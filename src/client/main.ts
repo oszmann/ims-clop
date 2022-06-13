@@ -191,11 +191,12 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     const partNumber: HTMLTextAreaElement = document.createElement("textarea");
     const description: HTMLTextAreaElement = document.createElement("textarea");
     const cost: HTMLTextAreaElement = document.createElement("textarea");
-    const created: HTMLElement = document.createElement("i");
-    const updated: HTMLElement = document.createElement("i");
+
+    const dates: HTMLElement = document.createElement("i");
+    const datesSpan: HTMLSpanElement = document.createElement("span");
     
-    const span: HTMLSpanElement = document.createElement("span");
     const id: HTMLElement = document.createElement("i");
+    const idSpan: HTMLSpanElement = document.createElement("span");
 
     const editButton: HTMLButtonElement = document.createElement("button");
     const deleteButton: HTMLButtonElement = document.createElement("button");
@@ -204,7 +205,7 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     description.id = item.id + "desc";
     cost.id = item.id + "cost";
     id.id = item.id + "id";
-    updated.id = item.id + "updated";
+    datesSpan.id = item.id + "dates-span";
 
     partNumber.rows = 1;
     description.rows = 1;
@@ -217,15 +218,18 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     partNumber.value = item.partNumber;
     description.value = item.description;
     cost.value = item.cost.toString();
-    id.innerText = "id";
-    created.innerText = item.created_at.toString();
-    updated.innerText = item.updated_at.toString();
+    id.innerText = "ID:";
+    dates.innerText ="Dates:"
 
-    span.classList.add("tooltip-span");
-    span.innerText = item.id;
+    idSpan.classList.add("tooltip-span");
+    idSpan.innerText = item.id;
 
-    id.appendChild(span)
+    id.appendChild(idSpan);
 
+    datesSpan.classList.add("tooltip-dates");
+    datesSpan.innerText = "C: " + item.created_at.toString() + "\n" + "U: " + item.updated_at.toString();
+
+    dates.appendChild(datesSpan);
     //TODO make butiful
     editButton.innerText = "Edit";
     deleteButton.innerText = "Delete";
@@ -244,8 +248,7 @@ function createItemDiv(item: ItemH): HTMLDivElement {
     div.appendChild(partNumber);
     div.appendChild(description);
     div.appendChild(cost);
-    div.appendChild(created);
-    div.appendChild(updated);
+    div.appendChild(dates);
     div.appendChild(editButton);
     div.appendChild(deleteButton);
     //console.log("created div")
@@ -297,9 +300,9 @@ function updateItems(newItems: ItemH[]) {
             items[i].cost = newItems[index].cost;
         }
         if (items[i].updated_at !== newItems[index].updated_at) {
-            const updated = <HTMLElement>document.getElementById(items[i].id + "updated");
+            const updated = <HTMLSpanElement>document.getElementById(items[i].id + "dates-sapn");
             items[i].updated_at = newItems[index].updated_at;
-            updated.innerText = newItems[index].updated_at.toString();
+            updated.innerText = "C:" + newItems[i].created_at.toString() + "\n" + "U:" + newItems[i].updated_at.toString();
         }
         if (items[i].created_at !== newItems[index].created_at) {
             console.warn("witchcraft", items[i].created_at, newItems[index].created_at);

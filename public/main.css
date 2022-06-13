@@ -11,9 +11,11 @@ button {
     justify-content: center;
 }
 
-#insert-item-div textarea {
-    margin: 5px;
-    margin-right: 0px;
+#insert-location-div {
+    display: flex;
+    width: 100%;
+    background-color: red;
+    justify-content: center;
 }
 
 #buttons-bar {
@@ -25,26 +27,48 @@ button {
     overflow: auto;
 }
 
+#items-div button {
+    transform: translateY(-70%);
+}
+
 #items-div i {
     border: 2px solid black;
     max-width: 200px;
     overflow: auto;
     display: inline-block;
-    line-break: strict;
+    margin-left: 5px;
+    margin-bottom: 12px;
 }
 
-.tooltip-span {
+.tooltip-span, .tooltip-dates{
     visibility: hidden;
     background-color: white;
     border: 1px solid black;
     position: absolute;
+}
+
+i:hover .tooltip-span, i:hover .tooltip-dates{
+    visibility: visible;
+}
+
+.tooltip-dates {
+    z-index: 1;
+    visibility: hidden;
+    background-color: white;
+    border: 1px solid black;
+    position: absolute;
+}
+
+.tooltip-span {
     transform: translate(-10px, 100%);
 }
 
-i:hover .tooltip-span {
-    visibility: visible;
+.tooltip-dates {
+    transform: translate(-10px, 0%);
 }
 
 textarea {
     resize: none;
+    margin: 5px;
+    margin-right: 0px;
 }
