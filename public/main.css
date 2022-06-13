@@ -53,7 +53,7 @@ button {
 }
 
 #items-div button {
-    transform: translateY(-70%);
+    transform: translateY(0);
 }
 
 #items-div i {
@@ -62,7 +62,6 @@ button {
     overflow: auto;
     display: inline-block;
     margin-left: 5px;
-    margin-bottom: 12px;
 }
 
 .tooltip-span,

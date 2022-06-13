@@ -1,9 +1,11 @@
-import { ItemH, LocationH } from "../common/util";
+import { ItemH, LocationH, PositionH } from "../common/util";
 import { createItem, itemsDiv, localhost, locationsDiv, makeItemRequest, makeLocationRequest, Route } from "./util";
 
 let items: ItemH[] = [];
 
 let locations: LocationH[] = [];
+
+let positions: PositionH[] = [];
 
 //--------------------ITEMS
 export function updateItems(newItems: ItemH[]) {
@@ -37,17 +39,17 @@ export function updateItems(newItems: ItemH[]) {
     for (let i = 0; i < items.length; i++) {
         const index: number = newItems.indexOf(newItems.find(x => x.id === items[i].id));
         if (items[i].partNumber !== newItems[index].partNumber) {
-            const partNumber = <HTMLTextAreaElement>document.getElementById(items[i].id + "part-number");
+            const partNumber = <HTMLInputElement>document.getElementById(items[i].id + "part-number");
             partNumber.value = newItems[index].partNumber;
             items[i].partNumber = newItems[index].partNumber;
         }
         if (items[i].description !== newItems[index].description) {
-            const description = <HTMLTextAreaElement>document.getElementById(items[i].id + "desc");
+            const description = <HTMLInputElement>document.getElementById(items[i].id + "desc");
             description.value = newItems[index].description;
             items[i].description = newItems[index].description;
         }
         if (items[i].cost !== newItems[index].cost) {
-            const cost = <HTMLTextAreaElement>document.getElementById(items[i].id + "cost");
+            const cost = <HTMLInputElement>document.getElementById(items[i].id + "cost");
             cost.value = newItems[index].cost.toString();
             items[i].cost = newItems[index].cost;
         }
@@ -69,9 +71,9 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     div.id = item.id;
     div.classList.add("item-outer-div");
 
-    const partNumber: HTMLTextAreaElement = document.createElement("textarea");
-    const description: HTMLTextAreaElement = document.createElement("textarea");
-    const cost: HTMLTextAreaElement = document.createElement("textarea");
+    const partNumber: HTMLInputElement = document.createElement("input");
+    const description: HTMLInputElement = document.createElement("input");
+    const cost: HTMLInputElement = document.createElement("input");
 
     const dates: HTMLElement = document.createElement("i");
     const datesSpan: HTMLSpanElement = document.createElement("span");
@@ -88,9 +90,9 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     id.id = item.id + "id";
     datesSpan.id = item.id + "dates-span";
 
-    partNumber.rows = 1;
-    description.rows = 1;
-    cost.rows = 1;
+    partNumber.type = "text";
+    description.type = "text";
+    cost.type = "number";
 
     partNumber.placeholder = "part-number";
     description.placeholder = "desc";
@@ -245,4 +247,10 @@ export function createLocationTableHeaders(): HTMLTableRowElement {
     tableHeaderRow.appendChild(headerShelf);
     tableHeaderRow.appendChild(headerDelete);
     return tableHeaderRow;
+}
+
+
+//--------------------POSITIONS
+export async function updatePositions(newPositions: PositionH[]) {
+    positions = newPositions;
 }

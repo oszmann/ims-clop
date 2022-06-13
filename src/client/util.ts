@@ -85,17 +85,17 @@ export const positionsEditDiv = <HTMLDivElement>$("positions-edit");
 export const positionsDiv = <HTMLDivElement>$("positions-div");
 
 //STATIC - LOCATIONS
-export const addWarehouse = <HTMLTextAreaElement>$("insert-warehouse");
-export const addRow = <HTMLTextAreaElement>$("insert-row");
-export const addRack = <HTMLTextAreaElement>$("insert-rack");
-export const addShelf = <HTMLTextAreaElement>$("insert-shelf");
+export const addWarehouse = <HTMLInputElement>$("insert-warehouse");
+export const addRow = <HTMLInputElement>$("insert-row");
+export const addRack = <HTMLInputElement>$("insert-rack");
+export const addShelf = <HTMLInputElement>$("insert-shelf");
 export const addLocationButton = <HTMLButtonElement>$("add-location-button");
 export const locationsDiv = <HTMLDivElement>$("locations-div");
 
 //STATIC - ITEMS
-export const addPartNo = <HTMLTextAreaElement>$("insert-part-no");
-export const addDescription = <HTMLTextAreaElement>$("insert-description");
-export const addCost = <HTMLTextAreaElement>$("insert-cost");
+export const addPartNo = <HTMLInputElement>$("insert-part-no");
+export const addDescription = <HTMLInputElement>$("insert-description");
+export const addCost = <HTMLInputElement>$("insert-cost");
 export const addItemButton = <HTMLButtonElement>$("add-item-button");
 export const itemsDiv = <HTMLDivElement>$("items-div");
 
