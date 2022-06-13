@@ -5,7 +5,7 @@ import { DataSource } from "typeorm";
 import { Item } from "./entities/item";
 import { Location } from "./entities/location";
 import { Position } from "./entities/position";
-import { deleteItem, getEntities, init, insertPosition, Objects, setEntity, setItem, updateItem } from "./database";
+import { init, insertPosition, createRequest, readRequest, deleteRequest, updateRequest } from "./database";
 import { itemFromItemH, toNumber } from "./util";
 
 // -------------------firing express app
@@ -25,12 +25,6 @@ app.get("/home", (req: Request, res: Response) => {
     res.json({ message: `a!` });
 });
 
-app.get("/api", async (req: Request, res: Response) => {
-    console.log(req.query);
-    console.log(req.url);
-    res.json(await insertPosition(AppDataSource));
-});
-
 app.get("/api/", async (req: Request, res: Response) => {
     console.log(req.query);
     console.log(req.url);
@@ -40,25 +34,25 @@ app.get("/api/", async (req: Request, res: Response) => {
 app.get("/api/get", async (req: Request, res: Response) => {
     console.log(req.url);
     console.log(req.query);
-    res.json(await getEntities(AppDataSource, Objects.ITEMS));
+    res.json(await readRequest(AppDataSource, req));
 });
 
 app.get("/api/set/", async (req: Request, res: Response) => {
     console.log(req.url);
     console.log(req.query.item);
-    res.json(await setEntity(AppDataSource, req));
+    res.json(await createRequest(AppDataSource, req));
 });
 
 app.get("/api/update/", async (req: Request, res: Response) => {
     console.log(req.url);
     console.log(req.query.item);
-    res.json(await updateItem(AppDataSource, itemFromItemH(JSON.parse(req.query.item.toString()), true)));
+    res.json(await updateRequest(AppDataSource, req));
 });
 
 app.get("/api/remove/", async (req: Request, res: Response) => {
     console.log(req.url);
     console.log(req.query.item);
-    res.json(await deleteItem(AppDataSource, req.query.item.toString()));
+    res.json(await deleteRequest(AppDataSource, req));
 });
 
 // --------------------Listen
