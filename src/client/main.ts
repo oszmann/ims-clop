@@ -1,59 +1,125 @@
 import { ItemH, LocationH } from "../common/util";
 import {
     openAddItem,
-    addItemDiv,
     deleteButton,
     itemsDiv,
     Route,
-    addButton,
-    add0,
-    add1,
-    add2,
+    addItemButton,
+    addPartNo,
+    addDescription,
+    addCost,
     VarType,
     openAddLocation,
-    add3,
+    homeButton,
+    localhost,
+    addLocationButton,
+    addWarehouse,
+    addRow,
+    addRack,
+    addShelf,
 } from "./util";
 
-let addType: string;
+let doUpdate: boolean = true;
 
-//BUTTON LISTENERS
-openAddItem.addEventListener("click", () => {
-    console.log("clicked");
-    setMenu("item");
-});
+let items: ItemH[] = [];
+let newItemsCache: ItemH[] = [];
+let locations: LocationH[] = [];
+let newLocationsCache: LocationH[] = [];
 
-openAddLocation.addEventListener("click", () => {
-    setMenu("location")
-});
-
-deleteButton.addEventListener("click", () => {
-    makeItemRequest(Route.D, "all").then(resp => {
-        console.log(resp);
-        updateItems(resp);
+function initHome() {
+    //BUTTON LISTENERS
+    openAddItem.addEventListener("click", () => {
+        window.location.href = "/items";
     });
-    itemsDiv.classList.remove("add-item-open");
-    addItemDiv.style.display = "none";
-});
 
-addButton.addEventListener("click", () => {
-    if (add3.style.display === "none") {
-        makeItemRequest(Route.C, JSON.stringify(createItem(add0.value, add1.value, add2.value))).then(resp => {
+    openAddLocation.addEventListener("click", () => {
+        window.location.href = "/locations";
+    });
+
+    deleteButton.addEventListener("click", () => {
+        makeItemRequest(Route.D, "all").then(resp => {
             console.log(resp);
             updateItems(resp);
         });
-    }
-    else {
-        console.log(JSON.parse(JSON.stringify(createLocation(add0.value, add1.value, add2.value, add3.value))))
-        makeLocationRequest(Route.C, JSON.stringify(createLocation(add0.value, add1.value, add2.value, add3.value))).then(resp => {
-            
+    });
+}
+
+function initItems() {
+    //BUTTON LISTENERS
+    openAddLocation.addEventListener("click", () => {
+        window.location.href = "/locations";
+    });
+
+    homeButton.addEventListener("click", () => {
+        console.log("go home bish");
+        window.location.href = "/";
+    });
+
+    addItemButton.addEventListener("click", () => {
+        makeItemRequest(Route.C, JSON.stringify(createItem(addPartNo.value, addDescription.value, addCost.value))).then(
+            resp => {
+                console.log(resp);
+                updateItems(resp);
+            }
+        );
+        addPartNo.value = "";
+        addDescription.value = "";
+        addCost.value = "";
+    });
+    updateItems(newItemsCache);
+}
+
+function initLocations() {
+    //BUTTON LISTENERS
+    openAddItem.addEventListener("click", () => {
+        window.location.href = "/items";
+    });
+
+    homeButton.addEventListener("click", () => {
+        console.log("go home bish");
+        window.location.href = "/";
+    });
+
+    addLocationButton.addEventListener("click", () => {
+        console.log(
+            JSON.parse(JSON.stringify(createLocation(addWarehouse.value, addRow.value, addRack.value, addShelf.value)))
+        );
+        makeLocationRequest(
+            Route.C,
+            JSON.stringify(createLocation(addWarehouse.value, addRow.value, addRack.value, addShelf.value))
+        ).then(resp => {
             console.log(resp);
             updateLocations(resp);
-        })
-    }
-    
-    setMenu("off");
-});
+        });
+        addWarehouse.value = "";
+        addRow.value = "";
+        addRack.value = "";
+        addShelf.value = "";
+    });
+}
 
+function init() {
+    switch (window.location.href) {
+        case localhost + "":
+        case localhost + "/":
+            initHome();
+            break;
+        case localhost + "/locations":
+        case localhost + "/locations.html":
+            initLocations();
+            break;
+        case localhost + "/items":
+        case localhost + "/items.html":
+            initItems();
+            break;
+        default:
+            console.log("route not found, loading home");
+            initHome();
+            break;
+    }
+}
+
+init();
 
 function setMenu(setTo: string) {
     //TODO: Change boolean to string, options for off, location and item
@@ -61,38 +127,23 @@ function setMenu(setTo: string) {
     switch (setTo) {
         case "off":
             itemsDiv.classList.remove("add-item-open");
-            addItemDiv.style.display = "none";
             break;
         case "item":
-            if (add3.style.display === "none" && addItemDiv.style.display === "flex") {
-                break;
-            }
             itemsDiv.classList.add("add-item-open");
-            addItemDiv.style.display = "flex";
-            add3.style.display = "none";
-            add0.value = "";
-            add1.value = "";
-            add2.value = "";
-            add0.placeholder = "Part Number";
-            add1.placeholder = "Description";
-            add2.placeholder = "Cost (number)";
-            addButton.innerText = "Insert Item";
+            addPartNo.placeholder = "";
+            addDescription.placeholder = "";
+            addCost.placeholder = "";
+            addItemButton.innerText = "Insert Item";
             break;
         case "location":
-            if (add3.style.display === "" && addItemDiv.style.display === "flex") {
-                break;
-            }
             itemsDiv.classList.add("add-item-open");
-            addItemDiv.style.display = "flex";
-            add3.style.display = "";
-            add0.value = "";
-            add1.value = "";
-            add2.value = "";
-            add3.value = "";
-            add0.placeholder = "Warehouse (or nothing)";
-            add1.placeholder = "Row (number)";
-            add2.placeholder = "Rack (number)";
-            addButton.innerText = "Insert Location";
+            addPartNo.value = "";
+            addDescription.value = "";
+            addCost.value = "";
+            addPartNo.placeholder = "Warehouse (or nothing)";
+            addDescription.placeholder = "Row (number)";
+            addCost.placeholder = "Rack (number)";
+            addItemButton.innerText = "Insert Location";
             break;
         default:
             console.log("Menu option not specified");
@@ -145,21 +196,20 @@ function createLocation(warehouse: string, row: string, rack: string, shelf: str
     return locationH;
 }
 
-let doUpdate: boolean = true;
-//Maybe use this?
-let items: ItemH[] = [];
-let locations: LocationH[] = [];
-
 // function assembleRequest(item: string, location: string, position: string): string {
 //     return VarType.item + item + VarType.location + location + VarType.position + position;
 // }
 
 async function makeItemRequest(route: Route, request: string = ""): Promise<ItemH[]> {
-    return <ItemH[]>await (await fetch(route + "/" + VarType.item + request + VarType.location + VarType.position)).json();
+    return <ItemH[]>(
+        await (await fetch(route + "/" + VarType.item + request + VarType.location + VarType.position)).json()
+    );
 }
 
 async function makeLocationRequest(route: Route, request: string = ""): Promise<LocationH[]> {
-    return <LocationH[]>await (await fetch(route + "/" + VarType.item + VarType.location + request + VarType.position)).json();
+    return <LocationH[]>(
+        await (await fetch(route + "/" + VarType.item + VarType.location + request + VarType.position)).json()
+    );
 }
 
 //Return a proper Div for a given ItemH object.
@@ -228,6 +278,13 @@ function updateItems(newItems: ItemH[]) {
     const toBeRemoved: string[] = items.map(x => x.id).filter(x => !newItems.map(x => x.id).includes(x));
     const toBeAdded: string[] = newItems.map(x => x.id).filter(x => !items.map(x => x.id).includes(x));
     //Remove items from display and internal array
+    // console.log(window.location.href)
+    // console.log(localhost + "/items")
+    if (window.location.href !== localhost + "/items" && window.location.href !== localhost + "/items.html") {
+        console.log("caching");
+        newItemsCache = newItems;
+        return;
+    }
     for (let i = 0; i < itemsDiv.children.length; i++) {
         if (toBeRemoved.includes(itemsDiv.children[i].id)) {
             itemsDiv.children[i].remove();
