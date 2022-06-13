@@ -16,6 +16,8 @@ app.use(express.json());
 app.use("/", express.static(path.join(process.cwd(), "public")));
 app.use("/js", express.static(path.join(process.cwd(), "dist", "client")));
 app.use("/bs", express.static(path.join(process.cwd(), "node_modules/bootstrap")));
+app.use("/locations", express.static(path.join(process.cwd(), "public/locations.html")));
+app.use("/items", express.static(path.join(process.cwd(), "public/items.html")));
 
 // -------------------routes
 app.get("/home", (req: Request, res: Response) => {
