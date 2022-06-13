@@ -26,32 +26,27 @@ app.get("/home", (req: Request, res: Response) => {
 });
 
 app.get("/api/", async (req: Request, res: Response) => {
-    console.log(req.query);
     console.log(req.url);
     res.json(await insertPosition(AppDataSource));
 });
 
 app.get("/api/get", async (req: Request, res: Response) => {
     console.log(req.url);
-    console.log(req.query);
     res.json(await readRequest(AppDataSource, req));
 });
 
 app.get("/api/set/", async (req: Request, res: Response) => {
     console.log(req.url);
-    console.log(req.query.item);
     res.json(await createRequest(AppDataSource, req));
 });
 
 app.get("/api/update/", async (req: Request, res: Response) => {
     console.log(req.url);
-    console.log(req.query.item);
     res.json(await updateRequest(AppDataSource, req));
 });
 
 app.get("/api/remove/", async (req: Request, res: Response) => {
     console.log(req.url);
-    console.log(req.query.item);
     res.json(await deleteRequest(AppDataSource, req));
 });
 

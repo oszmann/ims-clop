@@ -80,9 +80,9 @@ export async function makeLocationRequest(route: Route, request: string = "Locat
 }
 
 //STATIC - INDEX
-export const openAddItem = <HTMLButtonElement>$("insert-item");
-export const deleteButton = <HTMLButtonElement>$("delete");
-export const openAddLocation = <HTMLButtonElement>$("insert-location");
+export const deleteButton = <HTMLAreaElement>$("delete");
+export const positionsEditDiv = <HTMLDivElement>$("positions-edit");
+export const positionsDiv = <HTMLDivElement>$("positions-div");
 
 //STATIC - LOCATIONS
 export const addWarehouse = <HTMLTextAreaElement>$("insert-warehouse");
@@ -90,7 +90,6 @@ export const addRow = <HTMLTextAreaElement>$("insert-row");
 export const addRack = <HTMLTextAreaElement>$("insert-rack");
 export const addShelf = <HTMLTextAreaElement>$("insert-shelf");
 export const addLocationButton = <HTMLButtonElement>$("add-location-button");
-export const homeButton = <HTMLButtonElement>$("home");
 export const locationsDiv = <HTMLDivElement>$("locations-div");
 
 //STATIC - ITEMS

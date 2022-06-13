@@ -1,14 +1,11 @@
 import { updateItems, updateLocations } from "./ui";
 import {
-    openAddItem,
     deleteButton,
     Route,
     addItemButton,
     addPartNo,
     addDescription,
     addCost,
-    openAddLocation,
-    homeButton,
     localhost,
     addLocationButton,
     addWarehouse,
@@ -25,14 +22,6 @@ let doUpdate: boolean = true;
 
 function initHome() {
     //BUTTON LISTENERS
-    openAddItem.addEventListener("click", () => {
-        window.location.href = "/items";
-    });
-
-    openAddLocation.addEventListener("click", () => {
-        window.location.href = "/locations";
-    });
-
     deleteButton.addEventListener("click", () => {
         makeItemRequest(Route.D, "all").then(resp => {
             console.log(resp);
@@ -43,15 +32,6 @@ function initHome() {
 
 async function initItems() {
     //BUTTON LISTENERS
-    openAddLocation.addEventListener("click", () => {
-        window.location.href = "/locations";
-    });
-
-    homeButton.addEventListener("click", () => {
-        console.log("go home bish");
-        window.location.href = "/";
-    });
-
     addItemButton.addEventListener("click", () => {
         makeItemRequest(Route.C, JSON.stringify(createItem(addPartNo.value, addDescription.value, addCost.value))).then(
             resp => {
@@ -68,15 +48,6 @@ async function initItems() {
 
 async function initLocations() {
     //BUTTON LISTENERS
-    openAddItem.addEventListener("click", () => {
-        window.location.href = "/items";
-    });
-
-    homeButton.addEventListener("click", () => {
-        console.log("go home bish");
-        window.location.href = "/";
-    });
-
     addLocationButton.addEventListener("click", () => {
         console.log(
             JSON.parse(

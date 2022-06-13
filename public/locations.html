@@ -7,10 +7,35 @@
         <script src="/bs/dist/js/bootstrap.min.js"></script>
     </head>
     <body>
-        <div id="buttons-bar">
-            <button id="home">Home</button>
-            <button id="insert-item">Items</button>
-        </div>
+        <nav class="navbar navbar-expand-lg sticky-top" id="navbar">
+            <div class="container-fluid">
+                <a class="navbar-brand">ims-clop</a>
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/#" aria-current="page">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/items">Items</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/locations">Locations</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
         <div id="insert-location-div">
             <textarea id="insert-warehouse" rows="1" placeholder="Warehouse (or nothing)"></textarea>
             <textarea id="insert-row" rows="1" placeholder="Row (number)"></textarea>

@@ -1,20 +1,39 @@
+:root {
+    --text-primary: #000000;
+    --text-secondary: #373737;
+    --bg-primary: #5f5e5e;
+    --bg-secondary: rgb(64, 163, 31);
+}
+
 button {
     margin: 5px;
     margin-right: 0px;
     height: 30px;
 }
 
-#insert-item-div {
-    display: flex;
-    width: 100%;
-    background-color: red;
-    justify-content: center;
+.nav-item .nav-link {
+    color: var(--text-primary);
 }
 
-#insert-location-div {
+.nav-item .nav-link:hover, .nav-item .active {
+    color: var(--text-secondary);
+}
+
+.navbar-brand {
+    color: var(--text-primary);
+}
+.navbar-brand:hover {
+    color: var(--text-primary);
+}
+
+#navbar {
+    background-color: var(--bg-primary);
+}
+
+#insert-item-div, #insert-location-div {
     display: flex;
     width: 100%;
-    background-color: red;
+    background-color: var(--bg-secondary);
     justify-content: center;
 }
 
@@ -22,8 +41,14 @@ button {
     background-color: grey;
 }
 
-#items-div, #locations-div {
+#items-div,
+#locations-div {
     max-height: calc(100vh - 100px);
+    overflow: auto;
+}
+
+#positions-container {
+    max-height: calc(100vh - 40px);
     overflow: auto;
 }
 
