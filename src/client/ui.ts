@@ -11,6 +11,8 @@ import {
     positionRowInput,
     positionShelfInput,
     Route,
+    sortArrayBy,
+    sortStringsLambda,
 } from "./util";
 
 let items: ItemH[] = [];
@@ -83,16 +85,17 @@ export function updateItems(newItems: ItemH[]) {
 export function createItemDiv(item: ItemH): HTMLDivElement {
     const div: HTMLDivElement = document.createElement("div");
     div.id = item.id;
-    div.classList.add("item-outer-div");
+    div.classList.add("input-group", "item-outer-div", "rounded");
+    div.style.backgroundColor = "var(--bg-secondary)"
 
     const partNumber: HTMLInputElement = document.createElement("input");
     const description: HTMLInputElement = document.createElement("input");
     const cost: HTMLInputElement = document.createElement("input");
 
-    const dates: HTMLElement = document.createElement("i");
+    const dates: HTMLAnchorElement = document.createElement("a");
     const datesSpan: HTMLSpanElement = document.createElement("span");
 
-    const id: HTMLElement = document.createElement("i");
+    const id: HTMLAnchorElement = document.createElement("a");
     const idSpan: HTMLSpanElement = document.createElement("span");
 
     const editButton: HTMLButtonElement = document.createElement("button");
@@ -108,6 +111,14 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     description.type = "text";
     cost.type = "number";
 
+    partNumber.classList.add("form-control");
+    description.classList.add("form-control");
+    cost.classList.add("form-control");
+
+    partNumber.style.width = "25%";
+    description.style.width = "25%";
+    cost.style.width = "5%";
+
     partNumber.placeholder = "part-number";
     description.placeholder = "desc";
     cost.placeholder = "cost";
@@ -116,7 +127,9 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     description.value = item.description;
     cost.value = item.cost.toString();
     id.innerText = "ID:";
+    id.style.padding = "5px"
     dates.innerText = "Dates:";
+    dates.style.padding = "5px"
 
     idSpan.classList.add("tooltip-span");
     idSpan.innerText = item.id;
@@ -129,7 +142,9 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     dates.appendChild(datesSpan);
 
     editButton.innerText = "Edit";
+    editButton.classList.add("btn", "btn-primary");
     deleteButton.innerText = "Delete";
+    deleteButton.classList.add("btn", "btn-primary");
     editButton.addEventListener("click", async () => {
         const temp = createItem(partNumber.value, description.value, cost.value);
         temp.id = item.id;
@@ -274,18 +289,25 @@ export async function updatePositions(newPositions: PositionH[]) {
 export async function initAutocomplete() {
     updateItems(await makeItemRequest(Route.R));
     const a = items.map(i => {
-        return "Item: " + i.partNumber.toString() + " : " + i.description.toString();
+        return "Item: " + i.partNumber.toString().toUpperCase() + " : " + i.description.toString();
     });
+    console.log(sortArrayBy(sortStringsLambda, a));
     autocomplete(<HTMLInputElement>$("position-part-no-input"), a, 6);
     console.log(a);
     updateLocations(await makeLocationRequest(Route.R));
     const b = locations.map(l => {
-        return "Location: " + l.warehouse + " | " + l.row + " | " + l.rack + " | " + l.shelf;
+        return "Location: " + l.warehouse.toUpperCase() + " | " + l.row + " | " + l.rack + " | " + l.shelf;
     });
+    console.log(sortArrayBy(sortStringsLambda, b));
     autocomplete(<HTMLInputElement>$("position-warehouse-input"), b, 10);
 }
 
 //AUTOCOMPLETE FUNCTION, props to the guys at: https://www.w3schools.com/howto/howto_js_autocomplete.asp
+/**
+ * @param inputElement Inputelement Autocomplete is linked to
+ * @param array Array of strings to display in Autocomplete
+ * @param type TO BE CHANGED length of prefix in array strings (e.g. "Locations: " => 10)
+ */
 function autocomplete(inputElement: HTMLInputElement, array: any[], type: number) {
     let currentArrowKeyIndex: number;
     inputElement.addEventListener("input", () => {
@@ -309,7 +331,7 @@ function autocomplete(inputElement: HTMLInputElement, array: any[], type: number
                 } else if (i === array.length - 1) {
                     objectDiv.style.borderRadius = "0px 0px 5px 5px";
                 }
-                objectDiv.innerHTML += "<strong style=>" + array[i].substr(0, inputValue.length + type) + "</strong>";
+                objectDiv.innerHTML += "<strong> <u>" + array[i].substr(0, type - 1) + "</u> " + array[i].substr(type, inputValue.length) + "</strong>";
                 objectDiv.innerHTML += array[i].substr(type + inputValue.length);
                 objectDiv.innerHTML += "<input type='hidden' value='" + array[i].substr(type).split(" : ")[0] + "'>";
                 objectDiv.addEventListener("click", () => {

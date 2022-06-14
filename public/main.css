@@ -37,27 +37,24 @@
     background-color: grey;
 }
 
-#items-div,
-#locations-div {
-    max-height: calc(100vh - 100px);
-    overflow: auto;
+#items-div {
+    width: 80%;
+    margin-left: 10%;
 }
 
-#positions-container {
-    max-height: calc(100vh - 40px);
-    overflow: auto;
-}
-
-#items-div button {
-    transform: translateY(0);
-}
-
-#items-div i {
-    border: 2px solid black;
+#items-div a {
     max-width: 200px;
-    overflow: auto;
     display: inline-block;
-    margin-left: 5px;
+    bottom: 0;
+    text-align: center;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.item-outer-div {
+    margin-top: 5px;
 }
 
 .tooltip-span,
@@ -66,19 +63,12 @@
     background-color: white;
     border: 1px solid black;
     position: absolute;
+    z-index: 99;
 }
 
-i:hover .tooltip-span,
-i:hover .tooltip-dates {
+a:hover .tooltip-span,
+a:hover .tooltip-dates {
     visibility: visible;
-}
-
-.tooltip-dates {
-    z-index: 1;
-    visibility: hidden;
-    background-color: white;
-    border: 1px solid black;
-    position: absolute;
 }
 
 .tooltip-span {
@@ -87,12 +77,6 @@ i:hover .tooltip-dates {
 
 .tooltip-dates {
     transform: translate(-10px, 0%);
-}
-
-textarea {
-    resize: none;
-    margin: 5px;
-    margin-right: 0px;
 }
 
 table,
