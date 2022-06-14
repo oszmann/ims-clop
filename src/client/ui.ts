@@ -2,8 +2,10 @@ import { ItemH, LocationH, PositionH } from "../common/util";
 import {
     $,
     createItem,
+    getActivePage,
     itemsDiv,
     localhost,
+    Page,
     locationsDiv,
     makeItemRequest,
     makeLocationRequest,
@@ -26,9 +28,7 @@ export function updateItems(newItems: ItemH[]) {
     const toBeRemoved: string[] = items.map(x => x.id).filter(x => !newItems.map(x => x.id).includes(x));
     const toBeAdded: string[] = newItems.map(x => x.id).filter(x => !items.map(x => x.id).includes(x));
 
-    // console.log(window.location.href)
-    // console.log(localhost + "/items")
-    if (window.location.href !== localhost + "/items" && window.location.href !== localhost + "/items.html") {
+    if (getActivePage() !== Page.ITEMS) {
         console.log("Not open.");
         items = newItems;
         return;
@@ -170,7 +170,7 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
 export function updateLocations(newLocations: LocationH[]) {
     locations = newLocations;
     console.log(locations);
-    if (window.location.href !== localhost + "/locations" && window.location.href !== localhost + "/locations.html") {
+    if (getActivePage() !== Page.LOCATIONS) {
         return;
     }
     locationsDiv.firstChild?.remove();

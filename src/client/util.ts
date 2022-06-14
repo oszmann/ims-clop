@@ -22,6 +22,12 @@ export enum SortBy {
     PART_NO,
     DESCRIPTION,
 }
+
+export enum Page {
+    HOME,
+    ITEMS,
+    LOCATIONS,
+}
 //Create a new ItemH item
 export function createItem(partNumber: string, desc: string, cost: string): ItemH {
     if (partNumber === "") {
@@ -65,6 +71,28 @@ export function createLocation(warehouse: string, row: string, rack: string, she
     locationH.shelf = parseInt(shelf);
 
     return locationH;
+}
+
+export function getActivePage(): Page {
+    switch (window.location.href) {
+        case localhost + "":
+        case localhost + "/":
+            case localhost + "/#":
+            return Page.HOME;
+        case localhost + "/locations":
+        case localhost + "/locations#":
+        case localhost + "/locations.html":
+        case localhost + "/locations.html#":
+            return Page.LOCATIONS
+        case localhost + "/items":
+        case localhost + "/items#":
+        case localhost + "/items.html":
+        case localhost + "/items.html#":
+            return Page.ITEMS
+        default:
+            console.log("route not found,", window.location.href);
+            return Page.HOME;
+    }
 }
 
 export function sortArrayBy(callback: (a: any, b: any) => any, array: any[]): any[] {

@@ -16,6 +16,8 @@ import {
     makeLocationRequest,
     createLocation,
     createItem,
+    getActivePage,
+    Page,
 } from "./util";
 
 let doUpdate: boolean = true;
@@ -74,22 +76,18 @@ async function initLocations() {
 }
 
 function init() {
-    switch (window.location.href) {
-        case localhost + "":
-        case localhost + "/":
+    switch (getActivePage()) {
+        case Page.HOME:
             initHome();
             break;
-        case localhost + "/locations":
-        case localhost + "/locations.html":
+        case Page.LOCATIONS:
             initLocations();
             break;
-        case localhost + "/items":
-        case localhost + "/items.html":
+            case Page.ITEMS:
             initItems();
             break;
         default:
-            console.log("route not found, loading home");
-            initHome();
+            console.log("NOW THIS IS WITCHCRAFT");
             break;
     }
 }
