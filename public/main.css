@@ -29,6 +29,11 @@
     background-color: var(--bg-primary);
 }
 
+.form-floating label {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 #insert-position-container,
 #insert-item-container,
 #insert-location-container {
@@ -179,6 +184,10 @@ td {
 
 .-w7 {
     width: 7%;
+}
+
+.-w5 {
+    width: 5%;
 }
 
 .-wauto {

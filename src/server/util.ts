@@ -9,6 +9,7 @@ export function itemFromItemH(itemH: ItemH, update: boolean = false): Item {
     item.partNumber = itemH.partNumber;
     item.description = itemH.description;
     item.cost = itemH.cost;
+    item.minStock = itemH.minStock;
     if (update) {
         item.id = itemH.id;
     }
@@ -29,8 +30,8 @@ export function positionFromPositionH(positionH: PositionH): Position {
     position.itemId = positionH.itemId;
     position.locationId = positionH.locationId;
     position.position = positionH.pos;
-    positionH
-    return
+    positionH;
+    return;
 }
 
 export function toNumber(input?: string, radix = 10) {

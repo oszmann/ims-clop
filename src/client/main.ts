@@ -27,6 +27,7 @@ import {
     positionShelfInput,
     positionPosInput,
     positionAmountInput,
+    addMinStock,
 } from "./util";
 
 let doUpdate: boolean = true;
@@ -57,6 +58,13 @@ function initHome() {
             console.log(resp);
             updatePositions(resp);
         });
+        positionPartNoInput.value = "";
+        positionWarehouseInput.value = "";
+        positionRowInput.value = "";
+        positionRackInput.value = "";
+        positionShelfInput.value = "";
+        positionPosInput.value = "";
+        positionAmountInput.value = "";
     });
     initAutocomplete();
 }
@@ -64,15 +72,17 @@ function initHome() {
 async function initItems() {
     //BUTTON LISTENERS
     addItemButton.addEventListener("click", () => {
-        makeItemRequest(Route.C, JSON.stringify(createItem(addPartNo.value, addDescription.value, addCost.value))).then(
-            resp => {
-                console.log(resp);
-                updateItems(resp);
-            }
-        );
+        makeItemRequest(
+            Route.C,
+            JSON.stringify(createItem(addPartNo.value, addDescription.value, addCost.value, addMinStock.value))
+        ).then(resp => {
+            console.log(resp);
+            updateItems(resp);
+        });
         addPartNo.value = "";
         addDescription.value = "";
         addCost.value = "";
+        addMinStock.value = "";
     });
     updateItems(await makeItemRequest(Route.R));
 }
@@ -80,13 +90,6 @@ async function initItems() {
 async function initLocations() {
     //BUTTON LISTENERS
     addLocationButton.addEventListener("click", () => {
-        console.log(
-            JSON.parse(
-                JSON.stringify(
-                    createLocation(addWarehouse.value.toUpperCase(), addRow.value, addRack.value, addShelf.value)
-                )
-            )
-        );
         makeLocationRequest(
             Route.C,
             JSON.stringify(createLocation(addWarehouse.value, addRow.value, addRack.value, addShelf.value))

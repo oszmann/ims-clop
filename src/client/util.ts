@@ -30,7 +30,7 @@ export enum Page {
     LOCATIONS,
 }
 //Create a new ItemH item
-export function createItem(partNumber: string, desc: string, cost: string): ItemH {
+export function createItem(partNumber: string, desc: string, cost: string, minStock: string): ItemH {
     if (partNumber === "") {
         partNumber = "test item";
     }
@@ -40,12 +40,16 @@ export function createItem(partNumber: string, desc: string, cost: string): Item
     if (cost === "") {
         cost = "0";
     }
+    if (minStock === "") {
+        minStock = "0";
+    }
 
     const itemH = new ItemH();
 
-    itemH.partNumber = partNumber;
+    itemH.partNumber = partNumber.toUpperCase();
     itemH.description = desc;
     itemH.cost = parseInt(cost);
+    itemH.minStock = parseInt(minStock);
 
     return itemH;
 }
@@ -66,7 +70,7 @@ export function createLocation(warehouse: string, row: string, rack: string, she
 
     const locationH = new LocationH();
 
-    locationH.warehouse = warehouse;
+    locationH.warehouse = warehouse.toUpperCase();
     locationH.row = parseInt(row);
     locationH.rack = parseInt(rack);
     locationH.shelf = parseInt(shelf);
@@ -87,14 +91,15 @@ export function createPosition(
     const items = getItems();
     const locations = getLocations();
     const loc = locations.find(
-        x =>  x.warehouse.toLowerCase() === warehouse.toLowerCase() &&
+        x =>
+            x.warehouse.toLowerCase() === warehouse.toLowerCase() &&
             x.row.toString() === row &&
             x.rack.toString() === rack &&
-            x.shelf.toString() === shelf   
+            x.shelf.toString() === shelf
     );
     if (!loc) {
         alert("please select a valid location!");
-        return
+        return;
     }
     const item = items.find(i => i.partNumber === partNo);
     if (!item) {
@@ -187,6 +192,7 @@ export const locationsDiv = <HTMLDivElement>$("locations-div");
 export const addPartNo = <HTMLInputElement>$("insert-part-no");
 export const addDescription = <HTMLInputElement>$("insert-description");
 export const addCost = <HTMLInputElement>$("insert-cost");
+export const addMinStock = <HTMLInputElement>$("insert-min-stock");
 export const addItemButton = <HTMLButtonElement>$("add-item-button");
 export const itemsDiv = <HTMLDivElement>$("items-div");
 

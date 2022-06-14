@@ -97,6 +97,7 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     const partNumber: HTMLInputElement = document.createElement("input");
     const description: HTMLInputElement = document.createElement("input");
     const cost: HTMLInputElement = document.createElement("input");
+    const minStock: HTMLInputElement = document.createElement("input");
 
     const dates: HTMLAnchorElement = document.createElement("a");
     const datesSpan: HTMLSpanElement = document.createElement("span");
@@ -107,33 +108,33 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     const editButton: HTMLButtonElement = document.createElement("button");
     const deleteButton: HTMLButtonElement = document.createElement("button");
 
+    id.id = item.id + "id";
     partNumber.id = item.id + "part-number";
     description.id = item.id + "desc";
     cost.id = item.id + "cost";
-    id.id = item.id + "id";
+    minStock.id = item.id + "min-stock";
     datesSpan.id = item.id + "dates-span";
 
     partNumber.type = "text";
     description.type = "text";
     cost.type = "number";
+    minStock.type = "number";
 
-    partNumber.classList.add("form-control");
-    description.classList.add("form-control");
-    cost.classList.add("form-control");
-
-    partNumber.style.width = "25%";
-    description.style.width = "25%";
-    cost.style.width = "5%";
+    partNumber.classList.add("form-control", "-w25");
+    description.classList.add("form-control", "-w25");
+    cost.classList.add("form-control", "-w5");
+    minStock.classList.add("form-control", "-w5");
 
     partNumber.placeholder = "part-number";
     description.placeholder = "desc";
     cost.placeholder = "cost";
 
+    id.innerText = "ID:";
+    id.style.padding = "5px";
     partNumber.value = item.partNumber;
     description.value = item.description;
     cost.value = item.cost.toString();
-    id.innerText = "ID:";
-    id.style.padding = "5px";
+    minStock.value = item.minStock.toString();
     dates.innerText = "Dates:";
     dates.style.padding = "5px";
 
@@ -152,7 +153,7 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     deleteButton.innerText = "Delete";
     deleteButton.classList.add("btn", "btn-primary");
     editButton.addEventListener("click", async () => {
-        const temp = createItem(partNumber.value, description.value, cost.value);
+        const temp = createItem(partNumber.value, description.value, cost.value, minStock.value);
         temp.id = item.id;
         updateItems(await makeItemRequest(Route.U, JSON.stringify(temp)));
     });
@@ -164,6 +165,7 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     div.appendChild(partNumber);
     div.appendChild(description);
     div.appendChild(cost);
+    div.appendChild(minStock);
     div.appendChild(dates);
     div.appendChild(editButton);
     div.appendChild(deleteButton);
@@ -215,7 +217,7 @@ export function createLocationTable(locations: LocationH[]): HTMLTableElement {
 
         const deleteButton: HTMLButtonElement = document.createElement("button");
 
-        warehouseTd.innerText = location.warehouse.toUpperCase();
+        warehouseTd.innerText = location.warehouse;
         rowTd.innerText = location.row.toString();
         rackTd.innerText = location.rack.toString();
         shelfTd.innerText = location.shelf.toString();
@@ -294,12 +296,12 @@ export async function updatePositions(newPositions: PositionH[]) {
 export async function initAutocomplete() {
     updateItems(await makeItemRequest(Route.R));
     const a = items.map(i => {
-        return "Item: " + i.partNumber.toString().toUpperCase() + " : " + i.description.toString();
+        return "Item: " + i.partNumber.toString() + " : " + i.description.toString();
     });
     autocomplete(<HTMLInputElement>$("position-part-no-input"), a, 6);
     updateLocations(await makeLocationRequest(Route.R));
     const b = locations.map(l => {
-        return "Location: " + l.warehouse.toUpperCase() + " | " + l.row + " | " + l.rack + " | " + l.shelf;
+        return "Location: " + l.warehouse + " | " + l.row + " | " + l.rack + " | " + l.shelf;
     });
     autocomplete(<HTMLInputElement>$("position-warehouse-input"), b, 10);
 }
