@@ -192,7 +192,7 @@ export function createLocationTable(locations: LocationH[]): HTMLTableElement {
         const tr: HTMLTableRowElement = document.createElement("tr");
 
         //ID SHENANIGANS
-        const id: HTMLElement = document.createElement("i");
+        const id: HTMLAnchorElement = document.createElement("a");
         const idSpan: HTMLSpanElement = document.createElement("span");
 
         id.id = location.id + "id";
