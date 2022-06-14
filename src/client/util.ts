@@ -144,11 +144,31 @@ export function sortArrayBy(array: any[], callback: (a: any, b: any) => any): an
 
 export const sortStringsLambda = (a: string, b: string) => Intl.Collator().compare(a, b);
 
-export const sortItemsLambda = (a: ItemH, b: ItemH) => Intl.Collator().compare(a.partNumber, b.partNumber);
+export const sortItemsByPartNumberLambda = (a: ItemH, b: ItemH) => Intl.Collator().compare(a.partNumber, b.partNumber);
+
+export const sortItemsByDescLambda = (a: ItemH, b: ItemH) => Intl.Collator().compare(a.description, b.description);
+
+export const sortItemsByMinStockLambda = (a: ItemH, b: ItemH) => Intl.Collator().compare(a.minStock.toString(), b.minStock.toString());
+
+export const sortItemsByUDateLambda = (a: ItemH, b: ItemH) => Intl.Collator().compare(a.updated_at.toString(), b.updated_at.toString());
+
+export const sortItemsByCDateLambda = (a: ItemH, b: ItemH) => Intl.Collator().compare(a.created_at.toString(), b.created_at.toString());
+
+
 
 export const sortLocationsLambda = (a: LocationH, b: LocationH) =>
-    Intl.Collator().compare(a.warehouse + a.row + a.row + a.shelf, b.warehouse + b.row + b.row + b.shelf);
+    Intl.Collator().compare(a.warehouse + a.row.toString() + a.rack.toString() + a.shelf.toString(), b.warehouse + b.row.toString() + b.rack.toString() + b.shelf.toString());
 
+export const sortLocationsByRow = (a: LocationH, b: LocationH) =>
+    Intl.Collator().compare(a.row.toString() + a.warehouse + a.rack.toString() + a.shelf.toString(), b.row.toString() + b.warehouse + b.rack.toString() + b.shelf.toString());
+
+export const sortLocationsByRackLambda = (a: LocationH, b: LocationH) =>
+    Intl.Collator().compare(a.rack.toString() + a.warehouse + a.row.toString() + a.shelf.toString(), b.rack.toString() + b.warehouse + b.row.toString() + b.shelf.toString());
+
+export const sortLocationsByShelfLambda = (a: LocationH, b: LocationH) =>
+    Intl.Collator().compare(a.shelf.toString() + a.warehouse + a.row.toString() + a.rack.toString(), b.shelf.toString() + b.warehouse + b.row.toString() + b.rack.toString());
+
+    
 export async function makeItemRequest(route: Route, request: string = "Items, please!"): Promise<ItemH[]> {
     return <ItemH[]>(
         await (await fetch(route + "/" + VarType.item + request + VarType.location + VarType.position)).json()
