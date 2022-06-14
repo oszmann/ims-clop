@@ -1,4 +1,5 @@
-import { ItemH, LocationH } from "../common/util";
+import { ItemH, LocationH, PositionH } from "../common/util";
+import { getItems, getLocations } from "./ui";
 
 //API ROUTES
 export enum Route {
@@ -73,34 +74,75 @@ export function createLocation(warehouse: string, row: string, rack: string, she
     return locationH;
 }
 
+export function createPosition(
+    partNo: string,
+    warehouse: string,
+    row: string,
+    rack: string,
+    shelf: string,
+    pos: string,
+    amount: string
+): PositionH {
+    //Check if item and location enetered exist
+    const items = getItems();
+    const locations = getLocations();
+    const loc = locations.find(
+        x =>  x.warehouse.toLowerCase() === warehouse.toLowerCase() &&
+            x.row.toString() === row &&
+            x.rack.toString() === rack &&
+            x.shelf.toString() === shelf   
+    );
+    if (!loc) {
+        alert("please select a valid location!");
+        return
+    }
+    const item = items.find(i => i.partNumber === partNo);
+    if (!item) {
+        alert("Please select a valid item!");
+        return;
+    }
+    if (item && loc) {
+        const positionH = new PositionH();
+        positionH.itemId = item.id;
+        positionH.locationId = loc.id;
+        positionH.minAmount = parseInt(amount);
+        positionH.pos = parseInt(pos);
+        return positionH;
+    }
+}
+
 export function getActivePage(): Page {
     switch (window.location.href) {
         case localhost + "":
         case localhost + "/":
-            case localhost + "/#":
+        case localhost + "/#":
             return Page.HOME;
         case localhost + "/locations":
         case localhost + "/locations#":
         case localhost + "/locations.html":
         case localhost + "/locations.html#":
-            return Page.LOCATIONS
+            return Page.LOCATIONS;
         case localhost + "/items":
         case localhost + "/items#":
         case localhost + "/items.html":
         case localhost + "/items.html#":
-            return Page.ITEMS
+            return Page.ITEMS;
         default:
             console.log("route not found,", window.location.href);
             return Page.HOME;
     }
 }
 
-export function sortArrayBy(callback: (a: any, b: any) => any, array: any[]): any[] {
-    array.sort(callback);
-    return array;
+export function sortArrayBy(array: any[], callback: (a: any, b: any) => any): any[] {
+    return array.sort(callback);
 }
 
 export const sortStringsLambda = (a: string, b: string) => Intl.Collator().compare(a, b);
+
+export const sortItemsLambda = (a: ItemH, b: ItemH) => Intl.Collator().compare(a.partNumber, b.partNumber);
+
+export const sortLocationsLambda = (a: LocationH, b: LocationH) =>
+    Intl.Collator().compare(a.warehouse + a.row + a.row + a.shelf, b.warehouse + b.row + b.row + b.shelf);
 
 export async function makeItemRequest(route: Route, request: string = "Items, please!"): Promise<ItemH[]> {
     return <ItemH[]>(
@@ -111,6 +153,12 @@ export async function makeItemRequest(route: Route, request: string = "Items, pl
 export async function makeLocationRequest(route: Route, request: string = "Locations, please!"): Promise<LocationH[]> {
     return <LocationH[]>(
         await (await fetch(route + "/" + VarType.item + VarType.location + request + VarType.position)).json()
+    );
+}
+
+export async function makePositionRequest(route: Route, request: string = "Positions, please!"): Promise<PositionH[]> {
+    return <PositionH[]>(
+        await (await fetch(route + "/" + VarType.item + VarType.location + VarType.position + request)).json()
     );
 }
 
@@ -125,6 +173,7 @@ export const positionRackInput = <HTMLInputElement>$("position-rack-input");
 export const positionShelfInput = <HTMLInputElement>$("position-shelf-input");
 export const positionPosInput = <HTMLInputElement>$("position-pos-input");
 export const positionAmountInput = <HTMLInputElement>$("position-amount-input");
+export const addPositionButton = <HTMLButtonElement>$("position-add-button");
 
 //STATIC - LOCATIONS
 export const addWarehouse = <HTMLInputElement>$("insert-warehouse");
