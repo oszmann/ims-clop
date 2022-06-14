@@ -1,4 +1,4 @@
-import { initAutocomplete, updateItems, updateLocations } from "./ui";
+import { initAutocomplete, updateItems, updateLocations, updatePositions } from "./ui";
 import {
     deleteButton,
     Route,
@@ -6,7 +6,6 @@ import {
     addPartNo,
     addDescription,
     addCost,
-    localhost,
     addLocationButton,
     addWarehouse,
     addRow,
@@ -18,6 +17,16 @@ import {
     createItem,
     getActivePage,
     Page,
+    addPositionButton,
+    makePositionRequest,
+    createPosition,
+    positionPartNoInput,
+    positionWarehouseInput,
+    positionRowInput,
+    positionRackInput,
+    positionShelfInput,
+    positionPosInput,
+    positionAmountInput,
 } from "./util";
 
 let doUpdate: boolean = true;
@@ -28,6 +37,25 @@ function initHome() {
         makeItemRequest(Route.D, "all").then(resp => {
             console.log(resp);
             updateItems(resp);
+        });
+    });
+    addPositionButton.addEventListener("click", () => {
+        makePositionRequest(
+            Route.C,
+            JSON.stringify(
+                createPosition(
+                    positionPartNoInput.value,
+                    positionWarehouseInput.value,
+                    positionRowInput.value,
+                    positionRackInput.value,
+                    positionShelfInput.value,
+                    positionPosInput.value,
+                    positionAmountInput.value
+                )
+            )
+        ).then(resp => {
+            console.log(resp);
+            updatePositions(resp);
         });
     });
     initAutocomplete();
@@ -83,7 +111,7 @@ function init() {
         case Page.LOCATIONS:
             initLocations();
             break;
-            case Page.ITEMS:
+        case Page.ITEMS:
             initItems();
             break;
         default:

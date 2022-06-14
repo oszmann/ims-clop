@@ -4,7 +4,6 @@ import {
     createItem,
     getActivePage,
     itemsDiv,
-    localhost,
     Page,
     locationsDiv,
     makeItemRequest,
@@ -18,12 +17,19 @@ import {
 } from "./util";
 
 let items: ItemH[] = [];
+export function getItems(): ItemH[] {
+    return items;
+}
 
 let locations: LocationH[] = [];
+export function getLocations(): LocationH[] {
+    return locations;
+}
 
 let positions: PositionH[] = [];
 
 //--------------------ITEMS
+
 export function updateItems(newItems: ItemH[]) {
     const toBeRemoved: string[] = items.map(x => x.id).filter(x => !newItems.map(x => x.id).includes(x));
     const toBeAdded: string[] = newItems.map(x => x.id).filter(x => !items.map(x => x.id).includes(x));
@@ -78,7 +84,7 @@ export function updateItems(newItems: ItemH[]) {
             console.warn("witchcraft", items[i].created_at, newItems[index].created_at);
         }
     }
-    console.log(items);
+    //console.log(items);
 }
 
 //Return a proper formatted Div for a given ItemH object.
@@ -86,7 +92,7 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     const div: HTMLDivElement = document.createElement("div");
     div.id = item.id;
     div.classList.add("input-group", "item-outer-div", "rounded");
-    div.style.backgroundColor = "var(--bg-secondary)"
+    div.style.backgroundColor = "var(--bg-secondary)";
 
     const partNumber: HTMLInputElement = document.createElement("input");
     const description: HTMLInputElement = document.createElement("input");
@@ -127,9 +133,9 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     description.value = item.description;
     cost.value = item.cost.toString();
     id.innerText = "ID:";
-    id.style.padding = "5px"
+    id.style.padding = "5px";
     dates.innerText = "Dates:";
-    dates.style.padding = "5px"
+    dates.style.padding = "5px";
 
     idSpan.classList.add("tooltip-span");
     idSpan.innerText = item.id;
@@ -151,7 +157,6 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
         updateItems(await makeItemRequest(Route.U, JSON.stringify(temp)));
     });
     deleteButton.addEventListener("click", async () => {
-        console.log(item.id);
         updateItems(await makeItemRequest(Route.D, item.id));
     });
 
@@ -169,7 +174,7 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
 //--------------------LOCATIONS
 export function updateLocations(newLocations: LocationH[]) {
     locations = newLocations;
-    console.log(locations);
+    //console.log(locations);
     if (getActivePage() !== Page.LOCATIONS) {
         return;
     }
@@ -291,14 +296,11 @@ export async function initAutocomplete() {
     const a = items.map(i => {
         return "Item: " + i.partNumber.toString().toUpperCase() + " : " + i.description.toString();
     });
-    console.log(sortArrayBy(sortStringsLambda, a));
     autocomplete(<HTMLInputElement>$("position-part-no-input"), a, 6);
-    console.log(a);
     updateLocations(await makeLocationRequest(Route.R));
     const b = locations.map(l => {
         return "Location: " + l.warehouse.toUpperCase() + " | " + l.row + " | " + l.rack + " | " + l.shelf;
     });
-    console.log(sortArrayBy(sortStringsLambda, b));
     autocomplete(<HTMLInputElement>$("position-warehouse-input"), b, 10);
 }
 
@@ -331,7 +333,12 @@ function autocomplete(inputElement: HTMLInputElement, array: any[], type: number
                 } else if (i === array.length - 1) {
                     objectDiv.style.borderRadius = "0px 0px 5px 5px";
                 }
-                objectDiv.innerHTML += "<strong> <u>" + array[i].substr(0, type - 1) + "</u> " + array[i].substr(type, inputValue.length) + "</strong>";
+                objectDiv.innerHTML +=
+                    "<strong> <u>" +
+                    array[i].substr(0, type - 1) +
+                    "</u> " +
+                    array[i].substr(type, inputValue.length) +
+                    "</strong>";
                 objectDiv.innerHTML += array[i].substr(type + inputValue.length);
                 objectDiv.innerHTML += "<input type='hidden' value='" + array[i].substr(type).split(" : ")[0] + "'>";
                 objectDiv.addEventListener("click", () => {
