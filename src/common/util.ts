@@ -6,7 +6,7 @@ export class ItemH {
     partNumber: string;
     description: string;
     cost: number;
-    minAmount: number;
+    minStock: number;
     created_at: Date;
     updated_at: Date;
 }

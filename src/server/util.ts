@@ -1,6 +1,7 @@
-import { ItemH, LocationH } from "../common/util";
+import { ItemH, LocationH, PositionH } from "../common/util";
 import { Item } from "./entities/item";
 import { Location } from "./entities/location";
+import { Position } from "./entities/position";
 
 export function itemFromItemH(itemH: ItemH, update: boolean = false): Item {
     const item: Item = new Item();
@@ -21,6 +22,15 @@ export function locationFromLocationH(locationH: LocationH): Location {
     location.rack = locationH.rack;
     location.shelf = locationH.shelf;
     return location;
+}
+
+export function positionFromPositionH(positionH: PositionH): Position {
+    const position = new Position();
+    position.itemId = positionH.itemId;
+    position.locationId = positionH.locationId;
+    position.position = positionH.pos;
+    positionH
+    return
 }
 
 export function toNumber(input?: string, radix = 10) {

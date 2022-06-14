@@ -24,7 +24,7 @@ export class Item extends BaseEntity {
     cost: number;
 
     @Column("int")
-    minAmount: number;
+    minStock: number;
 
     @CreateDateColumn()
     created_at: Date;

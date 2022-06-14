@@ -50,8 +50,7 @@ export async function createRequest(source: DataSource, req: Request): Promise<a
         return await createLocation(source, JSON.parse(req.query.loc.toString()));
     } else if (req.query.pos !== "") {
         console.log("inserting position");
-        //TODO
-        return await getEntities(source, Objects.POSITIONS);
+        return await createPosition(source, JSON.parse(req.query.pos.toString()));
     }
 }
 
@@ -143,6 +142,11 @@ async function getOrCreateLocation(source: DataSource, location: Location): Prom
         return a[0];
     }
     return await source.manager.save(Location, location);
+}
+
+async function createPosition(source: DataSource, position: Position): Promise<Position[]> {
+    console.log("doing wizardry")
+    return getEntities(source, Objects.POSITIONS)
 }
 
 async function updateItem(source: DataSource, item: Item): Promise<Item[]> {
@@ -237,7 +241,6 @@ export async function insertPosition(source: DataSource) {
     pos.item = i;
     pos.position = 0; //should count positions with locations, then add 1
     pos.location = l;
-    pos.minAmount = 4;
     console.log(await source.manager.save(pos));
     return await source.manager.find(Position);
 }
