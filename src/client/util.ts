@@ -83,6 +83,13 @@ export async function makeLocationRequest(route: Route, request: string = "Locat
 export const deleteButton = <HTMLAreaElement>$("delete");
 export const positionsEditDiv = <HTMLDivElement>$("positions-edit");
 export const positionsDiv = <HTMLDivElement>$("positions-div");
+export const positionPartNoInput = <HTMLInputElement>$("position-part-no-input");
+export const positionWarehouseInput = <HTMLInputElement>$("position-warehouse-input");
+export const positionRowInput = <HTMLInputElement>$("position-row-input");
+export const positionRackInput = <HTMLInputElement>$("position-rack-input");
+export const positionShelfInput = <HTMLInputElement>$("position-shelf-input");
+export const positionPosInput = <HTMLInputElement>$("position-pos-input");
+export const positionAmountInput = <HTMLInputElement>$("position-amount-input");
 
 //STATIC - LOCATIONS
 export const addWarehouse = <HTMLInputElement>$("insert-warehouse");

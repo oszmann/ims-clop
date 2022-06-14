@@ -6,6 +6,7 @@
         <link href="/bs/dist/css/bootstrap.min.css" rel="stylesheet" />
         <script src="/bs/dist/js/bootstrap.min.js"></script>
     </head>
+    <body>
         <nav class="navbar navbar-expand-lg sticky-top" id="navbar">
             <div class="container-fluid">
                 <a class="navbar-brand">ims-clop</a>
@@ -38,10 +39,153 @@
                 </div>
             </div>
         </nav>
+        <div id="insert-position-div" class="input-group">
+            <div class="input-group md-3">
+                <div class="form-floating" id="a1">
+                    <input type="text" class="form-control" id="position-part-no-input" placeholder="Part Number:" />
+                    <label for="position-part-no-input">Part Number:</label>
+                </div>
+                <div class="form-floating" id="a2">
+                    <input type="text" class="form-control" id="position-warehouse-input" placeholder="Warehouse:" />
+                    <label for="position-warehouse-input">Warehouse:</label>
+                </div>
+                <div class="form-floating" id="a3">
+                    <input type="text" class="form-control" id="position-row-input" placeholder="Row:" disabled />
+                    <label for="position-row-input">Row:</label>
+                </div>
+                <div class="form-floating" id="a4">
+                    <input type="text" class="form-control" id="position-rack-input" placeholder="Rack:" disabled />
+                    <label for="position-rack-input">Rack:</label>
+                </div>
+                <div class="form-floating" id="a5">
+                    <input type="text" class="form-control" id="position-shelf-input" placeholder="Shelf:" disabled />
+                    <label for="position-shelf-input">Shelf:</label>
+                </div>
+                <div class="form-floating" id="a6">
+                    <input type="number" class="form-control" id="position-pos-input" placeholder="(Pos:)" />
+                    <label for="position-pos-input">(Pos:)</label>
+                </div>
+                <div class="form-floating" id="a7">
+                    <input type="number" class="form-control" id="position-amount-input" placeholder="Amount:" />
+                    <label for="position-amount-input">Amount:</label>
+                </div>
+
+                <button class="btn btn-primary" type="button" id="a8">OK</button>
+            </div>
+        </div>
+
         <div id="positions-container">
             <div id="positions-edit"></div>
             <div id="positions-div"></div>
         </div>
+
+        <!-- <script>
+            function autocomplete(inp, arr) {
+                var currentFocus;
+                inp.addEventListener("input", function (e) {
+                    console.log("inserting")
+                    var a,
+                        b,
+                        i,
+                        val = this.value;
+                    closeAllLists();
+                    if (!val) {
+                        return false;
+                    }
+                    currentFocus = -1;
+                    a = document.createElement("DIV");
+                    a.setAttribute("id", this.id + "autocomplete-list");
+                    a.setAttribute("class", "autocomplete-items");
+                    this.parentNode.appendChild(a);
+                    for (i = 0; i < arr.length; i++) {
+                        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                            b = document.createElement("DIV");
+                            b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                            b.innerHTML += arr[i].substr(val.length);
+                            b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                            b.addEventListener("click", function (e) {
+                                inp.value = this.getElementsByTagName("input")[0].value;
+                                closeAllLists();
+                            });
+                            a.appendChild(b);
+                        }
+                    }
+                });
+                inp.addEventListener("keydown", function (e) {
+                    var x = document.getElementById(this.id + "autocomplete-list");
+                    if (x) x = x.getElementsByTagName("div");
+                    if (e.keyCode == 40) {
+                        currentFocus++;
+                        addActive(x);
+                    } else if (e.keyCode == 38) {
+                        currentFocus--;
+                        addActive(x);
+                    } else if (e.keyCode == 13) {
+                        e.preventDefault();
+                        if (currentFocus > -1) {
+                            if (x) x[currentFocus].click();
+                        }
+                    }
+                });
+                function addActive(x) {
+                    if (!x) return false;
+                    removeActive(x);
+                    if (currentFocus >= x.length) currentFocus = 0;
+                    if (currentFocus < 0) currentFocus = x.length - 1;
+                    x[currentFocus].classList.add("autocomplete-active");
+                }
+                function removeActive(x) {
+                    for (var i = 0; i < x.length; i++) {
+                        x[i].classList.remove("autocomplete-active");
+                    }
+                }
+                function closeAllLists(elmnt) {
+                    console.log(elmnt)
+                    var x = document.getElementsByClassName("autocomplete-items");
+                    for (var i = 0; i < x.length; i++) {
+                        if (elmnt != x[i] && elmnt != inp) {
+                            x[i].parentNode.removeChild(x[i]);
+                        }
+                    }
+                }
+                document.addEventListener("click", function (e) {
+                    closeAllLists(e.target);
+                });
+            }
+
+            var countries = [
+                "Afghanistan",
+                "Albania",
+                "Algeria",
+                "Andorra",
+                "Angola",
+                "Anguilla",
+                "Antigua & Barbuda",
+                "Argentina",
+                "Armenia",
+                "Aruba",
+                "Australia",
+                "Austria",
+                "Azerbaijan",
+                "Bahamas",
+                "Bahrain",
+                "Bangladesh",
+                "Barbados",
+                "Belarus",
+                "Belgium",
+                "Belize",
+                "Benin",
+                "Bermuda",
+                "Bhutan",
+                "Bolivia",
+                "Bosnia & Herzegovina",
+                "Botswana",
+                "Brazil",
+                "British Virgin Islands",
+                "Brunei",
+            ];
+            autocomplete(document.getElementById("position-warehouse-input"), countries);
+        </script> -->
         <script src="./js/main.js"></script>
         <link rel="stylesheet" href="main.css" />
     </body>

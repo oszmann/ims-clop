@@ -17,8 +17,10 @@ export class PositionH {
     minAmount: number;
     created_at: Date;
     updated_at: Date;
-    item: ItemH;
-    location: LocationH;
+
+    //Test:
+    //item: ItemH;
+    //location: LocationH;
 }
 
 export class LocationH {

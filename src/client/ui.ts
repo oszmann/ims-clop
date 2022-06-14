@@ -1,5 +1,17 @@
 import { ItemH, LocationH, PositionH } from "../common/util";
-import { createItem, itemsDiv, localhost, locationsDiv, makeItemRequest, makeLocationRequest, Route } from "./util";
+import {
+    $,
+    createItem,
+    itemsDiv,
+    localhost,
+    locationsDiv,
+    makeItemRequest,
+    makeLocationRequest,
+    positionRackInput,
+    positionRowInput,
+    positionShelfInput,
+    Route,
+} from "./util";
 
 let items: ItemH[] = [];
 
@@ -16,6 +28,7 @@ export function updateItems(newItems: ItemH[]) {
     // console.log(localhost + "/items")
     if (window.location.href !== localhost + "/items" && window.location.href !== localhost + "/items.html") {
         console.log("Not open.");
+        items = newItems;
         return;
     }
 
@@ -63,6 +76,7 @@ export function updateItems(newItems: ItemH[]) {
             console.warn("witchcraft", items[i].created_at, newItems[index].created_at);
         }
     }
+    console.log(items);
 }
 
 //Return a proper formatted Div for a given ItemH object.
@@ -141,6 +155,9 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
 export function updateLocations(newLocations: LocationH[]) {
     locations = newLocations;
     console.log(locations);
+    if (window.location.href !== localhost + "/locations" && window.location.href !== localhost + "/locations.html") {
+        return;
+    }
     locationsDiv.firstChild?.remove();
     locationsDiv.appendChild(createLocationTable(newLocations));
 }
@@ -249,8 +266,107 @@ export function createLocationTableHeaders(): HTMLTableRowElement {
     return tableHeaderRow;
 }
 
-
 //--------------------POSITIONS
 export async function updatePositions(newPositions: PositionH[]) {
     positions = newPositions;
+}
+
+export async function initAutocomplete() {
+    updateItems(await makeItemRequest(Route.R));
+    const a = items.map(i => {
+        return "Item: " + i.partNumber.toString() + " : " + i.description.toString();
+    });
+    autocomplete(<HTMLInputElement>$("position-part-no-input"), a, 6);
+    console.log(a);
+    updateLocations(await makeLocationRequest(Route.R));
+    const b = locations.map(l => {
+        return "Location: " + l.warehouse + " | " + l.row + " | " + l.rack + " | " + l.shelf;
+    });
+    autocomplete(<HTMLInputElement>$("position-warehouse-input"), b, 10);
+}
+
+//AUTOCOMPLETE FUNCTION, props to the guys at: https://www.w3schools.com/howto/howto_js_autocomplete.asp
+function autocomplete(inputElement: HTMLInputElement, array: any[], type: number) {
+    let currentArrowKeyIndex: number;
+    inputElement.addEventListener("input", () => {
+        let inputValue = inputElement.value;
+        closeAllLists(inputElement);
+        if (!inputValue) {
+            return false;
+        }
+        currentArrowKeyIndex = -1;
+        const container = document.createElement("div");
+        container.id = inputElement.id + "autocomplete-list";
+        container.classList.add("autocomplete-items");
+        inputElement.parentNode.appendChild(container);
+        for (let i = 0; i < array.length; i++) {
+            if (array[i].substr(type, inputValue.length).toLowerCase() === inputValue.toLowerCase()) {
+                const objectDiv = document.createElement("div");
+                if (array.length === 1) {
+                    objectDiv.style.borderRadius = "5px 5px 5px 5px";
+                } else if (i === 0) {
+                    objectDiv.style.borderRadius = "5px 5px 0px 0px";
+                } else if (i === array.length - 1) {
+                    objectDiv.style.borderRadius = "0px 0px 5px 5px";
+                }
+                objectDiv.innerHTML += "<strong style=>" + array[i].substr(0, inputValue.length + type) + "</strong>";
+                objectDiv.innerHTML += array[i].substr(type + inputValue.length);
+                objectDiv.innerHTML += "<input type='hidden' value='" + array[i].substr(type).split(" : ")[0] + "'>";
+                objectDiv.addEventListener("click", () => {
+                    if (type === 10) {
+                        const temp = objectDiv.getElementsByTagName("input")[0].value.split(" | ");
+                        inputElement.value = temp[0];
+                        positionRowInput.value = temp[1];
+                        positionRackInput.value = temp[2];
+                        positionShelfInput.value = temp[3];
+                    } else {
+                        inputElement.value = objectDiv.getElementsByTagName("input")[0].value;
+                    }
+                    closeAllLists(inputElement);
+                });
+                container.appendChild(objectDiv);
+            }
+        }
+    });
+    inputElement.addEventListener("keydown", e => {
+        let container = <HTMLDivElement>document.getElementById(inputElement.id + "autocomplete-list");
+        let containerChildren;
+        if (container) {
+            containerChildren = container.getElementsByTagName("div");
+            if (e.key === "ArrowDown") {
+                currentArrowKeyIndex++;
+                addActive(containerChildren);
+            } else if (e.key === "ArrowUp") {
+                currentArrowKeyIndex--;
+                addActive(containerChildren);
+            } else if (e.key === "Enter") {
+                e.preventDefault();
+                if (currentArrowKeyIndex > -1) {
+                    containerChildren[currentArrowKeyIndex].click();
+                }
+            }
+        }
+    });
+
+    function addActive(x: HTMLCollection) {
+        removeActive(x);
+        if (currentArrowKeyIndex >= x.length) {
+            currentArrowKeyIndex = 0;
+        }
+        if (currentArrowKeyIndex < 0) {
+            currentArrowKeyIndex = x.length - 1;
+        }
+        x[currentArrowKeyIndex].classList.add("autocomplete-active");
+    }
+    function removeActive(x: HTMLCollection) {
+        for (let i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
+        }
+    }
+    function closeAllLists(element?: HTMLDivElement) {
+        let x = document.getElementsByClassName("autocomplete-items");
+        for (let i = 0; i < x.length; i++) {
+            x[i].parentNode.removeChild(x[i]);
+        }
+    }
 }

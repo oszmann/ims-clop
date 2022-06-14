@@ -5,17 +5,12 @@
     --bg-secondary: rgb(64, 163, 31);
 }
 
-button {
-    margin: 5px;
-    margin-right: 0px;
-    height: 30px;
-}
-
 .nav-item .nav-link {
     color: var(--text-primary);
 }
 
-.nav-item .nav-link:hover, .nav-item .active {
+.nav-item .nav-link:hover,
+.nav-item .active {
     color: var(--text-secondary);
 }
 
@@ -30,7 +25,8 @@ button {
     background-color: var(--bg-primary);
 }
 
-#insert-item-div, #insert-location-div {
+#insert-item-div,
+#insert-location-div {
     display: flex;
     width: 100%;
     background-color: var(--bg-secondary);
@@ -118,4 +114,88 @@ td {
 #h-she,
 #h-del {
     width: 10%;
+}
+
+/*AUTOCOMPLETE*/
+.autocomplete-items {
+    width: 200%;
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    right: 0;
+}
+
+.autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+}
+
+/*when hovering an item:*/
+.autocomplete-items div:hover {
+    background-color: #e9e9e9;
+}
+
+/*when navigating through the items using the arrow keys:*/
+.autocomplete-active {
+    background-color: DodgerBlue !important;
+    color: #ffffff;
+}
+
+#insert-position-div {
+    width: 80%;
+    margin-left: 10%;
+}
+
+/* #position-part-no-input {
+    width: 20%;
+}
+
+#position-warehouse-input {
+    width: 15%;
+}
+
+#position-amount-input {
+    width: 7%;
+} */
+
+#a1 {
+    width: 25%;
+}
+
+#a2 {
+    width: 20%;
+}
+
+#a3,
+#a4,
+#a5,
+#a6 {
+    width: 7%;
+}
+
+#a7 {
+    width: 15%;
+}
+
+#a8 {
+    width: 7%;
+}
+
+.input-group div input {
+    border-radius: 0px;
+}
+
+#position-part-no-inputautocomplete-list {
+    border-radius: 5px;
+}
+
+#a1 input {
+    border-radius: 5px 0px 0px 5px !important;
 }

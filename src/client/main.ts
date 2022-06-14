@@ -1,4 +1,4 @@
-import { updateItems, updateLocations } from "./ui";
+import { initAutocomplete, updateItems, updateLocations } from "./ui";
 import {
     deleteButton,
     Route,
@@ -28,6 +28,7 @@ function initHome() {
             updateItems(resp);
         });
     });
+    initAutocomplete();
 }
 
 async function initItems() {
