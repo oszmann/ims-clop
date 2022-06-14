@@ -81,14 +81,15 @@
 a:hover .tooltip-span,
 a:hover .tooltip-dates {
     visibility: visible;
+    max-width: 300px;
 }
 
 .tooltip-span {
-    transform: translate(-10px, 100%);
+    transform: translate(10px, 70%);
 }
 
 .tooltip-dates {
-    transform: translate(-50px, 0%);
+    transform: translate(-50px, 70%);
 }
 
 table,
@@ -172,9 +173,12 @@ td {
     width: 7%;
 }
 
-
 .-wauto {
     width: auto;
+}
+
+.-pb10{
+    padding-bottom: 10px;
 }
 
 .input-group div input {
