@@ -67,6 +67,13 @@ export function createLocation(warehouse: string, row: string, rack: string, she
     return locationH;
 }
 
+export function sortArrayBy(callback: (a: any, b: any) => any, array: any[]): any[] {
+    array.sort(callback);
+    return array;
+}
+
+export const sortStringsLambda = (a: string, b: string) => Intl.Collator().compare(a, b);
+
 export async function makeItemRequest(route: Route, request: string = "Items, please!"): Promise<ItemH[]> {
     return <ItemH[]>(
         await (await fetch(route + "/" + VarType.item + request + VarType.location + VarType.position)).json()
