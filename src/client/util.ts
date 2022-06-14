@@ -105,7 +105,7 @@ export function createPosition(
         const positionH = new PositionH();
         positionH.itemId = item.id;
         positionH.locationId = loc.id;
-        positionH.minAmount = parseInt(amount);
+        positionH.amount = parseInt(amount);
         positionH.pos = parseInt(pos);
         return positionH;
     }

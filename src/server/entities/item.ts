@@ -23,6 +23,9 @@ export class Item extends BaseEntity {
     @Column("double precision")
     cost: number;
 
+    @Column("int")
+    minAmount: number;
+
     @CreateDateColumn()
     created_at: Date;
 

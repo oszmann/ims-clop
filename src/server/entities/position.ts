@@ -17,7 +17,7 @@ export class Position {
     locationId!: string;
 
     @Column("int")
-    minAmount!: number;
+    amount!: number;
 
     @Column("int")
     position!: number;

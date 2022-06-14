@@ -6,6 +6,7 @@ export class ItemH {
     partNumber: string;
     description: string;
     cost: number;
+    minAmount: number;
     created_at: Date;
     updated_at: Date;
 }
@@ -15,7 +16,7 @@ export class PositionH {
     itemId: string;
     locationId: string;
     pos: number;
-    minAmount: number;
+    amount: number;
     created_at: Date;
     updated_at: Date;
 
