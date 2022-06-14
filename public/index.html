@@ -9,7 +9,7 @@
     <body>
         <nav class="navbar navbar-expand-lg sticky-top" id="navbar">
             <div class="collapse navbar-collapse flex-md-column">
-                <div class="container-fluid flex-md-row -pb10" style="display: flex;">
+                <div class="container-fluid flex-md-row -pb10" style="display: flex">
                     <a class="navbar-brand">ims-clop</a>
                     <button
                         class="navbar-toggler"
@@ -42,35 +42,75 @@
                 <div id="insert-position-container">
                     <div id="insert-position-div">
                         <div class="input-group">
-                            <div class="form-floating -w30">
-                                <input type="text" class="form-control rounded-start" id="position-part-no-input" placeholder="Part Number:" />
+                            <div class="form-floating -w26">
+                                <input
+                                    type="text"
+                                    class="form-control rounded-start"
+                                    id="position-part-no-input"
+                                    placeholder="Part Number:"
+                                />
                                 <label for="position-part-no-input">Part Number:</label>
                             </div>
                             <div class="form-floating -w20">
-                                <input type="text" class="form-control" id="position-warehouse-input" placeholder="Warehouse:" />
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="position-warehouse-input"
+                                    placeholder="Warehouse:"
+                                />
                                 <label for="position-warehouse-input">Warehouse:</label>
                             </div>
                             <div class="form-floating -w7">
-                                <input type="text" class="form-control" id="position-row-input" placeholder="Row:" disabled />
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="position-row-input"
+                                    placeholder="Row:"
+                                    disabled
+                                />
                                 <label for="position-row-input">Row:</label>
                             </div>
                             <div class="form-floating -w7">
-                                <input type="text" class="form-control" id="position-rack-input" placeholder="Rack:" disabled />
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="position-rack-input"
+                                    placeholder="Rack:"
+                                    disabled
+                                />
                                 <label for="position-rack-input">Rack:</label>
                             </div>
                             <div class="form-floating -w7">
-                                <input type="text" class="form-control" id="position-shelf-input" placeholder="Shelf:" disabled />
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="position-shelf-input"
+                                    placeholder="Shelf:"
+                                    disabled
+                                />
                                 <label for="position-shelf-input">Shelf:</label>
                             </div>
                             <div class="form-floating -w7">
-                                <input type="number" class="form-control" id="position-pos-input" placeholder="(Pos:)" />
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    id="position-pos-input"
+                                    placeholder="(Pos:)"
+                                />
                                 <label for="position-pos-input">(Pos:)</label>
                             </div>
                             <div class="form-floating -w15">
-                                <input type="number" class="form-control" id="position-amount-input" placeholder="Amount:" />
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    id="position-amount-input"
+                                    placeholder="Amount:"
+                                />
                                 <label for="position-amount-input">Amount:</label>
                             </div>
-                            <button class="btn btn-primary -w7 rounded-end" type="button">OK</button>
+                            <button class="btn btn-primary -w11 rounded-end" type="button" id="position-add-button">
+                                Add Position
+                            </button>
                         </div>
                     </div>
                 </div>
