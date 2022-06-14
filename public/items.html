@@ -8,40 +8,54 @@
     </head>
     <body>
         <nav class="navbar navbar-expand-lg sticky-top" id="navbar">
-            <div class="container-fluid">
-                <a class="navbar-brand">ims-clop</a>
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
-                    aria-controls="navbarNav"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/" aria-current="page">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/items">Items</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/locations">Locations</a>
-                        </li>
-                    </ul>
+            <div class="collapse navbar-collapse flex-md-column">
+                <div class="container-fluid flex-md-row" style="display: flex;">
+                    <a class="navbar-brand">ims-clop</a>
+                    <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                        aria-controls="navbarNav"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/" aria-current="page">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="/items">Items</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/locations">Locations</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="insert-item-container">
+                    <div id="insert-item-div" class="input-group rounded nav-item">
+                        <div class="form-floating rounded-start -w30">
+                            <input id="insert-part-no" placeholder="Part Number:" type="text" class="form-control rounded-start" />
+                            <label for="insert-part-no">Part Number:</label>
+                        </div>
+                        <div class="form-floating -w30">
+                            <input id="insert-description" placeholder="Description:" type="text" class="form-control" />
+                            <label for="insert-description">Description:</label>
+                        </div>
+                        <div class="form-floating -w30">
+                            <input id="insert-cost" placeholder="Cost (number):" type="number" class="form-control" />
+                            <label for="insert-cost">Cost (number):</label>
+                        </div>
+                        <button id="add-item-button" class="btn btn-secondary rounded-end -w10">Insert item</button>
+                    </div>
                 </div>
             </div>
         </nav>
-        <div id="insert-item-div">
-            <input id="insert-part-no" placeholder="Part Number" type="text" />
-            <input id="insert-description" placeholder="Description" type="text" />
-            <input id="insert-cost" placeholder="Cost (number)" type="number" />
-            <button id="add-item-button">Insert item</button>
-        </div>
+
         <div id="items-div"></div>
         <script src="./js/main.js"></script>
         <link rel="stylesheet" href="main.css" />

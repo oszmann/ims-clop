@@ -8,41 +8,59 @@
     </head>
     <body>
         <nav class="navbar navbar-expand-lg sticky-top" id="navbar">
-            <div class="container-fluid">
-                <a class="navbar-brand">ims-clop</a>
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
-                    aria-controls="navbarNav"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/#" aria-current="page">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/items">Items</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/locations">Locations</a>
-                        </li>
-                    </ul>
+            <div class="collapse navbar-collapse flex-md-column">
+                <div class="container-fluid flex-md-row" style="display: flex;">
+                    <a class="navbar-brand">ims-clop</a>
+                    <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                        aria-controls="navbarNav"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/#" aria-current="page">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/items">Items</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="/locations">Locations</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="insert-location-container">
+                    <div id="insert-location-div" class="nav-item input-group">
+                            <div class="form-floating -w40 rounded-start">
+                                <input id="insert-warehouse" placeholder="Warehouse (or nothing):" type="text" class="form-control rounded-start" />
+                                <label for="insert-warehouse">Warehouse (or nothing):</label>
+                            </div>
+                            <div class="form-floating -w15">
+                                <input id="insert-row" placeholder="Row (number):" type="number" class="form-control" />
+                                <label for="insert-row">Row (number):</label>
+                            </div>
+                            <div class="form-floating -w15">
+                                <input id="insert-rack" placeholder="Rack (number)" type="number" class="form-control" />
+                                <label for="insert-rack">Row (number):</label>
+                            </div>
+                            <div class="form-floating -w15">
+                                <input id="insert-shelf" placeholder="Shelf (number)" type="number" class="form-control" />
+                                <label for="insert-shelf">Row (number):</label>
+                            </div>
+                            <button id="add-location-button" class="btn btn-secondary -w15 rounded-end">Insert location</button>
+                      
+                    </div>
                 </div>
             </div>
+            
         </nav>
-        <div id="insert-location-div">
-            <input id="insert-warehouse" placeholder="Warehouse (or nothing)" type="text" />
-            <input id="insert-row" placeholder="Row (number)" type="number" />
-            <input id="insert-rack" placeholder="Rack (number)" type="number" />
-            <input id="insert-shelf" placeholder="Shelf (number)" type="number" />
-            <button id="add-location-button">Insert location</button>
-        </div>
         <div id="locations-div"></div>
         <script src="./js/main.js"></script>
         <link rel="stylesheet" href="main.css" />
