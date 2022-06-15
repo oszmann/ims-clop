@@ -384,12 +384,10 @@ function autocomplete(inputElement: HTMLInputElement, array: any[], type: number
                     array[i].substr(type - 1, index + 1) +
                     "</strong>";
                 objectDiv.innerHTML += array[i].substr(type + index);
-                objectDiv.setAttribute("data-input", array[i].substr(type).split(" : ")[0]);
+                objectDiv.setAttribute("data-input", array[i].substr(type));
                 objectDiv.addEventListener("click", () => {
-                    console.log("hi")
                     if (type === 10) {
-                        console.log("hi")
-                        const temp = objectDiv.getAttribute("data-input");
+                        const temp = objectDiv.getAttribute("data-input").split(" : ");
                         console.log(temp)
                         inputElement.value = temp[0];
                         positionRowInput.value = temp[1];
