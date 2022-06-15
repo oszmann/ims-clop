@@ -3,7 +3,7 @@ import { DataSource } from "typeorm";
 import { Item } from "./entities/item";
 import { Location } from "./entities/location";
 import { Position } from "./entities/position";
-import { itemFromItemH, locationFromLocationH } from "./util";
+import { itemFromItemH, positionFromPositionH } from "./util";
 
 enum Objects {
     ITEMS,
@@ -50,7 +50,7 @@ export async function createRequest(source: DataSource, req: Request): Promise<a
         return await createLocation(source, JSON.parse(req.query.loc.toString()));
     } else if (req.query.pos !== "") {
         console.log("inserting position");
-        return await createPosition(source, JSON.parse(req.query.pos.toString()));
+        return await createPosition(source, positionFromPositionH(JSON.parse(req.query.pos.toString())));
     }
 }
 
@@ -85,9 +85,7 @@ export async function updateRequest(source: DataSource, req: Request): Promise<a
         console.warn("CANNOT UPDATE LOCATION");
         return await getEntities(source, Objects.LOCATIONS);
     } else if (req.query.pos !== "") {
-        console.warn("NOT YET IMPLEMENTED");
-        //TODO
-        return await getEntities(source, Objects.POSITIONS);
+        return await updatePosition(source, positionFromPositionH(JSON.parse(req.query.pos.toString()), true));
     }
 }
 
@@ -128,36 +126,52 @@ async function createLocation(source: DataSource, location: Location): Promise<L
 
 async function getOrCreateLocation(source: DataSource, location: Location): Promise<Location> {
     console.log("l", location);
-    const a: Location[] = await source.manager.find(Location, {
-        where: {
-            warehouse: location.warehouse,
-            row: location.row,
-            rack: location.rack,
-            shelf: location.shelf,
-        },
+    const a: Location = await source.manager.findOneBy(Location, {
+        warehouse: location.warehouse,
+        row: location.row,
+        rack: location.rack,
+        shelf: location.shelf,
     });
     //console.log("Location: ", a);
-    if (a[0]) {
-        //console.log("found")
-        return a[0];
+    if (a) {
+        //console.log("found");
+        return a;
     }
     return await source.manager.save(Location, location);
 }
 
 async function createPosition(source: DataSource, position: Position): Promise<Position[]> {
     console.log("doing wizardry");
-    return getEntities(source, Objects.POSITIONS);
+    position.position = await source.manager.countBy(Position, {locationId: position.locationId});
+    position.item = await source.manager.findOneBy(Item, {id: position.itemId});
+    position.location = await source.manager.findOneBy(Location, {id: position.locationId});
+    await source.manager.save(Position, position);
+    return await getEntities(source, Objects.POSITIONS);
 }
 
 async function updateItem(source: DataSource, item: Item): Promise<Item[]> {
-    const found: Item[] = await source.manager.findBy(Item, {
+    const found: Item = await source.manager.findOneBy(Item, {
         id: item.id,
     });
-    if (found[0]) {
-        await source.manager.save(item);
+    if (found) {
+        await source.manager.save(Item, item);
         return getEntities(source, Objects.ITEMS);
     } else {
         console.warn("CANT UPDATE NONEXISTANT ITEM");
+    }
+}
+
+async function updatePosition(source: DataSource, position: Position) {
+    position.item = await source.manager.findOneBy(Item, {id: position.itemId});
+    position.location = await source.manager.findOneBy(Location, {id: position.locationId});
+    const found: Position = await source.manager.findOneBy(Position, {
+        id: position.id,
+    });
+    if (found) {
+        await source.manager.save(Position, position);
+        return getEntities(source, Objects.POSITIONS);
+    } else {
+        console.warn("CANT UPDATE NONEXISTANT POSITION");
     }
 }
 
@@ -192,7 +206,7 @@ async function deleteItem(source: DataSource, req: string): Promise<Item[]> {
 }
 
 async function deleteLocation(source: DataSource, locId: string): Promise<Location[]> {
-    const l: Location[] = await source.manager.findBy(Location, {
+    const l: Location = await source.manager.findOneBy(Location, {
         id: locId,
     });
     const positionsToDelete: Position[] = await source.manager.findBy(Position, {
@@ -203,6 +217,21 @@ async function deleteLocation(source: DataSource, locId: string): Promise<Locati
             return getEntities(source, Objects.LOCATIONS);
         });
     });
+}
+
+async function deletePosition(source: DataSource, posId: string): Promise<Position[]> {
+    const pos = await source.manager.findOneBy(Position, {id: posId});
+    updatePositionPositions(source, pos.locationId);
+    return await getEntities(source, Objects.POSITIONS);
+}
+
+async function updatePositionPositions(source: DataSource, locId: string) {
+    const posArray: Position[] = await source.manager.findBy(Position, {locationId: locId});
+    posArray.sort((a: Position, b: Position) => a.position - b.position);
+    for (let i = 0; i < posArray.length; i++) {
+        posArray[i].position = i;
+        await source.manager.save(Position, posArray[i]);
+    }
 }
 
 export async function getEntities(source: DataSource, type: Objects): Promise<any[]> {

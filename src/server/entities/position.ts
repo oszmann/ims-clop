@@ -8,7 +8,7 @@ import { Location } from "./location";
 @Entity()
 export class Position {
     @PrimaryGeneratedColumn("uuid")
-    id: number;
+    id: string;
 
     @Column("text")
     itemId!: string;

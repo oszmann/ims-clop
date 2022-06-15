@@ -16,7 +16,7 @@ export class PositionH {
     id: string;
     itemId: string;
     locationId: string;
-    pos: number;
+    position: number;
     amount: number;
     created_at: Date;
     updated_at: Date;

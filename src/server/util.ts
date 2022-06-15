@@ -26,13 +26,16 @@ export function locationFromLocationH(locationH: LocationH): Location {
     return location;
 }
 
-export function positionFromPositionH(positionH: PositionH): Position {
+export function positionFromPositionH(positionH: PositionH, update: boolean = false): Position {
     const position = new Position();
+    if (update) {
+        position.id = positionH.id;
+        position.position = positionH.position;
+    }
     position.itemId = positionH.itemId;
     position.locationId = positionH.locationId;
-    position.position = positionH.pos;
-    positionH;
-    return;
+    position.amount = positionH.amount;
+    return position;
 }
 
 export function toNumber(input?: string, radix = 10) {
