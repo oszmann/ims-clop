@@ -7,6 +7,7 @@ export class ItemH {
     description: string;
     cost: number;
     minStock: number;
+    type: string;
     created_at: Date;
     updated_at: Date;
 }
@@ -31,4 +32,9 @@ export class LocationH {
     row: number;
     rack: number;
     shelf: number;
+}
+
+export enum MachineType {
+    DEFAULT = "No type",
+    TIE_FIGHTER = "Tie Fighter",
 }

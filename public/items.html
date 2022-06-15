@@ -38,7 +38,7 @@
                 </div>
                 <div id="insert-item-container">
                     <div id="insert-item-div" class="input-group rounded nav-item">
-                        <div class="form-floating rounded-start -w30">
+                        <div class="form-floating rounded-start -w25">
                             <input
                                 id="insert-part-no"
                                 placeholder="Part Number:"
@@ -69,12 +69,26 @@
                             />
                             <label for="insert-min-stock">Minimum stock (number):</label>
                         </div>
+                        <div class="dropdown form-floating -w10">
+                            <a
+                                class="align-m btn btn-primary dropdown-toggle form-control rounded-0"
+                                href="#"
+                                role="button"
+                                id="dropdown-menu-link"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                data-type="DEFAULT"
+                            >
+                                Type
+                            </a>
+                            <ul class="dropdown-menu" id="machines-dropdown" aria-labelledby="dropdown-menu-link"></ul>
+                        </div>
                         <button id="add-item-button" class="btn btn-secondary rounded-end -w10">Insert item</button>
                     </div>
                 </div>
             </div>
         </nav>
-
+        <div id="fart"></div>
         <div id="items-div"></div>
         <script src="./js/main.js"></script>
         <link rel="stylesheet" href="main.css" />

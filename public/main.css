@@ -202,6 +202,15 @@ td {
     border-radius: 0px;
 }
 
+.align-m {
+    padding-top: 1.15rem !important;
+    padding-bottom: 0 !important;
+}
+
+.visible {
+    display: block;
+}
+
 #position-part-no-inputautocomplete-list {
     border-radius: 5px;
 }

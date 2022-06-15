@@ -1,4 +1,4 @@
-import { ItemH, LocationH, PositionH } from "../common/util";
+import { ItemH, LocationH, MachineType, PositionH } from "../common/util";
 import { Item } from "./entities/item";
 import { Location } from "./entities/location";
 import { Position } from "./entities/position";
@@ -10,6 +10,7 @@ export function itemFromItemH(itemH: ItemH, update: boolean = false): Item {
     item.description = itemH.description;
     item.cost = itemH.cost;
     item.minStock = itemH.minStock;
+    item.machineType = itemH.type;
     if (update) {
         item.id = itemH.id;
     }

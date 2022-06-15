@@ -1,6 +1,5 @@
-import { ItemH, LocationH, PositionH } from "../common/util";
+import { ItemH, LocationH, MachineType, PositionH } from "../common/util";
 import {
-    $,
     createItem,
     getActivePage,
     itemsDiv,
@@ -13,8 +12,17 @@ import {
     positionShelfInput,
     Route,
     sortArrayBy,
-    sortStringsLambda,
+    positionPartNoInput,
+    positionWarehouseInput,
+    sortItemsByPartNumberLambda,
+    sortLocationsLambda,
+    SortBy,
+    $,
+    dropdownMenu,
+    machinesDropdown,
 } from "./util";
+
+let sortBy: SortBy;
 
 let items: ItemH[] = [];
 export function getItems(): ItemH[] {
@@ -37,6 +45,7 @@ export function updateItems(newItems: ItemH[]) {
     if (getActivePage() !== Page.ITEMS) {
         console.log("Not open.");
         items = newItems;
+        items = sortArrayBy(items, sortItemsByPartNumberLambda);
         return;
     }
 
@@ -74,6 +83,11 @@ export function updateItems(newItems: ItemH[]) {
             cost.value = newItems[index].cost.toString();
             items[i].cost = newItems[index].cost;
         }
+        if (items[i].minStock !== newItems[index].minStock) {
+            const minStock = <HTMLInputElement>document.getElementById(items[i].id + "min-stock");
+            minStock.value = newItems[index].minStock.toString();
+            items[i].minStock = newItems[index].minStock;
+        }
         if (items[i].updated_at !== newItems[index].updated_at) {
             const updated = <HTMLSpanElement>document.getElementById(items[i].id + "dates-span");
             items[i].updated_at = newItems[index].updated_at;
@@ -84,6 +98,10 @@ export function updateItems(newItems: ItemH[]) {
             console.warn("witchcraft", items[i].created_at, newItems[index].created_at);
         }
     }
+    if (!sortBy) {
+        sortBy = SortBy.PART_NO;
+    }
+    items = sortArrayBy(items, sortItemsByPartNumberLambda);
     //console.log(items);
 }
 
@@ -160,22 +178,68 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     deleteButton.addEventListener("click", async () => {
         updateItems(await makeItemRequest(Route.D, item.id));
     });
-
+    const dropdown = createDropdownDiv(item.id);
+    dropdown.classList.add("-w20")
     div.appendChild(id);
     div.appendChild(partNumber);
     div.appendChild(description);
     div.appendChild(cost);
     div.appendChild(minStock);
-    div.appendChild(dates);
+    div.appendChild(dropdown);
     div.appendChild(editButton);
+    div.appendChild(dates);
     div.appendChild(deleteButton);
     //console.log("created div")
+    return div;
+}
+
+function createDropdownDiv(id: string): HTMLDivElement {
+    const div = document.createElement("div");
+    // const a = <HTMLAnchorElement>dropdownMenu.cloneNode();
+    // const ul = <HTMLUListElement>machinesDropdown.cloneNode();
+    // a.id = id + "dropdown";
+    // ul.setAttribute("aria-labelledby", id + "dropdown")
+    // ul.id = id + "dropdown-list";
+
+    // div.classList.add("dropdown", "form-floating")
+    // div.appendChild(a);
+    // div.appendChild(ul);
+    div.classList.add("dropdown", "form-floating");
+    const a = document.createElement("a");
+    a.innerText = "Type";
+    a.classList.add("btn", "btn-primary", "dropdown-toggle","form-control", "rounded-0");
+    a.href = "#";
+    a.setAttribute("role", "button");
+    a.setAttribute("data-bs-toggle", "dropdown");
+    a.setAttribute("aria-expanded", "false");
+    a.setAttribute("data-type", "DEFAULT");
+    a.id = id + "dropdown";
+    const ul = document.createElement("ul");
+    ul.classList.add("dropdown-menu");
+    ul.setAttribute("aria-labelledby", id + "dropdown");
+    // Object.values(MachineType).forEach((value, index) => {
+    //     const li: HTMLLIElement = document.createElement("li");
+    //     const a: HTMLAnchorElement = document.createElement("a");
+    //     a.classList.add("dropdown-item");
+    //     a.href = "#";
+    //     a.innerText = value;
+    //     li.appendChild(a);
+    //     li.addEventListener("click", () => {
+    //         a.innerText = value;
+    //         console.log(Object.keys(MachineType)[index]);
+    //         a.setAttribute("data-type", Object.keys(MachineType)[index]);
+    //     });
+    //     ul.appendChild(li);
+    // });
+    div.appendChild(a);
+    div.appendChild(ul);
     return div;
 }
 
 //--------------------LOCATIONS
 export function updateLocations(newLocations: LocationH[]) {
     locations = newLocations;
+    locations = sortArrayBy(locations, sortLocationsLambda);
     //console.log(locations);
     if (getActivePage() !== Page.LOCATIONS) {
         return;
@@ -298,12 +362,12 @@ export async function initAutocomplete() {
     const a = items.map(i => {
         return "Item: " + i.partNumber.toString() + " : " + i.description.toString();
     });
-    autocomplete(<HTMLInputElement>$("position-part-no-input"), a, 6);
+    autocomplete(positionPartNoInput, a, 6);
     updateLocations(await makeLocationRequest(Route.R));
     const b = locations.map(l => {
         return "Location: " + l.warehouse + " | " + l.row + " | " + l.rack + " | " + l.shelf;
     });
-    autocomplete(<HTMLInputElement>$("position-warehouse-input"), b, 10);
+    autocomplete(positionWarehouseInput, b, 10);
 }
 
 //AUTOCOMPLETE FUNCTION, props to the guys at: https://www.w3schools.com/howto/howto_js_autocomplete.asp
@@ -377,6 +441,10 @@ function autocomplete(inputElement: HTMLInputElement, array: any[], type: number
                 }
             }
         }
+    });
+
+    inputElement.addEventListener("blur", () => {
+        closeAllLists();
     });
 
     function addActive(x: HTMLCollection) {

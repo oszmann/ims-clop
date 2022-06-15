@@ -1,4 +1,4 @@
-import { ItemH, LocationH, PositionH } from "../common/util";
+import { ItemH, LocationH, MachineType, PositionH } from "../common/util";
 import { getItems, getLocations } from "./ui";
 
 //API ROUTES
@@ -18,10 +18,19 @@ export enum VarType {
 }
 
 export enum SortBy {
-    DATE_INSERT,
-    DATE_UPDATE,
+    CREATE_DATE,
+    UPDATE_DATE,
     PART_NO,
     DESCRIPTION,
+    COST,
+    MIN_STOCK,
+    WAREHOUSE,
+    ROW,
+    RACK,
+    SHELF,
+    ITEM_ID,
+    LOCATION_ID,
+    AMOUNT,
 }
 
 export enum Page {
@@ -29,6 +38,7 @@ export enum Page {
     ITEMS,
     LOCATIONS,
 }
+
 //Create a new ItemH item
 export function createItem(partNumber: string, desc: string, cost: string, minStock: string): ItemH {
     if (partNumber === "") {
@@ -50,6 +60,7 @@ export function createItem(partNumber: string, desc: string, cost: string, minSt
     itemH.description = desc;
     itemH.cost = parseInt(cost);
     itemH.minStock = parseInt(minStock);
+    itemH.type = dropdownMenu.getAttribute("data-type");
 
     return itemH;
 }
@@ -148,27 +159,39 @@ export const sortItemsByPartNumberLambda = (a: ItemH, b: ItemH) => Intl.Collator
 
 export const sortItemsByDescLambda = (a: ItemH, b: ItemH) => Intl.Collator().compare(a.description, b.description);
 
-export const sortItemsByMinStockLambda = (a: ItemH, b: ItemH) => Intl.Collator().compare(a.minStock.toString(), b.minStock.toString());
+export const sortItemsByMinStockLambda = (a: ItemH, b: ItemH) =>
+    Intl.Collator().compare(a.minStock.toString(), b.minStock.toString());
 
-export const sortItemsByUDateLambda = (a: ItemH, b: ItemH) => Intl.Collator().compare(a.updated_at.toString(), b.updated_at.toString());
+export const sortItemsByUDateLambda = (a: ItemH, b: ItemH) =>
+    Intl.Collator().compare(a.updated_at.toString(), b.updated_at.toString());
 
-export const sortItemsByCDateLambda = (a: ItemH, b: ItemH) => Intl.Collator().compare(a.created_at.toString(), b.created_at.toString());
-
-
+export const sortItemsByCDateLambda = (a: ItemH, b: ItemH) =>
+    Intl.Collator().compare(a.created_at.toString(), b.created_at.toString());
 
 export const sortLocationsLambda = (a: LocationH, b: LocationH) =>
-    Intl.Collator().compare(a.warehouse + a.row.toString() + a.rack.toString() + a.shelf.toString(), b.warehouse + b.row.toString() + b.rack.toString() + b.shelf.toString());
+    Intl.Collator().compare(
+        a.warehouse + a.row.toString() + a.rack.toString() + a.shelf.toString(),
+        b.warehouse + b.row.toString() + b.rack.toString() + b.shelf.toString()
+    );
 
-export const sortLocationsByRow = (a: LocationH, b: LocationH) =>
-    Intl.Collator().compare(a.row.toString() + a.warehouse + a.rack.toString() + a.shelf.toString(), b.row.toString() + b.warehouse + b.rack.toString() + b.shelf.toString());
+export const sortLocationsByRowLambda = (a: LocationH, b: LocationH) =>
+    Intl.Collator().compare(
+        a.row.toString() + a.warehouse + a.rack.toString() + a.shelf.toString(),
+        b.row.toString() + b.warehouse + b.rack.toString() + b.shelf.toString()
+    );
 
 export const sortLocationsByRackLambda = (a: LocationH, b: LocationH) =>
-    Intl.Collator().compare(a.rack.toString() + a.warehouse + a.row.toString() + a.shelf.toString(), b.rack.toString() + b.warehouse + b.row.toString() + b.shelf.toString());
+    Intl.Collator().compare(
+        a.rack.toString() + a.warehouse + a.row.toString() + a.shelf.toString(),
+        b.rack.toString() + b.warehouse + b.row.toString() + b.shelf.toString()
+    );
 
 export const sortLocationsByShelfLambda = (a: LocationH, b: LocationH) =>
-    Intl.Collator().compare(a.shelf.toString() + a.warehouse + a.row.toString() + a.rack.toString(), b.shelf.toString() + b.warehouse + b.row.toString() + b.rack.toString());
+    Intl.Collator().compare(
+        a.shelf.toString() + a.warehouse + a.row.toString() + a.rack.toString(),
+        b.shelf.toString() + b.warehouse + b.row.toString() + b.rack.toString()
+    );
 
-    
 export async function makeItemRequest(route: Route, request: string = "Items, please!"): Promise<ItemH[]> {
     return <ItemH[]>(
         await (await fetch(route + "/" + VarType.item + request + VarType.location + VarType.position)).json()
@@ -186,6 +209,10 @@ export async function makePositionRequest(route: Route, request: string = "Posit
         await (await fetch(route + "/" + VarType.item + VarType.location + VarType.position + request)).json()
     );
 }
+
+//STATIC - SHARED
+export const machinesDropdown = <HTMLUListElement>$("machines-dropdown");
+export const dropdownMenu = <HTMLAnchorElement>$("dropdown-menu-link");
 
 //STATIC - INDEX
 export const deleteButton = <HTMLAreaElement>$("delete");

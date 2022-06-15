@@ -145,8 +145,8 @@ async function getOrCreateLocation(source: DataSource, location: Location): Prom
 }
 
 async function createPosition(source: DataSource, position: Position): Promise<Position[]> {
-    console.log("doing wizardry")
-    return getEntities(source, Objects.POSITIONS)
+    console.log("doing wizardry");
+    return getEntities(source, Objects.POSITIONS);
 }
 
 async function updateItem(source: DataSource, item: Item): Promise<Item[]> {

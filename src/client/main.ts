@@ -1,3 +1,4 @@
+import { MachineType } from "../common/util";
 import { initAutocomplete, updateItems, updateLocations, updatePositions } from "./ui";
 import {
     deleteButton,
@@ -28,6 +29,10 @@ import {
     positionPosInput,
     positionAmountInput,
     addMinStock,
+    machinesDropdown,
+    dropdownMenu,
+    itemsDiv,
+    $,
 } from "./util";
 
 let doUpdate: boolean = true;
@@ -83,7 +88,10 @@ async function initItems() {
         addDescription.value = "";
         addCost.value = "";
         addMinStock.value = "";
+        dropdownMenu.innerText = "Type";
+        dropdownMenu.setAttribute("data-type", "DEFAULT");
     });
+    initTypeDropdown();
     updateItems(await makeItemRequest(Route.R));
 }
 
@@ -124,6 +132,44 @@ function init() {
 }
 
 init();
+
+function initTypeDropdown() {
+    Object.values(MachineType).forEach((value, index) => {
+        const li: HTMLLIElement = document.createElement("li");
+        const a: HTMLAnchorElement = document.createElement("a");
+        a.classList.add("dropdown-item");
+        a.href = "#";
+        a.innerText = value;
+        li.appendChild(a);
+        li.addEventListener("click", () => {
+            dropdownMenu.innerText = value;
+            console.log(Object.keys(MachineType)[index]);
+            dropdownMenu.setAttribute("data-type", Object.keys(MachineType)[index]);
+        });
+        machinesDropdown.appendChild(li);
+    });
+    //SOMETHING LIKE THIS
+    const id = "blubb" 
+    const div = document.createElement("div");
+    div.classList.add("dropdown");
+    const a = document.createElement("a");
+    a.innerText = "Type";
+    a.classList.add("btn", "btn-primary", "rounded-0");
+    a.href = "#";
+    a.setAttribute("data-type", "DEFAULT");
+    a.id = id + "dropdown";
+    const ul = document.createElement("ul");
+    ul.classList.add("dropdown-menu");
+    ul.id = id + "fml"
+    
+    a.addEventListener("click", () =>{
+        const b = <HTMLUListElement>$(id + "fml");
+        b.classList.add("visible")
+    })
+    div.appendChild(a)
+    div.appendChild(ul);
+    <HTMLDivElement>$("fart").appendChild(div)
+}
 
 async function main() {
     updateItems(await makeItemRequest(Route.R));
