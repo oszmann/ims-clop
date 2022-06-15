@@ -394,7 +394,7 @@ function autocomplete(inputElement: HTMLInputElement, array: any[], type: number
                         positionRackInput.value = temp[2];
                         positionShelfInput.value = temp[3];
                     } else {
-                        inputElement.value = objectDiv.getAttribute("data-input");
+                        inputElement.value = objectDiv.getAttribute("data-input").split(" : ")[0];
                     }
                     closeAllLists(inputElement);
                 });

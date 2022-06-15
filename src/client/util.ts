@@ -253,6 +253,7 @@ export function createDropdownDiv(id: string, type: string): HTMLDivElement {
         if (e.key === "Enter") {
             const temp = <HTMLAnchorElement>ul.children[pointer];
             temp.click();
+            a.blur();
         }
     });
 
