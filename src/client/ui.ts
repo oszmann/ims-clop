@@ -1,3 +1,4 @@
+import { sanitize } from "string-sanitizer";
 import { ItemH, LocationH, MachineType, PositionH } from "../common/util";
 import {
     createItem,
@@ -325,12 +326,12 @@ export async function updatePositions(newPositions: PositionH[]) {
 export async function initAutocomplete() {
     updateItems(await makeItemRequest(Route.R));
     const a = items.map(i => {
-        return "Item: " + i.partNumber.toString() + " : " + i.description.toString();
+        return "Item: " + i.partNumber + " : " + Object.values(MachineType)[Object.keys(MachineType).indexOf(i.machineType)] +" : " + i.description;
     });
     autocomplete(positionPartNoInput, a, 6);
     updateLocations(await makeLocationRequest(Route.R));
     const b = locations.map(l => {
-        return "Location: " + l.warehouse + " | " + l.row + " | " + l.rack + " | " + l.shelf;
+        return "Location: " + l.warehouse + " : " + l.row + " : " + l.rack + " : " + l.shelf;
     });
     autocomplete(positionWarehouseInput, b, 10);
 }
@@ -355,7 +356,19 @@ function autocomplete(inputElement: HTMLInputElement, array: any[], type: number
         container.classList.add("autocomplete-items");
         inputElement.parentNode.appendChild(container);
         for (let i = 0; i < array.length; i++) {
-            if (array[i].substr(type, inputValue.length).toLowerCase() === inputValue.toLowerCase()) {
+            const a = sanitize(inputValue);
+            let b = array[i].substr(type);
+            let c = "";
+            let index = 0;
+            //calculate length of non-sanitised correct partial string
+            while (a.toLowerCase() !== sanitize(c).toLowerCase()) {
+                c += b.substr(index, 1);
+                index++;
+                if(index > b.length) {
+                    break;
+                }
+            }
+            if (index <= b.length) {
                 const objectDiv = document.createElement("div");
                 if (array.length === 1) {
                     objectDiv.style.borderRadius = "5px 5px 5px 5px";
@@ -368,19 +381,22 @@ function autocomplete(inputElement: HTMLInputElement, array: any[], type: number
                     "<strong> <u>" +
                     array[i].substr(0, type - 1) +
                     "</u> " +
-                    array[i].substr(type, inputValue.length) +
+                    array[i].substr(type - 1, index + 1) +
                     "</strong>";
-                objectDiv.innerHTML += array[i].substr(type + inputValue.length);
-                objectDiv.innerHTML += "<input type='hidden' value='" + array[i].substr(type).split(" : ")[0] + "'>";
+                objectDiv.innerHTML += array[i].substr(type + index);
+                objectDiv.setAttribute("data-input", array[i].substr(type).split(" : ")[0]);
                 objectDiv.addEventListener("click", () => {
+                    console.log("hi")
                     if (type === 10) {
-                        const temp = objectDiv.getElementsByTagName("input")[0].value.split(" | ");
+                        console.log("hi")
+                        const temp = objectDiv.getAttribute("data-input");
+                        console.log(temp)
                         inputElement.value = temp[0];
                         positionRowInput.value = temp[1];
                         positionRackInput.value = temp[2];
                         positionShelfInput.value = temp[3];
                     } else {
-                        inputElement.value = objectDiv.getElementsByTagName("input")[0].value;
+                        inputElement.value = objectDiv.getAttribute("data-input");
                     }
                     closeAllLists(inputElement);
                 });
@@ -406,10 +422,6 @@ function autocomplete(inputElement: HTMLInputElement, array: any[], type: number
                 }
             }
         }
-    });
-
-    inputElement.addEventListener("blur", () => {
-        closeAllLists();
     });
 
     function addActive(x: HTMLCollection) {
