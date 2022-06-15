@@ -40,7 +40,7 @@ export enum Page {
 }
 
 //Create a new ItemH item
-export function createItem(partNumber: string, desc: string, cost: string, minStock: string): ItemH {
+export function createItem(partNumber: string, desc: string, cost: string, minStock: string, type: string): ItemH {
     if (partNumber === "") {
         partNumber = "test item";
     }
@@ -60,7 +60,7 @@ export function createItem(partNumber: string, desc: string, cost: string, minSt
     itemH.description = desc;
     itemH.cost = parseInt(cost);
     itemH.minStock = parseInt(minStock);
-    itemH.type = dropdownMenu.getAttribute("data-type");
+    itemH.machineType = type;
 
     return itemH;
 }
@@ -208,6 +208,87 @@ export async function makePositionRequest(route: Route, request: string = "Posit
     return <PositionH[]>(
         await (await fetch(route + "/" + VarType.item + VarType.location + VarType.position + request)).json()
     );
+}
+
+export function createDropdownDiv(id: string, type: string): HTMLDivElement {
+    let pointer: number = 0;
+    const div = document.createElement("div");
+    div.classList.add("dropdown");
+    const a = document.createElement("a");
+    console.log(Object.keys(MachineType), type);
+    pointer = Object.keys(MachineType).indexOf(type);
+    a.innerText = Object.values(MachineType)[pointer];
+    a.classList.add("btn", "btn-secondary", "rounded-0");
+    a.href = "#";
+    a.setAttribute("data-type", type);
+    a.id = id + "type";
+    const ul = document.createElement("ul");
+    ul.classList.add("dropdown-menu", "type-dropdown");
+    ul.id = id + "fml";
+    
+    a.addEventListener("click", () =>{
+        ul.classList.add("visible");
+        ul.children[pointer].classList.add("type-dropdown-active")
+    });
+    a.addEventListener("blur", () => {
+        setTimeout(() => {
+            if (ul.getAttribute("clicked")) {
+                ul.removeAttribute("clicked");
+            }
+            ul.classList.remove("visible");
+        }, 100);
+        
+    });
+    a.addEventListener("keydown", e =>  {
+        if (e.key === "ArrowDown") {
+            console.log("go down");
+            pointer++;
+            moveSelected();
+        }
+        if (e.key === "ArrowUp") {
+            console.log("go up");
+            pointer--;
+            moveSelected();
+        }
+        if (e.key === "Enter") {
+            const temp = <HTMLAnchorElement>ul.children[pointer];
+            temp.click();
+        }
+    });
+
+    function moveSelected() {
+        for (let i = 0; i < ul.children.length; i++) {
+            ul.children[i].classList.remove("type-dropdown-active");
+        }
+        if (pointer < 0) {
+            pointer = 0;
+        } else if(pointer >= Object.values(MachineType).length) {
+            pointer = Object.values(MachineType).length - 1;
+        }
+        console.log(pointer)
+        ul.children[pointer].classList.add("type-dropdown-active");
+    }
+    Object.values(MachineType).forEach((value, index) => {
+        const li: HTMLLIElement = document.createElement("li");
+        const lia: HTMLAnchorElement = document.createElement("a");
+        lia.classList.add("dropdown-item");
+        lia.href = "#";
+        lia.innerText = value;
+        li.appendChild(lia);
+        li.addEventListener("click", () => {
+            ul.setAttribute("clicked", "clicked");
+            a.innerText = value;
+            console.log(Object.keys(MachineType)[index]);
+            a.setAttribute("data-type", Object.keys(MachineType)[index]);
+            pointer = index;
+            moveSelected();
+            //ul.classList.remove("visible")
+        });
+        ul.appendChild(li);
+    });
+    div.appendChild(a);
+    div.appendChild(ul);
+    return div;
 }
 
 //STATIC - SHARED

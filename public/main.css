@@ -150,6 +150,15 @@ td {
     color: #ffffff;
 }
 
+.type-dropdown-active {
+    border: 2px solid DodgerBlue !important;
+    color: #ffffff;
+}
+
+.type-dropdown {
+    transform: translateX(-1px);
+}
+
 .-w50 {
     width: 50%;
 }
