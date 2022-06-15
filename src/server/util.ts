@@ -10,7 +10,7 @@ export function itemFromItemH(itemH: ItemH, update: boolean = false): Item {
     item.description = itemH.description;
     item.cost = itemH.cost;
     item.minStock = itemH.minStock;
-    item.machineType = itemH.type;
+    item.machineType = itemH.machineType;
     if (update) {
         item.id = itemH.id;
     }

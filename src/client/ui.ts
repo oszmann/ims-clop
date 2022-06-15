@@ -18,8 +18,7 @@ import {
     sortLocationsLambda,
     SortBy,
     $,
-    dropdownMenu,
-    machinesDropdown,
+    createDropdownDiv,
 } from "./util";
 
 let sortBy: SortBy;
@@ -62,6 +61,7 @@ export function updateItems(newItems: ItemH[]) {
     toBeAdded.forEach(id => {
         const newItem = newItems.find(x => x.id === id);
         items.push(newItem);
+        console.log(newItem)
         itemsDiv.appendChild(createItemDiv(newItem));
     });
 
@@ -69,27 +69,33 @@ export function updateItems(newItems: ItemH[]) {
     for (let i = 0; i < items.length; i++) {
         const index: number = newItems.indexOf(newItems.find(x => x.id === items[i].id));
         if (items[i].partNumber !== newItems[index].partNumber) {
-            const partNumber = <HTMLInputElement>document.getElementById(items[i].id + "part-number");
+            const partNumber = <HTMLInputElement>$(items[i].id + "part-number");
             partNumber.value = newItems[index].partNumber;
             items[i].partNumber = newItems[index].partNumber;
         }
         if (items[i].description !== newItems[index].description) {
-            const description = <HTMLInputElement>document.getElementById(items[i].id + "desc");
+            const description = <HTMLInputElement>$(items[i].id + "desc");
             description.value = newItems[index].description;
             items[i].description = newItems[index].description;
         }
         if (items[i].cost !== newItems[index].cost) {
-            const cost = <HTMLInputElement>document.getElementById(items[i].id + "cost");
+            const cost = <HTMLInputElement>$(items[i].id + "cost");
             cost.value = newItems[index].cost.toString();
             items[i].cost = newItems[index].cost;
         }
         if (items[i].minStock !== newItems[index].minStock) {
-            const minStock = <HTMLInputElement>document.getElementById(items[i].id + "min-stock");
+            const minStock = <HTMLInputElement>$(items[i].id + "min-stock");
             minStock.value = newItems[index].minStock.toString();
             items[i].minStock = newItems[index].minStock;
         }
+        if (items[i].machineType !== newItems[index].machineType) {
+            const type = <HTMLAnchorElement>$(items[i].id + "type");
+            type.setAttribute("data-type", newItems[index].machineType);
+            type.innerText = Object.values(MachineType)[Object.keys(MachineType).indexOf(newItems[index].machineType)];
+            items[i].machineType = newItems[index].machineType;
+        }
         if (items[i].updated_at !== newItems[index].updated_at) {
-            const updated = <HTMLSpanElement>document.getElementById(items[i].id + "dates-span");
+            const updated = <HTMLSpanElement>$(items[i].id + "dates-span");
             items[i].updated_at = newItems[index].updated_at;
             updated.innerText =
                 "C:" + newItems[i].created_at.toString() + "\n" + "U:" + newItems[i].updated_at.toString();
@@ -171,15 +177,17 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     deleteButton.innerText = "Delete";
     deleteButton.classList.add("btn", "btn-primary");
     editButton.addEventListener("click", async () => {
-        const temp = createItem(partNumber.value, description.value, cost.value, minStock.value);
+        const dropdownA = <HTMLAnchorElement>dropdown.children[0];
+        const temp = createItem(partNumber.value, description.value, cost.value, minStock.value, dropdownA.getAttribute("data-type"));
         temp.id = item.id;
+        console.log(temp)
         updateItems(await makeItemRequest(Route.U, JSON.stringify(temp)));
     });
     deleteButton.addEventListener("click", async () => {
         updateItems(await makeItemRequest(Route.D, item.id));
     });
-    const dropdown = createDropdownDiv(item.id);
-    dropdown.classList.add("-w20")
+    const dropdown = createDropdownDiv(item.id, item.machineType);
+    dropdown.classList.add("-w10")
     div.appendChild(id);
     div.appendChild(partNumber);
     div.appendChild(description);
@@ -190,49 +198,6 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     div.appendChild(dates);
     div.appendChild(deleteButton);
     //console.log("created div")
-    return div;
-}
-
-function createDropdownDiv(id: string): HTMLDivElement {
-    const div = document.createElement("div");
-    // const a = <HTMLAnchorElement>dropdownMenu.cloneNode();
-    // const ul = <HTMLUListElement>machinesDropdown.cloneNode();
-    // a.id = id + "dropdown";
-    // ul.setAttribute("aria-labelledby", id + "dropdown")
-    // ul.id = id + "dropdown-list";
-
-    // div.classList.add("dropdown", "form-floating")
-    // div.appendChild(a);
-    // div.appendChild(ul);
-    div.classList.add("dropdown", "form-floating");
-    const a = document.createElement("a");
-    a.innerText = "Type";
-    a.classList.add("btn", "btn-primary", "dropdown-toggle","form-control", "rounded-0");
-    a.href = "#";
-    a.setAttribute("role", "button");
-    a.setAttribute("data-bs-toggle", "dropdown");
-    a.setAttribute("aria-expanded", "false");
-    a.setAttribute("data-type", "DEFAULT");
-    a.id = id + "dropdown";
-    const ul = document.createElement("ul");
-    ul.classList.add("dropdown-menu");
-    ul.setAttribute("aria-labelledby", id + "dropdown");
-    // Object.values(MachineType).forEach((value, index) => {
-    //     const li: HTMLLIElement = document.createElement("li");
-    //     const a: HTMLAnchorElement = document.createElement("a");
-    //     a.classList.add("dropdown-item");
-    //     a.href = "#";
-    //     a.innerText = value;
-    //     li.appendChild(a);
-    //     li.addEventListener("click", () => {
-    //         a.innerText = value;
-    //         console.log(Object.keys(MachineType)[index]);
-    //         a.setAttribute("data-type", Object.keys(MachineType)[index]);
-    //     });
-    //     ul.appendChild(li);
-    // });
-    div.appendChild(a);
-    div.appendChild(ul);
     return div;
 }
 
@@ -424,7 +389,7 @@ function autocomplete(inputElement: HTMLInputElement, array: any[], type: number
         }
     });
     inputElement.addEventListener("keydown", e => {
-        let container = <HTMLDivElement>document.getElementById(inputElement.id + "autocomplete-list");
+        let container = <HTMLDivElement>$(inputElement.id + "autocomplete-list");
         let containerChildren;
         if (container) {
             containerChildren = container.getElementsByTagName("div");

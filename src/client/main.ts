@@ -79,7 +79,7 @@ async function initItems() {
     addItemButton.addEventListener("click", () => {
         makeItemRequest(
             Route.C,
-            JSON.stringify(createItem(addPartNo.value, addDescription.value, addCost.value, addMinStock.value))
+            JSON.stringify(createItem(addPartNo.value, addDescription.value, addCost.value, addMinStock.value, dropdownMenu.getAttribute("data-type")))
         ).then(resp => {
             console.log(resp);
             updateItems(resp);
@@ -148,27 +148,6 @@ function initTypeDropdown() {
         });
         machinesDropdown.appendChild(li);
     });
-    //SOMETHING LIKE THIS
-    const id = "blubb" 
-    const div = document.createElement("div");
-    div.classList.add("dropdown");
-    const a = document.createElement("a");
-    a.innerText = "Type";
-    a.classList.add("btn", "btn-primary", "rounded-0");
-    a.href = "#";
-    a.setAttribute("data-type", "DEFAULT");
-    a.id = id + "dropdown";
-    const ul = document.createElement("ul");
-    ul.classList.add("dropdown-menu");
-    ul.id = id + "fml"
-    
-    a.addEventListener("click", () =>{
-        const b = <HTMLUListElement>$(id + "fml");
-        b.classList.add("visible")
-    })
-    div.appendChild(a)
-    div.appendChild(ul);
-    <HTMLDivElement>$("fart").appendChild(div)
 }
 
 async function main() {
