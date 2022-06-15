@@ -95,7 +95,6 @@ export function createPosition(
     row: string,
     rack: string,
     shelf: string,
-    pos: string,
     amount: string
 ): PositionH {
     //Check if item and location enetered exist
@@ -122,7 +121,6 @@ export function createPosition(
         positionH.itemId = item.id;
         positionH.locationId = loc.id;
         positionH.amount = parseInt(amount);
-        positionH.pos = parseInt(pos);
         return positionH;
     }
 }
@@ -241,12 +239,12 @@ export function createDropdownDiv(id: string, type: string): HTMLDivElement {
     });
     a.addEventListener("keydown", e =>  {
         if (e.key === "ArrowDown") {
-            console.log("go down");
+            //console.log("go down");
             pointer++;
             moveSelected();
         }
         if (e.key === "ArrowUp") {
-            console.log("go up");
+            //console.log("go up");
             pointer--;
             moveSelected();
         }
@@ -305,7 +303,6 @@ export const positionWarehouseInput = <HTMLInputElement>$("position-warehouse-in
 export const positionRowInput = <HTMLInputElement>$("position-row-input");
 export const positionRackInput = <HTMLInputElement>$("position-rack-input");
 export const positionShelfInput = <HTMLInputElement>$("position-shelf-input");
-export const positionPosInput = <HTMLInputElement>$("position-pos-input");
 export const positionAmountInput = <HTMLInputElement>$("position-amount-input");
 export const addPositionButton = <HTMLButtonElement>$("position-add-button");
 

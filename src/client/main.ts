@@ -26,7 +26,6 @@ import {
     positionRowInput,
     positionRackInput,
     positionShelfInput,
-    positionPosInput,
     positionAmountInput,
     addMinStock,
     machinesDropdown,
@@ -37,7 +36,7 @@ import {
 
 let doUpdate: boolean = true;
 
-function initHome() {
+async function initHome() {
     //BUTTON LISTENERS
     deleteButton.addEventListener("click", () => {
         makeItemRequest(Route.D, "all").then(resp => {
@@ -55,7 +54,6 @@ function initHome() {
                     positionRowInput.value,
                     positionRackInput.value,
                     positionShelfInput.value,
-                    positionPosInput.value,
                     positionAmountInput.value
                 )
             )
@@ -68,10 +66,10 @@ function initHome() {
         positionRowInput.value = "";
         positionRackInput.value = "";
         positionShelfInput.value = "";
-        positionPosInput.value = "";
         positionAmountInput.value = "";
     });
     initAutocomplete();
+    updatePositions(await makePositionRequest(Route.R));
 }
 
 async function initItems() {

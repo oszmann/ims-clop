@@ -321,6 +321,7 @@ export function createLocationTableHeaders(): HTMLTableRowElement {
 //--------------------POSITIONS
 export async function updatePositions(newPositions: PositionH[]) {
     positions = newPositions;
+    console.log(positions)
 }
 
 export async function initAutocomplete() {
