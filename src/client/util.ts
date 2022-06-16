@@ -213,7 +213,7 @@ export function createDropdownDiv(id: string, type: string): HTMLDivElement {
     const div = document.createElement("div");
     div.classList.add("dropdown");
     const a = document.createElement("a");
-    console.log(Object.keys(MachineType), type);
+    //console.log(Object.keys(MachineType), type);
     pointer = Object.keys(MachineType).indexOf(type);
     a.innerText = Object.values(MachineType)[pointer];
     a.classList.add("btn", "btn-secondary", "rounded-0");
@@ -264,7 +264,7 @@ export function createDropdownDiv(id: string, type: string): HTMLDivElement {
         } else if(pointer >= Object.values(MachineType).length) {
             pointer = Object.values(MachineType).length - 1;
         }
-        console.log(pointer)
+        //console.log(pointer)
         ul.children[pointer].classList.add("type-dropdown-active");
     }
     Object.values(MachineType).forEach((value, index) => {
@@ -277,7 +277,7 @@ export function createDropdownDiv(id: string, type: string): HTMLDivElement {
         li.addEventListener("click", () => {
             ul.setAttribute("clicked", "clicked");
             a.innerText = value;
-            console.log(Object.keys(MachineType)[index]);
+            //console.log(Object.keys(MachineType)[index]);
             a.setAttribute("data-type", Object.keys(MachineType)[index]);
             pointer = index;
             moveSelected();

@@ -20,6 +20,9 @@ import {
     SortBy,
     $,
     createDropdownDiv,
+    positionsDiv,
+    createPosition,
+    makePositionRequest,
 } from "./util";
 
 let sortBy: SortBy;
@@ -62,7 +65,7 @@ export function updateItems(newItems: ItemH[]) {
     toBeAdded.forEach(id => {
         const newItem = newItems.find(x => x.id === id);
         items.push(newItem);
-        console.log(newItem)
+        //console.log(newItem)
         itemsDiv.appendChild(createItemDiv(newItem));
     });
 
@@ -160,7 +163,7 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     description.value = item.description;
     cost.value = item.cost.toString();
     minStock.value = item.minStock.toString();
-    dates.innerText = "Dates:";
+    dates.innerText = "Dates";
     dates.style.padding = "5px";
 
     idSpan.classList.add("tooltip-span");
@@ -181,7 +184,7 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
         const dropdownA = <HTMLAnchorElement>dropdown.children[0];
         const temp = createItem(partNumber.value, description.value, cost.value, minStock.value, dropdownA.getAttribute("data-type"));
         temp.id = item.id;
-        console.log(temp)
+        //console.log(temp)
         updateItems(await makeItemRequest(Route.U, JSON.stringify(temp)));
     });
     deleteButton.addEventListener("click", async () => {
@@ -320,8 +323,174 @@ export function createLocationTableHeaders(): HTMLTableRowElement {
 
 //--------------------POSITIONS
 export async function updatePositions(newPositions: PositionH[]) {
-    positions = newPositions;
-    console.log(positions)
+    updateItems(await makeItemRequest(Route.R));
+    updateLocations(await makeLocationRequest(Route.R));
+
+    const toBeRemoved: string[] = positions.map(x => x.id).filter(x => !newPositions.map(x => x.id).includes(x));
+    const toBeAdded: string[] = newPositions.map(x => x.id).filter(x => !positions.map(x => x.id).includes(x));
+
+    if (getActivePage() !== Page.HOME) {
+        console.log("Not open.");
+        positions = newPositions;
+        //TODO
+        //positions = sortArrayBy(positions, );
+        return;
+    }
+
+    //Remove positions from display and internal array
+    for (let i = 0; i < positionsDiv.children.length; i++) {
+        if (toBeRemoved.includes(positionsDiv.children[i].id)) {
+            positionsDiv.children[i].remove();
+            i--;
+        }
+    }
+    toBeRemoved.forEach(id => positions.splice(positions.indexOf(positions.find(x => x.id === id)), 1));
+
+    //Add positions to display and internal array
+    toBeAdded.forEach(id => {
+        const newPosition = newPositions.find(x => x.id === id);
+        positions.push(newPosition);
+        console.log(newPosition)
+        positionsDiv.appendChild(createPositionDiv(newPosition));
+    });
+
+    //update contents
+    for (let i = 0; i < positions.length; i++) {
+        const index: number = newPositions.indexOf(newPositions.find(x => x.id === positions[i].id));
+        //only need to check for updatedat, position and amount
+        if (positions[i].created_at !== newPositions[index].created_at) {
+            console.warn("witchcraft", positions[i].created_at, newPositions[index].created_at);
+        }
+    }
+    //TODO
+    //positions = sortArrayBy(positions, );
+}
+
+function createPositionDiv(position: PositionH): HTMLDivElement {
+    const item = items.find(x => x.id === position.itemId);
+    const location = locations.find(x => x.id === position.locationId);
+    const div = document.createElement("div");
+    div.classList.add("input-group", "rounded", "position-outer-div");
+    div.style.backgroundColor = "var(--bg-secondary)";
+
+    const itemDiv = document.createElement("div");
+    const itemDec = document.createElement("a");
+    const partNo = document.createElement("a");
+    const t = document.createElement("a");
+    const type = document.createElement("a");
+    const d = document.createElement("a");
+    const desc = document.createElement("a");
+    const c = document.createElement("a");
+    const cost = document.createElement("a");
+    
+    const locationDiv = document.createElement("div");
+    const locationDec = document.createElement("a");
+    const warehouse = document.createElement("a");
+    const row = document.createElement("a");
+    const rack = document.createElement("a");
+    const shelf = document.createElement("a");
+
+    const amountDec = document.createElement("a");
+    const amount = document.createElement("input");
+    const posDec = document.createElement("a");
+    const pos = document.createElement("a");
+    const dates = document.createElement("a");
+    const datesSpan = document.createElement("span");
+    const editButton = document.createElement("button");
+    const deleteButton = document.createElement("button");
+
+    amount.id = position.id + "amount";
+    pos.id = position.id + "position";
+    dates.id = position.id + "dates";
+
+    amount.type = "number";
+    amount.placeholder = "Amount:";
+
+    itemDiv.classList.add("form-control", "overflow-a", "pos-loc-div", "-w30");
+    locationDiv.classList.add("form-control", "overflow-a", "pos-loc-div", "-w15");
+    amountDec.classList.add("form-control", "dec");
+    amountDec.style.maxWidth = "82px"
+    amount.classList.add("form-control");
+    amount.style.maxWidth = "75px";
+    posDec.classList.add("form-control", "dec");
+    posDec.style.maxWidth = "85px";
+    pos.classList.add("form-control");
+    pos.style.maxWidth = "40px"
+    dates.classList.add("form-control");
+    dates.style.maxWidth = "80px"
+
+    itemDec.innerText = "Item:";
+    itemDec.classList.add("border-0", "dec");
+    partNo.innerText = item.partNumber;
+    t.classList.add("border-0", "dec");
+    t.innerText = "T:";
+    type.innerText = Object.values(MachineType)[Object.keys(MachineType).indexOf(item.machineType)];
+    d.classList.add("border-0", "dec");
+    d.innerText = "D:"
+    desc.innerText = item.description;
+    c.classList.add("border-0", "dec");
+    c.innerText = "C:"
+    cost.innerText = item.cost.toString();
+
+    itemDiv.appendChild(itemDec);
+    itemDiv.appendChild(partNo);
+    itemDiv.appendChild(t);
+    itemDiv.appendChild(type);
+    itemDiv.appendChild(d);
+    itemDiv.appendChild(desc);
+    itemDiv.appendChild(c);
+    itemDiv.appendChild(cost);
+
+    locationDec.innerText = "Location:";
+    locationDec.classList.add("border-0", "underline");
+    warehouse.innerText = location.warehouse;
+    row.innerText = location.row.toString();
+    rack.innerText = location.rack.toString();
+    shelf.innerText = location.shelf.toString();
+
+    locationDiv.appendChild(locationDec);
+    locationDiv.appendChild(warehouse);
+    locationDiv.appendChild(row);
+    locationDiv.appendChild(rack);
+    locationDiv.appendChild(shelf);
+
+    amountDec.innerText = "Amount:"
+    amount.value = position.amount.toString();
+    posDec.innerText = "Position:"
+    pos.innerText = position.position.toString();
+
+    dates.innerText = "Dates"
+    datesSpan.classList.add("tooltip-dates");
+    datesSpan.innerText = "C: " + item.created_at.toString() + "\n" + "U: " + item.updated_at.toString();
+
+    dates.appendChild(datesSpan);
+
+    editButton.innerText = "Edit";
+    editButton.classList.add("btn", "btn-primary");
+    deleteButton.innerText = "Delete";
+    deleteButton.classList.add("btn", "btn-primary");
+
+    editButton.addEventListener("click", async () => {
+        const temp = createPosition(partNo.innerText, warehouse.innerText, row.innerText, rack.innerText, shelf.innerText, amount.value);
+        temp.id = position.id;
+        temp.position = position.position;
+
+        updatePositions(await makePositionRequest(Route.U, JSON.stringify(temp)));
+    });
+    deleteButton.addEventListener("click", async () => {
+        updateItems(await makeItemRequest(Route.D, position.id));
+    });
+    div.appendChild(itemDiv);
+    div.appendChild(locationDiv);
+    div.appendChild(amountDec);
+    div.appendChild(amount);
+    div.appendChild(posDec);
+    div.appendChild(pos);
+    div.appendChild(editButton);
+    div.appendChild(dates);
+    div.appendChild(deleteButton);
+
+    return div;
 }
 
 export async function initAutocomplete() {
@@ -389,7 +558,7 @@ function autocomplete(inputElement: HTMLInputElement, array: any[], type: number
                 objectDiv.addEventListener("click", () => {
                     if (type === 10) {
                         const temp = objectDiv.getAttribute("data-input").split(" : ");
-                        console.log(temp)
+                        //console.log(temp)
                         inputElement.value = temp[0];
                         positionRowInput.value = temp[1];
                         positionRackInput.value = temp[2];
