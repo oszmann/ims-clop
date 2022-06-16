@@ -119,7 +119,7 @@ export function updateItems(newItems: ItemH[]) {
 export function createItemDiv(item: ItemH): HTMLDivElement {
     const div: HTMLDivElement = document.createElement("div");
     div.id = item.id;
-    div.classList.add("input-group", "item-outer-div", "rounded");
+    div.classList.add("input-group", "item-outer-div", "rounded", "overflow-b");
     div.style.backgroundColor = "var(--bg-secondary)";
 
     const partNumber: HTMLInputElement = document.createElement("input");
@@ -148,10 +148,12 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     cost.type = "number";
     minStock.type = "number";
 
-    partNumber.classList.add("form-control", "-w25");
-    description.classList.add("form-control", "-w25");
-    cost.classList.add("form-control", "-w5");
-    minStock.classList.add("form-control", "-w5");
+    partNumber.classList.add("form-control");
+    partNumber.style.minWidth = "20%"
+    description.classList.add("form-control");
+    description.style.minWidth = "40%"
+    cost.classList.add("form-control");
+    minStock.classList.add("form-control");
 
     partNumber.placeholder = "part-number";
     description.placeholder = "desc";
@@ -191,7 +193,7 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
         updateItems(await makeItemRequest(Route.D, item.id));
     });
     const dropdown = createDropdownDiv(item.id, item.machineType);
-    dropdown.classList.add("-w10")
+    dropdown.classList.add("-w10");
     div.appendChild(id);
     div.appendChild(partNumber);
     div.appendChild(description);

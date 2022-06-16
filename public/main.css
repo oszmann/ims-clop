@@ -229,10 +229,6 @@ td {
     width: 5% !important;
 }
 
--w2 {
-    width: 70px !important;
-}
-
 .-wauto {
     width: auto;
 }
@@ -270,6 +266,10 @@ td {
     overflow: auto;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none;  /* IE and Edge */
+    white-space: nowrap;
+}
+
+.overflow-b {
     white-space: nowrap;
 }
 

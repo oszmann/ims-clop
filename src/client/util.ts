@@ -287,6 +287,7 @@ export function createDropdownDiv(id: string, type: string): HTMLDivElement {
     });
     div.appendChild(a);
     div.appendChild(ul);
+    div.style.backgroundColor = "var(--bg-primary)"
     return div;
 }
 

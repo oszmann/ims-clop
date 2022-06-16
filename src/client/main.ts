@@ -30,8 +30,6 @@ import {
     addMinStock,
     machinesDropdown,
     dropdownMenu,
-    itemsDiv,
-    $,
 } from "./util";
 
 let doUpdate: boolean = true;
