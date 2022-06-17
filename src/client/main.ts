@@ -41,12 +41,12 @@ let toggleDropdown: string = "shelf";
 
 async function initHome() {
     //BUTTON LISTENERS
-    deleteButton.addEventListener("click", () => {
-        makeItemRequest(Route.D, "all").then(resp => {
-            console.log(resp);
-            updateItems(resp);
-        });
-    });
+    // deleteButton.addEventListener("click", () => {
+    //     makeItemRequest(Route.D, "all").then(resp => {
+    //         console.log(resp);
+    //         updateItems(resp);
+    //     });
+    // });
     addPositionButton.addEventListener("click", () => {
         makePositionRequest(
             Route.C,
