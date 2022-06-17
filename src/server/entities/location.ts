@@ -9,8 +9,8 @@ export class Location extends BaseEntity {
     @Column("text", { nullable: true })
     warehouse: string;
 
-    @Column("int")
-    row: number;
+    // @Column("int")
+    // row: number;
 
     @Column("int")
     rack: number;

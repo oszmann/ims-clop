@@ -29,7 +29,7 @@ export class PositionH {
 export class LocationH {
     id: string;
     warehouse: string;
-    row: number;
+    // row: number;
     rack: number;
     shelf: number;
 }

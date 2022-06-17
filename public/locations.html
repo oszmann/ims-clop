@@ -38,29 +38,38 @@
                 </div>
                 <div id="insert-location-container">
                     <div id="insert-location-div" class="nav-item input-group">
-                        <div class="form-floating -w40 rounded-start">
+                        <div class="dropdown form-floating">
+                            <button class="btn btn-secondary dropdown-toggle form-control rounded-start" type="button" id="toggle-insert" data-bs-toggle="dropdown" aria-expanded="false">
+                                Add shelf
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a id="toggle-rack" class="dropdown-item" href="#">Insert whole rack</a></li>
+                                <li><a id="toggle-shelf" class="dropdown-item" href="#">Insert one shelf</a></li>
+                            </ul>
+                        </div>
+                        <div class="form-floating -w40">
                             <input
                                 id="insert-warehouse"
                                 placeholder="Warehouse (or nothing):"
                                 type="text"
                                 class="form-control rounded-start"
                             />
-                            <label for="insert-warehouse">Warehouse (or nothing):</label>
+                            <label for="insert-warehouse">Warehouse:</label>
                         </div>
-                        <div class="form-floating -w15">
+                        <!-- <div class="form-floating -w15">
                             <input id="insert-row" placeholder="Row (number):" type="number" class="form-control" />
                             <label for="insert-row">Row (number):</label>
-                        </div>
+                        </div> -->
                         <div class="form-floating -w15">
                             <input id="insert-rack" placeholder="Rack (number):" type="number" class="form-control" />
-                            <label for="insert-rack">Rack (number):</label>
+                            <label for="insert-rack">Rack:</label>
                         </div>
-                        <div class="form-floating -w15">
-                            <input id="insert-shelf" placeholder="Shelf (number):" type="number" class="form-control" />
-                            <label for="insert-shelf">Shelf (number):</label>
+                        <div class="form-floating -w20">
+                            <input id="insert-shelf" placeholder="a" type="number" class="form-control" />
+                            <label for="insert-shelf">Shelf:</label>
                         </div>
                         <button id="add-location-button" class="btn btn-secondary -w15 rounded-end">
-                            Insert location
+                            Add
                         </button>
                     </div>
                 </div>

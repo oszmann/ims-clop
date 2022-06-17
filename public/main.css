@@ -273,3 +273,6 @@ td {
     white-space: nowrap;
 }
 
+#toggle-insert {
+    padding-top: 0.85rem;
+}

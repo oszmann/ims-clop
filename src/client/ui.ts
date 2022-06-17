@@ -9,7 +9,6 @@ import {
     makeItemRequest,
     makeLocationRequest,
     positionRackInput,
-    positionRowInput,
     positionShelfInput,
     Route,
     sortArrayBy,
@@ -245,7 +244,7 @@ export function createLocationTable(locations: LocationH[]): HTMLTableElement {
 
         //NORMAL STUFF
         const warehouseTd: HTMLTableCellElement = document.createElement("td");
-        const rowTd: HTMLTableCellElement = document.createElement("td");
+        // const rowTd: HTMLTableCellElement = document.createElement("td");
         const rackTd: HTMLTableCellElement = document.createElement("td");
         const shelfTd: HTMLTableCellElement = document.createElement("td");
         const deleteTd: HTMLTableCellElement = document.createElement("td");
@@ -253,7 +252,7 @@ export function createLocationTable(locations: LocationH[]): HTMLTableElement {
         const deleteButton: HTMLButtonElement = document.createElement("button");
 
         warehouseTd.innerText = location.warehouse;
-        rowTd.innerText = location.row.toString();
+        // rowTd.innerText = location.row.toString();
         rackTd.innerText = location.rack.toString();
         shelfTd.innerText = location.shelf.toString();
 
@@ -266,7 +265,7 @@ export function createLocationTable(locations: LocationH[]): HTMLTableElement {
         deleteTd.appendChild(deleteButton);
 
         tr.appendChild(warehouseTd);
-        tr.appendChild(rowTd);
+        // tr.appendChild(rowTd);
         tr.appendChild(rackTd);
         tr.appendChild(shelfTd);
         tr.appendChild(deleteTd);
@@ -280,7 +279,7 @@ export function createLocationTableHeaders(): HTMLTableRowElement {
     const tableHeaderRow: HTMLTableRowElement = document.createElement("tr");
     const headerId: HTMLTableCellElement = document.createElement("th");
     const headerWarehouse: HTMLTableCellElement = document.createElement("th");
-    const headerRow: HTMLTableCellElement = document.createElement("th");
+    // const headerRow: HTMLTableCellElement = document.createElement("th");
     const headerRack: HTMLTableCellElement = document.createElement("th");
     const headerShelf: HTMLTableCellElement = document.createElement("th");
     const headerDelete: HTMLTableCellElement = document.createElement("th");
@@ -294,10 +293,10 @@ export function createLocationTableHeaders(): HTMLTableRowElement {
     headerWarehouse.innerText = "Warehouse";
     headerWarehouse.id = "h-ware";
 
-    headerRow.abbr = "ROW";
-    headerRow.scope = "col";
-    headerRow.innerText = "Row";
-    headerRow.id = "h-row";
+    // headerRow.abbr = "ROW";
+    // headerRow.scope = "col";
+    // headerRow.innerText = "Row";
+    // headerRow.id = "h-row";
 
     headerRack.abbr = "RAC";
     headerRack.scope = "col";
@@ -316,7 +315,7 @@ export function createLocationTableHeaders(): HTMLTableRowElement {
 
     tableHeaderRow.appendChild(headerId);
     tableHeaderRow.appendChild(headerWarehouse);
-    tableHeaderRow.appendChild(headerRow);
+    // tableHeaderRow.appendChild(headerRow);
     tableHeaderRow.appendChild(headerRack);
     tableHeaderRow.appendChild(headerShelf);
     tableHeaderRow.appendChild(headerDelete);
@@ -388,7 +387,7 @@ function createPositionDiv(position: PositionH): HTMLDivElement {
     const locationDiv = document.createElement("div");
     const locationDec = document.createElement("a");
     const warehouse = document.createElement("a");
-    const row = document.createElement("a");
+    // const row = document.createElement("a");
     const rack = document.createElement("a");
     const shelf = document.createElement("a");
 
@@ -446,13 +445,13 @@ function createPositionDiv(position: PositionH): HTMLDivElement {
     locationDec.innerText = "Location:";
     locationDec.classList.add("border-0", "underline");
     warehouse.innerText = location.warehouse;
-    row.innerText = location.row.toString();
+    // row.innerText = location.row.toString();
     rack.innerText = location.rack.toString();
     shelf.innerText = location.shelf.toString();
 
     locationDiv.appendChild(locationDec);
     locationDiv.appendChild(warehouse);
-    locationDiv.appendChild(row);
+    // locationDiv.appendChild(row);
     locationDiv.appendChild(rack);
     locationDiv.appendChild(shelf);
 
@@ -473,7 +472,7 @@ function createPositionDiv(position: PositionH): HTMLDivElement {
     deleteButton.classList.add("btn", "btn-primary");
 
     editButton.addEventListener("click", async () => {
-        const temp = createPosition(partNo.innerText, warehouse.innerText, row.innerText, rack.innerText, shelf.innerText, amount.value);
+        const temp = createPosition(partNo.innerText, warehouse.innerText, rack.innerText, shelf.innerText, amount.value);
         temp.id = position.id;
         temp.position = position.position;
 
@@ -503,7 +502,7 @@ export async function initAutocomplete() {
     autocomplete(positionPartNoInput, a, 6);
     updateLocations(await makeLocationRequest(Route.R));
     const b = locations.map(l => {
-        return "Location: " + l.warehouse + " : " + l.row + " : " + l.rack + " : " + l.shelf;
+        return "Location: " + l.warehouse + " : " + l.rack + " : " + l.shelf;
     });
     autocomplete(positionWarehouseInput, b, 10);
 }
@@ -562,9 +561,8 @@ function autocomplete(inputElement: HTMLInputElement, array: any[], type: number
                         const temp = objectDiv.getAttribute("data-input").split(" : ");
                         //console.log(temp)
                         inputElement.value = temp[0];
-                        positionRowInput.value = temp[1];
-                        positionRackInput.value = temp[2];
-                        positionShelfInput.value = temp[3];
+                        positionRackInput.value = temp[1];
+                        positionShelfInput.value = temp[2];
                     } else {
                         inputElement.value = objectDiv.getAttribute("data-input").split(" : ")[0];
                     }

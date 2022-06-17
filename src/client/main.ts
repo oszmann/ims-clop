@@ -9,7 +9,6 @@ import {
     addCost,
     addLocationButton,
     addWarehouse,
-    addRow,
     addRack,
     addShelf,
     makeItemRequest,
@@ -23,16 +22,21 @@ import {
     createPosition,
     positionPartNoInput,
     positionWarehouseInput,
-    positionRowInput,
     positionRackInput,
     positionShelfInput,
     positionAmountInput,
     addMinStock,
     machinesDropdown,
     dropdownMenu,
+    toggleRack,
+    toggleInsert,
+    disable,
+    unDisable,
+    toggleShelf,
 } from "./util";
 
 let doUpdate: boolean = true;
+let toggleDropdown: string = "shelf";
 
 async function initHome() {
     //BUTTON LISTENERS
@@ -49,7 +53,6 @@ async function initHome() {
                 createPosition(
                     positionPartNoInput.value,
                     positionWarehouseInput.value,
-                    positionRowInput.value,
                     positionRackInput.value,
                     positionShelfInput.value,
                     positionAmountInput.value
@@ -61,7 +64,6 @@ async function initHome() {
         });
         positionPartNoInput.value = "";
         positionWarehouseInput.value = "";
-        positionRowInput.value = "";
         positionRackInput.value = "";
         positionShelfInput.value = "";
         positionAmountInput.value = "";
@@ -71,6 +73,8 @@ async function initHome() {
 }
 
 async function initItems() {
+    initTypeDropdown();
+    updateItems(await makeItemRequest(Route.R));
     //BUTTON LISTENERS
     addItemButton.addEventListener("click", () => {
         makeItemRequest(
@@ -87,27 +91,65 @@ async function initItems() {
         dropdownMenu.innerText = "Type";
         dropdownMenu.setAttribute("data-type", "DEFAULT");
     });
-    initTypeDropdown();
-    updateItems(await makeItemRequest(Route.R));
 }
 
 async function initLocations() {
+    
+    updateLocations(await makeLocationRequest(Route.R));
     //BUTTON LISTENERS
+    
+    disable(document.getElementsByTagName("body")[0]);
     addLocationButton.addEventListener("click", () => {
-        makeLocationRequest(
-            Route.C,
-            JSON.stringify(createLocation(addWarehouse.value, addRow.value, addRack.value, addShelf.value))
-        ).then(resp => {
-            console.log(resp);
-            updateLocations(resp);
-        });
+        disable(document.getElementsByTagName("body")[0]);
+        if (toggleDropdown === "rack") {
+            for (let i = 0; i < parseInt(addShelf.value); i++) {
+                makeLocationRequest(
+                    Route.C,
+                    JSON.stringify(createLocation(addWarehouse.value, addRack.value, i.toString()))
+                ).then(resp => {
+                    console.log(resp);
+                    updateLocations(resp);
+                });
+            }
+        }
+        else {
+            makeLocationRequest(
+                Route.C,
+                JSON.stringify(createLocation(addWarehouse.value, addRack.value, addShelf.value))
+            ).then(resp => {
+                console.log(resp);
+                updateLocations(resp);
+            });
+        }
         addWarehouse.value = "";
-        addRow.value = "";
         addRack.value = "";
         addShelf.value = "";
+        
+        unDisable(document.getElementsByTagName("body")[0]);
     });
 
-    updateLocations(await makeLocationRequest(Route.R));
+    toggleRack.addEventListener("click", () => toggleInsertMode("rack"));
+    toggleShelf.addEventListener("click", () => toggleInsertMode("shelf"));
+    unDisable(document.getElementsByTagName("body")[0]);
+
+}
+
+function toggleInsertMode(a: string) {
+    if (a === "rack" && toggleDropdown === "shelf") {
+        console.log("switch to rack");
+        toggleDropdown = "rack";
+        toggleInsert.innerText = "Add rack";
+        const label = <HTMLLabelElement>addShelf.parentElement.children[1];
+        label.innerText = "Amount of shelves:"
+    } else if (a === "shelf" && toggleDropdown === "rack") {
+        console.log("switch to shelf");
+        toggleDropdown = "shelf";
+        toggleInsert.innerText = "Add shelf";
+        const label = <HTMLLabelElement>addShelf.parentElement.children[1];
+        label.innerText = "Shelf:"
+    } else {
+        console.log("nothing happened");
+    }
 }
 
 function init() {

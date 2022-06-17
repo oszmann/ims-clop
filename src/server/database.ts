@@ -128,7 +128,7 @@ async function getOrCreateLocation(source: DataSource, location: Location): Prom
     console.log("l", location);
     const a: Location = await source.manager.findOneBy(Location, {
         warehouse: location.warehouse,
-        row: location.row,
+        /*row: location.row,*/
         rack: location.rack,
         shelf: location.shelf,
     });
@@ -258,7 +258,7 @@ export async function insertPosition(source: DataSource) {
     item.partNumber = "123";
     item.description = "abc";
     let location = new Location();
-    location.row = 0;
+    // location.row = 0;
     location.rack = 0;
     location.shelf = 0;
     console.log("hi1");
