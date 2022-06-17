@@ -251,157 +251,114 @@ export function createDropdownDiv(id: string, type: string): HTMLDivElement {
     ul.classList.add("dropdown-menu", "type-dropdown");
     ul.id = id + "fml";
     
-    a.addEventListener("click", () =>{
-        ul.classList.add("visible");
-        ul.children[pointer].classList.add("type-dropdown-active")
-    });
-    a.addEventListener("blur", () => {
-        setTimeout(() => {
-            if (ul.getAttribute("clicked")) {
-                ul.removeAttribute("clicked");
+//AUTOCOMPLETE FUNCTION, props to the guys at: https://www.w3schools.com/howto/howto_js_autocomplete.asp
+/**
+ * Autocompleting dropdown input for searching. can be used with any array.
+ * @param inputElement Inputelement Autocomplete is linked to
+ * @param array Array of strings to display in Autocomplete
+ * @param type !!TO BE CHANGED!! length of prefix in array strings (e.g. "Locations: " => 10)
+ */
+export function autocomplete(inputElement: HTMLInputElement, array: any[], type: number) {
+    let currentArrowKeyIndex: number;
+    inputElement.addEventListener("input", () => {
+        let inputValue = inputElement.value;
+        closeAllLists(inputElement);
+        if (!inputValue) {
+            return false;
+        }
+        currentArrowKeyIndex = -1;
+        const container = document.createElement("div");
+        container.id = inputElement.id + "autocomplete-list";
+        container.classList.add("autocomplete-items");
+        inputElement.parentNode.appendChild(container);
+        for (let i = 0; i < array.length; i++) {
+            const a = sanitize(inputValue);
+            let b = array[i].substr(type);
+            let c = "";
+            let index = 0;
+            //calculate length of non-sanitised correct partial string
+            while (a.toLowerCase() !== sanitize(c).toLowerCase()) {
+                c += b.substr(index, 1);
+                index++;
+                if (index > b.length) {
+                    break;
+                }
             }
-            ul.classList.remove("visible");
-        }, 100);
-        
+            if (index <= b.length) {
+                const objectDiv = document.createElement("div");
+                if (array.length === 1) {
+                    objectDiv.style.borderRadius = "5px 5px 5px 5px";
+                } else if (i === 0) {
+                    objectDiv.style.borderRadius = "5px 5px 0px 0px";
+                } else if (i === array.length - 1) {
+                    objectDiv.style.borderRadius = "0px 0px 5px 5px";
+                }
+                objectDiv.innerHTML +=
+                    "<strong> <u>" +
+                    array[i].substr(0, type - 1) +
+                    "</u> " +
+                    array[i].substr(type - 1, index + 1) +
+                    "</strong>";
+                objectDiv.innerHTML += array[i].substr(type + index);
+                objectDiv.setAttribute("data-input", array[i].substr(type));
+                objectDiv.addEventListener("click", () => {
+                    if (type === 10) {
+                        const temp = objectDiv.getAttribute("data-input").split(" : ");
+                        //console.log(temp)
+                        inputElement.value = temp[0];
+                        positionRackInput.value = temp[1];
+                        positionShelfInput.value = temp[2];
+                    } else {
+                        inputElement.value = objectDiv.getAttribute("data-input").split(" : ")[0];
+                    }
+                    closeAllLists(inputElement);
+                });
+                container.appendChild(objectDiv);
+            }
+        }
     });
-    a.addEventListener("keydown", e =>  {
-        if (e.key === "ArrowDown") {
-            //console.log("go down");
-            pointer++;
-            moveSelected();
-        }
-        if (e.key === "ArrowUp") {
-            //console.log("go up");
-            pointer--;
-            moveSelected();
-        }
-        if (e.key === "Enter") {
-            const temp = <HTMLAnchorElement>ul.children[pointer];
-            temp.click();
-            a.blur();
+
+    inputElement.addEventListener("keydown", e => {
+        let container = <HTMLDivElement>$(inputElement.id + "autocomplete-list");
+        let containerChildren;
+        if (container) {
+            containerChildren = container.getElementsByTagName("div");
+            if (e.key === "ArrowDown") {
+                currentArrowKeyIndex++;
+                addActive(containerChildren);
+            } else if (e.key === "ArrowUp") {
+                currentArrowKeyIndex--;
+                addActive(containerChildren);
+            } else if (e.key === "Enter") {
+                e.preventDefault();
+                if (currentArrowKeyIndex > -1) {
+                    containerChildren[currentArrowKeyIndex].click();
+                }
+            }
         }
     });
 
-    function moveSelected() {
-        for (let i = 0; i < ul.children.length; i++) {
-            ul.children[i].classList.remove("type-dropdown-active");
+    function addActive(x: HTMLCollection) {
+        removeActive(x);
+        if (currentArrowKeyIndex >= x.length) {
+            currentArrowKeyIndex = 0;
         }
-        if (pointer < 0) {
-            pointer = 0;
-        } else if(pointer >= Object.values(MachineType).length) {
-            pointer = Object.values(MachineType).length - 1;
+        if (currentArrowKeyIndex < 0) {
+            currentArrowKeyIndex = x.length - 1;
         }
-        //console.log(pointer)
-        ul.children[pointer].classList.add("type-dropdown-active");
+        x[currentArrowKeyIndex].classList.add("autocomplete-active");
     }
-    Object.values(MachineType).forEach((value, index) => {
-        const li: HTMLLIElement = document.createElement("li");
-        const lia: HTMLAnchorElement = document.createElement("a");
-        lia.classList.add("dropdown-item");
-        lia.href = "#";
-        lia.innerText = value;
-        li.appendChild(lia);
-        li.addEventListener("click", () => {
-            ul.setAttribute("clicked", "clicked");
-            a.innerText = value;
-            //console.log(Object.keys(MachineType)[index]);
-            a.setAttribute("data-type", Object.keys(MachineType)[index]);
-            pointer = index;
-            moveSelected();
-            //ul.classList.remove("visible")
-        });
-        ul.appendChild(li);
-    });
-    div.appendChild(a);
-    div.appendChild(ul);
-    div.style.backgroundColor = "var(--bg-primary)"
-    return div;
-}
 
-function inserZerosForSort(a: string | number, b: string | number, c: string | number, d: string | number, e: string | number, f: string | number): [string, string] {
-    let part1 = "";
-    let part2 = "";
-    if (typeof a === "number" && typeof d === "number") {
-        let mag1 = parseInt(a.toExponential(0).split("+")[1]);
-        let mag2 = parseInt(d.toExponential(0).split("+")[1]);
-        while (mag1 < mag2) {
-            a = "0" + a.toString();
-            mag1++;
+    function removeActive(x: HTMLCollection) {
+        for (let i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
         }
-        while (mag2 < mag1) {
-            d = "0" + d.toString();
-        }
-        console.log(a, d)
     }
-    part1 += a.toString();
-    part2 += d.toString();
-    if (typeof b === "number" && typeof e === "number") {
-        let mag1 = parseInt(b.toExponential(0).split("+")[1]);
-        let mag2 = parseInt(e.toExponential(0).split("+")[1]);
-        while (mag1 < mag2) {
-            b = "0" + b.toString();
-            mag1++;
+
+    function closeAllLists(element?: HTMLDivElement) {
+        let x = document.getElementsByClassName("autocomplete-items");
+        for (let i = 0; i < x.length; i++) {
+            x[i].parentNode.removeChild(x[i]);
         }
-        while (mag2 < mag1) {
-            e = "0" + e.toString();
-        }
-        console.log(b, e)
     }
-    part1 += b.toString();
-    part2 += e.toString();
-    
-    if (typeof c === "number" && typeof f === "number") {
-        let mag1 = parseInt(c.toExponential(0).split("+")[1]);
-        let mag2 = parseInt(f.toExponential(0).split("+")[1]);
-        while (mag1 < mag2) {
-            c = "0" + c.toString();
-            mag1++;
-        }
-        while (mag2 < mag1) {
-            f = "0" + f.toString();
-        }
-        console.log(c, f)
-    }
-    part1 += c.toString();
-    part2 += f.toString();
-    return [part1, part2]
-}
-
-//STATIC - SHARED
-export const machinesDropdown = <HTMLUListElement>$("machines-dropdown");
-export const dropdownMenu = <HTMLAnchorElement>$("dropdown-menu-link");
-
-//STATIC - INDEX
-export const deleteButton = <HTMLAreaElement>$("delete");
-export const positionsEditDiv = <HTMLDivElement>$("positions-edit");
-export const positionsDiv = <HTMLDivElement>$("positions-div");
-export const positionPartNoInput = <HTMLInputElement>$("position-part-no-input");
-export const positionWarehouseInput = <HTMLInputElement>$("position-warehouse-input");
-//export const positionRowInput = <HTMLInputElement>$("position-row-input");
-export const positionRackInput = <HTMLInputElement>$("position-rack-input");
-export const positionShelfInput = <HTMLInputElement>$("position-shelf-input");
-export const positionAmountInput = <HTMLInputElement>$("position-amount-input");
-export const addPositionButton = <HTMLButtonElement>$("position-add-button");
-
-//STATIC - LOCATIONS
-export const toggleInsert = <HTMLButtonElement>$("toggle-insert");
-export const toggleRack = <HTMLAnchorElement>$("toggle-rack");
-export const toggleShelf = <HTMLAnchorElement>$("toggle-shelf");
-export const addWarehouse = <HTMLInputElement>$("insert-warehouse");
-//export const addRow = <HTMLInputElement>$("insert-row");
-export const addRack = <HTMLInputElement>$("insert-rack");
-export const addShelf = <HTMLInputElement>$("insert-shelf");
-export const addLocationButton = <HTMLButtonElement>$("add-location-button");
-export const locationsDiv = <HTMLDivElement>$("locations-div");
-
-//STATIC - ITEMS
-export const addPartNo = <HTMLInputElement>$("insert-part-no");
-export const addDescription = <HTMLInputElement>$("insert-description");
-export const addCost = <HTMLInputElement>$("insert-cost");
-export const addMinStock = <HTMLInputElement>$("insert-min-stock");
-export const addItemButton = <HTMLButtonElement>$("add-item-button");
-export const itemsDiv = <HTMLDivElement>$("items-div");
-
-export function $<T extends HTMLElement>(id: string): T {
-    return <T>document.getElementById(id);
 }
