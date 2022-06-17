@@ -65,10 +65,10 @@ export function createItem(partNumber: string, desc: string, cost: string, minSt
     return itemH;
 }
 
-export function createLocation(warehouse: string, row: string, rack: string, shelf: string): LocationH {
-    if (row === "") {
-        row = "0";
-    }
+export function createLocation(warehouse: string, rack: string, shelf: string): LocationH {
+    // if (row === "") {
+    //     row = "0";
+    // }
     if (rack === "") {
         rack = "0";
     }
@@ -82,7 +82,7 @@ export function createLocation(warehouse: string, row: string, rack: string, she
     const locationH = new LocationH();
 
     locationH.warehouse = warehouse.toUpperCase();
-    locationH.row = parseInt(row);
+    // locationH.row = parseInt(row);
     locationH.rack = parseInt(rack);
     locationH.shelf = parseInt(shelf);
 
@@ -92,7 +92,6 @@ export function createLocation(warehouse: string, row: string, rack: string, she
 export function createPosition(
     partNo: string,
     warehouse: string,
-    row: string,
     rack: string,
     shelf: string,
     amount: string
@@ -103,7 +102,7 @@ export function createPosition(
     const loc = locations.find(
         x =>
             x.warehouse.toLowerCase() === warehouse.toLowerCase() &&
-            x.row.toString() === row &&
+            /*x.row.toString() === row &&*/
             x.rack.toString() === rack &&
             x.shelf.toString() === shelf
     );
@@ -166,28 +165,26 @@ export const sortItemsByUDateLambda = (a: ItemH, b: ItemH) =>
 export const sortItemsByCDateLambda = (a: ItemH, b: ItemH) =>
     Intl.Collator().compare(a.created_at.toString(), b.created_at.toString());
 
-export const sortLocationsLambda = (a: LocationH, b: LocationH) =>
-    Intl.Collator().compare(
-        a.warehouse + a.row.toString() + a.rack.toString() + a.shelf.toString(),
-        b.warehouse + b.row.toString() + b.rack.toString() + b.shelf.toString()
-    );
+export const sortLocationsLambda = (a: LocationH, b: LocationH) => {
+    const temp = inserZerosForSort(a.warehouse, a.rack, a.shelf, b.warehouse, b.rack,  b.shelf)
+    return Intl.Collator().compare(temp[0], temp[1]);
+}
 
-export const sortLocationsByRowLambda = (a: LocationH, b: LocationH) =>
-    Intl.Collator().compare(
-        a.row.toString() + a.warehouse + a.rack.toString() + a.shelf.toString(),
-        b.row.toString() + b.warehouse + b.rack.toString() + b.shelf.toString()
-    );
+// export const sortLocationsByRowLambda = (a: LocationH, b: LocationH) =>
+//     Intl.Collator().compare(
+//         a.row.toString() + a.warehouse + a.rack.toString() + a.shelf.toString(),
+//         b.row.toString() + b.warehouse + b.rack.toString() + b.shelf.toString()
+//     );
 
-export const sortLocationsByRackLambda = (a: LocationH, b: LocationH) =>
-    Intl.Collator().compare(
-        a.rack.toString() + a.warehouse + a.row.toString() + a.shelf.toString(),
-        b.rack.toString() + b.warehouse + b.row.toString() + b.shelf.toString()
-    );
+export const sortLocationsByRackLambda = (a: LocationH, b: LocationH) => {
+    const temp = inserZerosForSort(a.rack, a.warehouse, a.shelf, b.rack, b.warehouse, b.shelf)
+    return Intl.Collator().compare(temp[0], temp[1]);
+}
 
 export const sortLocationsByShelfLambda = (a: LocationH, b: LocationH) =>
     Intl.Collator().compare(
-        a.shelf.toString() + a.warehouse + a.row.toString() + a.rack.toString(),
-        b.shelf.toString() + b.warehouse + b.row.toString() + b.rack.toString()
+        a.shelf.toString() + a.warehouse + /*a.row.toString() + */a.rack.toString(),
+        b.shelf.toString() + b.warehouse + /*b.row.toString() + */b.rack.toString()
     );
 
 export async function makeItemRequest(route: Route, request: string = "Items, please!"): Promise<ItemH[]> {
@@ -206,6 +203,36 @@ export async function makePositionRequest(route: Route, request: string = "Posit
     return <PositionH[]>(
         await (await fetch(route + "/" + VarType.item + VarType.location + VarType.position + request)).json()
     );
+}
+
+export function disable(e: HTMLElement) {
+    const i = e.getElementsByTagName("input");
+    for (let j = 0; j < i.length; j++) {
+        i[j].disabled = true;
+    }
+    const b = e.getElementsByTagName("button");
+    for (let i = 0; i < b.length; i++) {
+        b[i].disabled = true;
+    }
+    const s = e.getElementsByTagName("select");
+    for (let i = 0; i < s.length; i++) {
+        s[i].disabled = true;
+    }
+}
+
+export function unDisable(e: HTMLElement) {
+    const i = e.getElementsByTagName("input");
+    for (let j = 0; j < i.length; j++) {
+        i[j].disabled = false;
+    }
+    const b = e.getElementsByTagName("button");
+    for (let i = 0; i < b.length; i++) {
+        b[i].disabled = false;
+    }
+    const s = e.getElementsByTagName("select");
+    for (let i = 0; i < s.length; i++) {
+        s[i].disabled = false;
+    }
 }
 
 export function createDropdownDiv(id: string, type: string): HTMLDivElement {
@@ -291,6 +318,55 @@ export function createDropdownDiv(id: string, type: string): HTMLDivElement {
     return div;
 }
 
+function inserZerosForSort(a: string | number, b: string | number, c: string | number, d: string | number, e: string | number, f: string | number): [string, string] {
+    let part1 = "";
+    let part2 = "";
+    if (typeof a === "number" && typeof d === "number") {
+        let mag1 = parseInt(a.toExponential(0).split("+")[1]);
+        let mag2 = parseInt(d.toExponential(0).split("+")[1]);
+        while (mag1 < mag2) {
+            a = "0" + a.toString();
+            mag1++;
+        }
+        while (mag2 < mag1) {
+            d = "0" + d.toString();
+        }
+        console.log(a, d)
+    }
+    part1 += a.toString();
+    part2 += d.toString();
+    if (typeof b === "number" && typeof e === "number") {
+        let mag1 = parseInt(b.toExponential(0).split("+")[1]);
+        let mag2 = parseInt(e.toExponential(0).split("+")[1]);
+        while (mag1 < mag2) {
+            b = "0" + b.toString();
+            mag1++;
+        }
+        while (mag2 < mag1) {
+            e = "0" + e.toString();
+        }
+        console.log(b, e)
+    }
+    part1 += b.toString();
+    part2 += e.toString();
+    
+    if (typeof c === "number" && typeof f === "number") {
+        let mag1 = parseInt(c.toExponential(0).split("+")[1]);
+        let mag2 = parseInt(f.toExponential(0).split("+")[1]);
+        while (mag1 < mag2) {
+            c = "0" + c.toString();
+            mag1++;
+        }
+        while (mag2 < mag1) {
+            f = "0" + f.toString();
+        }
+        console.log(c, f)
+    }
+    part1 += c.toString();
+    part2 += f.toString();
+    return [part1, part2]
+}
+
 //STATIC - SHARED
 export const machinesDropdown = <HTMLUListElement>$("machines-dropdown");
 export const dropdownMenu = <HTMLAnchorElement>$("dropdown-menu-link");
@@ -301,15 +377,18 @@ export const positionsEditDiv = <HTMLDivElement>$("positions-edit");
 export const positionsDiv = <HTMLDivElement>$("positions-div");
 export const positionPartNoInput = <HTMLInputElement>$("position-part-no-input");
 export const positionWarehouseInput = <HTMLInputElement>$("position-warehouse-input");
-export const positionRowInput = <HTMLInputElement>$("position-row-input");
+//export const positionRowInput = <HTMLInputElement>$("position-row-input");
 export const positionRackInput = <HTMLInputElement>$("position-rack-input");
 export const positionShelfInput = <HTMLInputElement>$("position-shelf-input");
 export const positionAmountInput = <HTMLInputElement>$("position-amount-input");
 export const addPositionButton = <HTMLButtonElement>$("position-add-button");
 
 //STATIC - LOCATIONS
+export const toggleInsert = <HTMLButtonElement>$("toggle-insert");
+export const toggleRack = <HTMLAnchorElement>$("toggle-rack");
+export const toggleShelf = <HTMLAnchorElement>$("toggle-shelf");
 export const addWarehouse = <HTMLInputElement>$("insert-warehouse");
-export const addRow = <HTMLInputElement>$("insert-row");
+//export const addRow = <HTMLInputElement>$("insert-row");
 export const addRack = <HTMLInputElement>$("insert-rack");
 export const addShelf = <HTMLInputElement>$("insert-shelf");
 export const addLocationButton = <HTMLButtonElement>$("add-location-button");
