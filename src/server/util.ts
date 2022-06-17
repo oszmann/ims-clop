@@ -20,7 +20,7 @@ export function itemFromItemH(itemH: ItemH, update: boolean = false): Item {
 export function locationFromLocationH(locationH: LocationH): Location {
     const location = new Location();
     location.warehouse = locationH.warehouse;
-    location.row = locationH.row;
+    // location.row = locationH.row;
     location.rack = locationH.rack;
     location.shelf = locationH.shelf;
     return location;
