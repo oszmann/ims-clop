@@ -1,27 +1,19 @@
-import { sanitize } from "string-sanitizer";
 import { ItemH, LocationH, MachineType, PositionH } from "../common/util";
+import { $, itemsDiv, locationsDiv, positionPartNoInput, positionsDiv, positionWarehouseInput } from "./static";
+import { createItemDiv, createLocationTable, createPositionDiv } from "./ui-create";
 import {
-    createItem,
     getActivePage,
-    itemsDiv,
     Page,
-    locationsDiv,
     makeItemRequest,
     makeLocationRequest,
-    positionRackInput,
-    positionShelfInput,
     Route,
     sortArrayBy,
-    positionPartNoInput,
-    positionWarehouseInput,
     sortItemsByPartNumberLambda,
-    sortLocationsLambda,
+    sortLocationsByWarehouseLambda,
     SortBy,
-    $,
-    createDropdownDiv,
-    positionsDiv,
-    createPosition,
-    makePositionRequest,
+    sortLocationsByRackLambda,
+    sortLocationsByShelfLambda,
+    autocomplete,
 } from "./util";
 
 let sortBy: SortBy;
@@ -39,7 +31,11 @@ export function getLocations(): LocationH[] {
 let positions: PositionH[] = [];
 
 //--------------------ITEMS
-
+/**
+ * update Items-array
+ * @param newItems
+ * @returns
+ */
 export function updateItems(newItems: ItemH[]) {
     const toBeRemoved: string[] = items.map(x => x.id).filter(x => !newItems.map(x => x.id).includes(x));
     const toBeAdded: string[] = newItems.map(x => x.id).filter(x => !items.map(x => x.id).includes(x));
@@ -114,99 +110,12 @@ export function updateItems(newItems: ItemH[]) {
     //console.log(items);
 }
 
-//Return a proper formatted Div for a given ItemH object.
-export function createItemDiv(item: ItemH): HTMLDivElement {
-    const div: HTMLDivElement = document.createElement("div");
-    div.id = item.id;
-    div.classList.add("input-group", "item-outer-div", "rounded", "overflow-b");
-    div.style.backgroundColor = "var(--bg-secondary)";
-
-    const partNumber: HTMLInputElement = document.createElement("input");
-    const description: HTMLInputElement = document.createElement("input");
-    const cost: HTMLInputElement = document.createElement("input");
-    const minStock: HTMLInputElement = document.createElement("input");
-
-    const dates: HTMLAnchorElement = document.createElement("a");
-    const datesSpan: HTMLSpanElement = document.createElement("span");
-
-    const id: HTMLAnchorElement = document.createElement("a");
-    const idSpan: HTMLSpanElement = document.createElement("span");
-
-    const editButton: HTMLButtonElement = document.createElement("button");
-    const deleteButton: HTMLButtonElement = document.createElement("button");
-
-    id.id = item.id + "id";
-    partNumber.id = item.id + "part-number";
-    description.id = item.id + "desc";
-    cost.id = item.id + "cost";
-    minStock.id = item.id + "min-stock";
-    datesSpan.id = item.id + "dates-span";
-
-    partNumber.type = "text";
-    description.type = "text";
-    cost.type = "number";
-    minStock.type = "number";
-
-    partNumber.classList.add("form-control");
-    partNumber.style.minWidth = "20%"
-    description.classList.add("form-control");
-    description.style.minWidth = "40%"
-    cost.classList.add("form-control");
-    minStock.classList.add("form-control");
-
-    partNumber.placeholder = "part-number";
-    description.placeholder = "desc";
-    cost.placeholder = "cost";
-
-    id.innerText = "ID:";
-    id.style.padding = "5px";
-    partNumber.value = item.partNumber;
-    description.value = item.description;
-    cost.value = item.cost.toString();
-    minStock.value = item.minStock.toString();
-    dates.innerText = "Dates";
-    dates.style.padding = "5px";
-
-    idSpan.classList.add("tooltip-span");
-    idSpan.innerText = item.id;
-
-    id.appendChild(idSpan);
-
-    datesSpan.classList.add("tooltip-dates");
-    datesSpan.innerText = "C: " + item.created_at.toString() + "\n" + "U: " + item.updated_at.toString();
-
-    dates.appendChild(datesSpan);
-
-    editButton.innerText = "Edit";
-    editButton.classList.add("btn", "btn-primary");
-    deleteButton.innerText = "Delete";
-    deleteButton.classList.add("btn", "btn-primary");
-    editButton.addEventListener("click", async () => {
-        const dropdownA = <HTMLAnchorElement>dropdown.children[0];
-        const temp = createItem(partNumber.value, description.value, cost.value, minStock.value, dropdownA.getAttribute("data-type"));
-        temp.id = item.id;
-        //console.log(temp)
-        updateItems(await makeItemRequest(Route.U, JSON.stringify(temp)));
-    });
-    deleteButton.addEventListener("click", async () => {
-        updateItems(await makeItemRequest(Route.D, item.id));
-    });
-    const dropdown = createDropdownDiv(item.id, item.machineType);
-    dropdown.classList.add("-w10");
-    div.appendChild(id);
-    div.appendChild(partNumber);
-    div.appendChild(description);
-    div.appendChild(cost);
-    div.appendChild(minStock);
-    div.appendChild(dropdown);
-    div.appendChild(editButton);
-    div.appendChild(dates);
-    div.appendChild(deleteButton);
-    //console.log("created div")
-    return div;
-}
-
 //--------------------LOCATIONS
+/**
+ * Update locations array
+ * @param newLocations
+ * @returns
+ */
 export function updateLocations(newLocations: LocationH[]) {
     locations = newLocations;
     locations = sortArrayBy(locations, sortLocationsLambda);
@@ -218,111 +127,13 @@ export function updateLocations(newLocations: LocationH[]) {
     locationsDiv.appendChild(createLocationTable(newLocations));
 }
 
-export function createLocationTable(locations: LocationH[]): HTMLTableElement {
-    const table: HTMLTableElement = document.createElement("table");
-    table.style.width = "100%";
-    //create header
-    table.appendChild(createLocationTableHeaders());
-
-    locations.forEach(location => {
-        const tr: HTMLTableRowElement = document.createElement("tr");
-
-        //ID SHENANIGANS
-        const id: HTMLAnchorElement = document.createElement("a");
-        const idSpan: HTMLSpanElement = document.createElement("span");
-
-        id.id = location.id + "id";
-        id.innerText = "ID:";
-
-        idSpan.classList.add("tooltip-span");
-        idSpan.innerText = location.id;
-
-        id.appendChild(idSpan);
-        const idTd: HTMLTableCellElement = document.createElement("td");
-        idTd.appendChild(id);
-        tr.appendChild(idTd);
-
-        //NORMAL STUFF
-        const warehouseTd: HTMLTableCellElement = document.createElement("td");
-        // const rowTd: HTMLTableCellElement = document.createElement("td");
-        const rackTd: HTMLTableCellElement = document.createElement("td");
-        const shelfTd: HTMLTableCellElement = document.createElement("td");
-        const deleteTd: HTMLTableCellElement = document.createElement("td");
-
-        const deleteButton: HTMLButtonElement = document.createElement("button");
-
-        warehouseTd.innerText = location.warehouse;
-        // rowTd.innerText = location.row.toString();
-        rackTd.innerText = location.rack.toString();
-        shelfTd.innerText = location.shelf.toString();
-
-        deleteButton.innerText = "Delete Location";
-
-        deleteButton.addEventListener("click", async () => {
-            updateLocations(await makeLocationRequest(Route.D, location.id));
-        });
-
-        deleteTd.appendChild(deleteButton);
-
-        tr.appendChild(warehouseTd);
-        // tr.appendChild(rowTd);
-        tr.appendChild(rackTd);
-        tr.appendChild(shelfTd);
-        tr.appendChild(deleteTd);
-
-        table.appendChild(tr);
-    });
-    return table;
-}
-
-export function createLocationTableHeaders(): HTMLTableRowElement {
-    const tableHeaderRow: HTMLTableRowElement = document.createElement("tr");
-    const headerId: HTMLTableCellElement = document.createElement("th");
-    const headerWarehouse: HTMLTableCellElement = document.createElement("th");
-    // const headerRow: HTMLTableCellElement = document.createElement("th");
-    const headerRack: HTMLTableCellElement = document.createElement("th");
-    const headerShelf: HTMLTableCellElement = document.createElement("th");
-    const headerDelete: HTMLTableCellElement = document.createElement("th");
-    headerId.abbr = "ID";
-    headerId.scope = "col";
-    headerId.innerText = "";
-    headerId.id = "h-id";
-
-    headerWarehouse.abbr = "WH";
-    headerWarehouse.scope = "col";
-    headerWarehouse.innerText = "Warehouse";
-    headerWarehouse.id = "h-ware";
-
-    // headerRow.abbr = "ROW";
-    // headerRow.scope = "col";
-    // headerRow.innerText = "Row";
-    // headerRow.id = "h-row";
-
-    headerRack.abbr = "RAC";
-    headerRack.scope = "col";
-    headerRack.innerText = "Rack";
-    headerRack.id = "h-rack";
-
-    headerShelf.abbr = "SH";
-    headerShelf.scope = "col";
-    headerShelf.innerText = "Shelf";
-    headerShelf.id = "h-she";
-
-    headerDelete.abbr = "DEL";
-    headerDelete.scope = "col";
-    headerDelete.innerText = "";
-    headerDelete.id = "h-del";
-
-    tableHeaderRow.appendChild(headerId);
-    tableHeaderRow.appendChild(headerWarehouse);
-    // tableHeaderRow.appendChild(headerRow);
-    tableHeaderRow.appendChild(headerRack);
-    tableHeaderRow.appendChild(headerShelf);
-    tableHeaderRow.appendChild(headerDelete);
-    return tableHeaderRow;
-}
-
 //--------------------POSITIONS
+
+/**
+ * Update positions array
+ * @param newPositions new array of positions to be displayed
+ * @returns
+ */
 export async function updatePositions(newPositions: PositionH[]) {
     updateItems(await makeItemRequest(Route.R));
     updateLocations(await makeLocationRequest(Route.R));
@@ -330,6 +141,7 @@ export async function updatePositions(newPositions: PositionH[]) {
     const toBeRemoved: string[] = positions.map(x => x.id).filter(x => !newPositions.map(x => x.id).includes(x));
     const toBeAdded: string[] = newPositions.map(x => x.id).filter(x => !positions.map(x => x.id).includes(x));
 
+    //dont try to access variables you dont need to
     if (getActivePage() !== Page.HOME) {
         console.log("Not open.");
         positions = newPositions;
@@ -351,7 +163,7 @@ export async function updatePositions(newPositions: PositionH[]) {
     toBeAdded.forEach(id => {
         const newPosition = newPositions.find(x => x.id === id);
         positions.push(newPosition);
-        console.log(newPosition)
+        // console.log(newPosition);
         positionsDiv.appendChild(createPositionDiv(newPosition));
     });
 
@@ -367,250 +179,27 @@ export async function updatePositions(newPositions: PositionH[]) {
     //positions = sortArrayBy(positions, );
 }
 
-function createPositionDiv(position: PositionH): HTMLDivElement {
-    const item = items.find(x => x.id === position.itemId);
-    const location = locations.find(x => x.id === position.locationId);
-    const div = document.createElement("div");
-    div.classList.add("input-group", "rounded", "position-outer-div");
-    div.style.backgroundColor = "var(--bg-secondary)";
-
-    const itemDiv = document.createElement("div");
-    const itemDec = document.createElement("a");
-    const partNo = document.createElement("a");
-    const t = document.createElement("a");
-    const type = document.createElement("a");
-    const d = document.createElement("a");
-    const desc = document.createElement("a");
-    const c = document.createElement("a");
-    const cost = document.createElement("a");
-    
-    const locationDiv = document.createElement("div");
-    const locationDec = document.createElement("a");
-    const warehouse = document.createElement("a");
-    // const row = document.createElement("a");
-    const rack = document.createElement("a");
-    const shelf = document.createElement("a");
-
-    const amountDec = document.createElement("a");
-    const amount = document.createElement("input");
-    const posDec = document.createElement("a");
-    const pos = document.createElement("a");
-    const dates = document.createElement("a");
-    const datesSpan = document.createElement("span");
-    const editButton = document.createElement("button");
-    const deleteButton = document.createElement("button");
-
-    amount.id = position.id + "amount";
-    pos.id = position.id + "position";
-    dates.id = position.id + "dates";
-
-    amount.type = "number";
-    amount.placeholder = "Amount:";
-
-    itemDiv.classList.add("form-control", "overflow-a", "pos-loc-div", "-w30");
-    locationDiv.classList.add("form-control", "overflow-a", "pos-loc-div", "-w15");
-    amountDec.classList.add("form-control", "dec");
-    amountDec.style.maxWidth = "82px"
-    amount.classList.add("form-control");
-    amount.style.maxWidth = "75px";
-    posDec.classList.add("form-control", "dec");
-    posDec.style.maxWidth = "85px";
-    pos.classList.add("form-control");
-    pos.style.maxWidth = "40px"
-    dates.classList.add("form-control");
-    dates.style.maxWidth = "80px"
-
-    itemDec.innerText = "Item:";
-    itemDec.classList.add("border-0", "dec");
-    partNo.innerText = item.partNumber;
-    t.classList.add("border-0", "dec");
-    t.innerText = "T:";
-    type.innerText = Object.values(MachineType)[Object.keys(MachineType).indexOf(item.machineType)];
-    d.classList.add("border-0", "dec");
-    d.innerText = "D:"
-    desc.innerText = item.description;
-    c.classList.add("border-0", "dec");
-    c.innerText = "C:"
-    cost.innerText = item.cost.toString();
-
-    itemDiv.appendChild(itemDec);
-    itemDiv.appendChild(partNo);
-    itemDiv.appendChild(t);
-    itemDiv.appendChild(type);
-    itemDiv.appendChild(d);
-    itemDiv.appendChild(desc);
-    itemDiv.appendChild(c);
-    itemDiv.appendChild(cost);
-
-    locationDec.innerText = "Location:";
-    locationDec.classList.add("border-0", "underline");
-    warehouse.innerText = location.warehouse;
-    // row.innerText = location.row.toString();
-    rack.innerText = location.rack.toString();
-    shelf.innerText = location.shelf.toString();
-
-    locationDiv.appendChild(locationDec);
-    locationDiv.appendChild(warehouse);
-    // locationDiv.appendChild(row);
-    locationDiv.appendChild(rack);
-    locationDiv.appendChild(shelf);
-
-    amountDec.innerText = "Amount:"
-    amount.value = position.amount.toString();
-    posDec.innerText = "Position:"
-    pos.innerText = position.position.toString();
-
-    dates.innerText = "Dates"
-    datesSpan.classList.add("tooltip-dates");
-    datesSpan.innerText = "C: " + item.created_at.toString() + "\n" + "U: " + item.updated_at.toString();
-
-    dates.appendChild(datesSpan);
-
-    editButton.innerText = "Edit";
-    editButton.classList.add("btn", "btn-primary");
-    deleteButton.innerText = "Delete";
-    deleteButton.classList.add("btn", "btn-primary");
-
-    editButton.addEventListener("click", async () => {
-        const temp = createPosition(partNo.innerText, warehouse.innerText, rack.innerText, shelf.innerText, amount.value);
-        temp.id = position.id;
-        temp.position = position.position;
-
-        updatePositions(await makePositionRequest(Route.U, JSON.stringify(temp)));
-    });
-    deleteButton.addEventListener("click", async () => {
-        updateItems(await makeItemRequest(Route.D, position.id));
-    });
-    div.appendChild(itemDiv);
-    div.appendChild(locationDiv);
-    div.appendChild(amountDec);
-    div.appendChild(amount);
-    div.appendChild(posDec);
-    div.appendChild(pos);
-    div.appendChild(editButton);
-    div.appendChild(dates);
-    div.appendChild(deleteButton);
-
-    return div;
-}
-
+/**
+ * initialize the autocomplete functions on homepage
+ */
 export async function initAutocomplete() {
     updateItems(await makeItemRequest(Route.R));
+    // Map data of items to a string[]
     const a = items.map(i => {
-        return "Item: " + i.partNumber + " : " + Object.values(MachineType)[Object.keys(MachineType).indexOf(i.machineType)] +" : " + i.description;
+        return (
+            "Item: " +
+            i.partNumber +
+            " : " +
+            Object.values(MachineType)[Object.keys(MachineType).indexOf(i.machineType)] +
+            " : " +
+            i.description
+        );
     });
     autocomplete(positionPartNoInput, a, 6);
     updateLocations(await makeLocationRequest(Route.R));
+    // Map data of locations to a string[]
     const b = locations.map(l => {
         return "Location: " + l.warehouse + " : " + l.rack + " : " + l.shelf;
     });
     autocomplete(positionWarehouseInput, b, 10);
-}
-
-//AUTOCOMPLETE FUNCTION, props to the guys at: https://www.w3schools.com/howto/howto_js_autocomplete.asp
-/**
- * @param inputElement Inputelement Autocomplete is linked to
- * @param array Array of strings to display in Autocomplete
- * @param type TO BE CHANGED length of prefix in array strings (e.g. "Locations: " => 10)
- */
-function autocomplete(inputElement: HTMLInputElement, array: any[], type: number) {
-    let currentArrowKeyIndex: number;
-    inputElement.addEventListener("input", () => {
-        let inputValue = inputElement.value;
-        closeAllLists(inputElement);
-        if (!inputValue) {
-            return false;
-        }
-        currentArrowKeyIndex = -1;
-        const container = document.createElement("div");
-        container.id = inputElement.id + "autocomplete-list";
-        container.classList.add("autocomplete-items");
-        inputElement.parentNode.appendChild(container);
-        for (let i = 0; i < array.length; i++) {
-            const a = sanitize(inputValue);
-            let b = array[i].substr(type);
-            let c = "";
-            let index = 0;
-            //calculate length of non-sanitised correct partial string
-            while (a.toLowerCase() !== sanitize(c).toLowerCase()) {
-                c += b.substr(index, 1);
-                index++;
-                if(index > b.length) {
-                    break;
-                }
-            }
-            if (index <= b.length) {
-                const objectDiv = document.createElement("div");
-                if (array.length === 1) {
-                    objectDiv.style.borderRadius = "5px 5px 5px 5px";
-                } else if (i === 0) {
-                    objectDiv.style.borderRadius = "5px 5px 0px 0px";
-                } else if (i === array.length - 1) {
-                    objectDiv.style.borderRadius = "0px 0px 5px 5px";
-                }
-                objectDiv.innerHTML +=
-                    "<strong> <u>" +
-                    array[i].substr(0, type - 1) +
-                    "</u> " +
-                    array[i].substr(type - 1, index + 1) +
-                    "</strong>";
-                objectDiv.innerHTML += array[i].substr(type + index);
-                objectDiv.setAttribute("data-input", array[i].substr(type));
-                objectDiv.addEventListener("click", () => {
-                    if (type === 10) {
-                        const temp = objectDiv.getAttribute("data-input").split(" : ");
-                        //console.log(temp)
-                        inputElement.value = temp[0];
-                        positionRackInput.value = temp[1];
-                        positionShelfInput.value = temp[2];
-                    } else {
-                        inputElement.value = objectDiv.getAttribute("data-input").split(" : ")[0];
-                    }
-                    closeAllLists(inputElement);
-                });
-                container.appendChild(objectDiv);
-            }
-        }
-    });
-    inputElement.addEventListener("keydown", e => {
-        let container = <HTMLDivElement>$(inputElement.id + "autocomplete-list");
-        let containerChildren;
-        if (container) {
-            containerChildren = container.getElementsByTagName("div");
-            if (e.key === "ArrowDown") {
-                currentArrowKeyIndex++;
-                addActive(containerChildren);
-            } else if (e.key === "ArrowUp") {
-                currentArrowKeyIndex--;
-                addActive(containerChildren);
-            } else if (e.key === "Enter") {
-                e.preventDefault();
-                if (currentArrowKeyIndex > -1) {
-                    containerChildren[currentArrowKeyIndex].click();
-                }
-            }
-        }
-    });
-
-    function addActive(x: HTMLCollection) {
-        removeActive(x);
-        if (currentArrowKeyIndex >= x.length) {
-            currentArrowKeyIndex = 0;
-        }
-        if (currentArrowKeyIndex < 0) {
-            currentArrowKeyIndex = x.length - 1;
-        }
-        x[currentArrowKeyIndex].classList.add("autocomplete-active");
-    }
-    function removeActive(x: HTMLCollection) {
-        for (let i = 0; i < x.length; i++) {
-            x[i].classList.remove("autocomplete-active");
-        }
-    }
-    function closeAllLists(element?: HTMLDivElement) {
-        let x = document.getElementsByClassName("autocomplete-items");
-        for (let i = 0; i < x.length; i++) {
-            x[i].parentNode.removeChild(x[i]);
-        }
-    }
 }

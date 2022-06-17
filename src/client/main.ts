@@ -1,38 +1,39 @@
 import { MachineType } from "../common/util";
-import { initAutocomplete, updateItems, updateLocations, updatePositions } from "./ui";
 import {
-    deleteButton,
-    Route,
-    addItemButton,
-    addPartNo,
-    addDescription,
     addCost,
+    addDescription,
+    addItemButton,
     addLocationButton,
-    addWarehouse,
+    addMinStock,
+    addPartNo,
+    addPositionButton,
     addRack,
     addShelf,
+    addWarehouse,
+    dropdownMenu,
+    machinesDropdown,
+    positionAmountInput,
+    positionPartNoInput,
+    positionRackInput,
+    positionShelfInput,
+    positionWarehouseInput,
+    toggleInsert,
+    toggleRack,
+    toggleShelf,
+} from "./static";
+import { initAutocomplete, updateItems, updateLocations, updatePositions } from "./ui";
+import {
+    Route,
     makeItemRequest,
     makeLocationRequest,
     createLocation,
     createItem,
     getActivePage,
     Page,
-    addPositionButton,
     makePositionRequest,
     createPosition,
-    positionPartNoInput,
-    positionWarehouseInput,
-    positionRackInput,
-    positionShelfInput,
-    positionAmountInput,
-    addMinStock,
-    machinesDropdown,
-    dropdownMenu,
-    toggleRack,
-    toggleInsert,
     disable,
     unDisable,
-    toggleShelf,
 } from "./util";
 
 let doUpdate: boolean = true;
@@ -59,7 +60,7 @@ async function initHome() {
                 )
             )
         ).then(resp => {
-            console.log(resp);
+            // console.log(resp);
             updatePositions(resp);
         });
         positionPartNoInput.value = "";
@@ -79,9 +80,17 @@ async function initItems() {
     addItemButton.addEventListener("click", () => {
         makeItemRequest(
             Route.C,
-            JSON.stringify(createItem(addPartNo.value, addDescription.value, addCost.value, addMinStock.value, dropdownMenu.getAttribute("data-type")))
+            JSON.stringify(
+                createItem(
+                    addPartNo.value,
+                    addDescription.value,
+                    addCost.value,
+                    addMinStock.value,
+                    dropdownMenu.getAttribute("data-type")
+                )
+            )
         ).then(resp => {
-            console.log(resp);
+            // console.log(resp);
             updateItems(resp);
         });
         addPartNo.value = "";
@@ -94,10 +103,9 @@ async function initItems() {
 }
 
 async function initLocations() {
-    
     updateLocations(await makeLocationRequest(Route.R));
     //BUTTON LISTENERS
-    
+
     disable(document.getElementsByTagName("body")[0]);
     addLocationButton.addEventListener("click", () => {
         disable(document.getElementsByTagName("body")[0]);
@@ -107,31 +115,29 @@ async function initLocations() {
                     Route.C,
                     JSON.stringify(createLocation(addWarehouse.value, addRack.value, i.toString()))
                 ).then(resp => {
-                    console.log(resp);
+                    // console.log(resp);
                     updateLocations(resp);
                 });
             }
-        }
-        else {
+        } else {
             makeLocationRequest(
                 Route.C,
                 JSON.stringify(createLocation(addWarehouse.value, addRack.value, addShelf.value))
             ).then(resp => {
-                console.log(resp);
+                // console.log(resp);
                 updateLocations(resp);
             });
         }
         addWarehouse.value = "";
         addRack.value = "";
         addShelf.value = "";
-        
+
         unDisable(document.getElementsByTagName("body")[0]);
     });
 
     toggleRack.addEventListener("click", () => toggleInsertMode("rack"));
     toggleShelf.addEventListener("click", () => toggleInsertMode("shelf"));
     unDisable(document.getElementsByTagName("body")[0]);
-
 }
 
 function toggleInsertMode(a: string) {
@@ -140,13 +146,13 @@ function toggleInsertMode(a: string) {
         toggleDropdown = "rack";
         toggleInsert.innerText = "Add rack";
         const label = <HTMLLabelElement>addShelf.parentElement.children[1];
-        label.innerText = "Amount of shelves:"
+        label.innerText = "Amount of shelves:";
     } else if (a === "shelf" && toggleDropdown === "rack") {
         console.log("switch to shelf");
         toggleDropdown = "shelf";
         toggleInsert.innerText = "Add shelf";
         const label = <HTMLLabelElement>addShelf.parentElement.children[1];
-        label.innerText = "Shelf:"
+        label.innerText = "Shelf:";
     } else {
         console.log("nothing happened");
     }
