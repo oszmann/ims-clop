@@ -1,4 +1,5 @@
 import { ItemH, LocationH, MachineType, PositionH } from "../common/util";
+import { sortArrayBy, SortBy, sortItemsByPartNumberLambda, sortLocationsByRackLambda, sortLocationsByShelfLambda, sortLocationsByWarehouseLambda } from "./search-and-sort";
 import { $, itemsDiv, locationsDiv, positionPartNoInput, positionsDiv, positionWarehouseInput } from "./static";
 import { createItemDiv, createLocationTable, createPositionDiv } from "./ui-create";
 import {
@@ -7,12 +8,6 @@ import {
     makeItemRequest,
     makeLocationRequest,
     Route,
-    sortArrayBy,
-    sortItemsByPartNumberLambda,
-    sortLocationsByWarehouseLambda,
-    SortBy,
-    sortLocationsByRackLambda,
-    sortLocationsByShelfLambda,
     autocomplete,
 } from "./util";
 
