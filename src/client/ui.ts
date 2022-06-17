@@ -43,7 +43,7 @@ export function updateItems(newItems: ItemH[]) {
     if (getActivePage() !== Page.ITEMS) {
         console.log("Not open.");
         items = newItems;
-        items = sortArrayBy(items, sortItemsByPartNumberLambda);
+        items = sortArrayBy(items, [sortItemsByPartNumberLambda]);
         return;
     }
 
@@ -106,7 +106,7 @@ export function updateItems(newItems: ItemH[]) {
     if (!sortBy) {
         sortBy = SortBy.PART_NO;
     }
-    items = sortArrayBy(items, sortItemsByPartNumberLambda);
+    items = sortArrayBy(items, [sortItemsByPartNumberLambda]);
     //console.log(items);
 }
 
@@ -118,7 +118,11 @@ export function updateItems(newItems: ItemH[]) {
  */
 export function updateLocations(newLocations: LocationH[]) {
     locations = newLocations;
-    locations = sortArrayBy(locations, sortLocationsLambda);
+    locations = sortArrayBy(locations, [
+        sortLocationsByShelfLambda,
+        sortLocationsByRackLambda,
+        sortLocationsByWarehouseLambda,
+    ]);
     //console.log(locations);
     if (getActivePage() !== Page.LOCATIONS) {
         return;

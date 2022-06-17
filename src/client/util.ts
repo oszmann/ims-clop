@@ -1,4 +1,6 @@
-import { ItemH, LocationH, MachineType, PositionH } from "../common/util";
+import { sanitize } from "string-sanitizer";
+import { ItemH, LocationH, PositionH } from "../common/util";
+import { $, positionRackInput, positionShelfInput } from "./static";
 import { getItems, getLocations } from "./ui";
 
 //API ROUTES
@@ -146,29 +148,59 @@ export function getActivePage(): Page {
     }
 }
 
-export function sortArrayBy(array: any[], callback: (a: any, b: any) => any): any[] {
-    return array.sort(callback);
+/**
+ * Sort an array by Lambdas
+ * !!important!!
+ * callback array should be populated "backwards", as in if you want to sort by W->R->S
+ * you need the array to go [sortLocationsByShelfLambda, sortLocationsByRackLambda, sortLocationsByWarehouseLambda]
+ * @param array
+ * @param callback
+ * @returns sorted array
+ */
+export function sortArrayBy(array: any[], callback: ((a: any, b: any) => any)[]): any[] {
+    callback.forEach(call => (array = array.sort(call)));
+    return array;
 }
 
+/**
+ * Lambda to sort simple strings
+ */
 export const sortStringsLambda = (a: string, b: string) => Intl.Collator().compare(a, b);
 
+/**
+ * Lambda to sort itemH items by partNumber
+ */
 export const sortItemsByPartNumberLambda = (a: ItemH, b: ItemH) => Intl.Collator().compare(a.partNumber, b.partNumber);
 
+/**
+ * Lambda to sort itemH items by description
+ */
 export const sortItemsByDescLambda = (a: ItemH, b: ItemH) => Intl.Collator().compare(a.description, b.description);
 
+/**
+ * Lambda to sort itemH items by minStock
+ */
 export const sortItemsByMinStockLambda = (a: ItemH, b: ItemH) =>
     Intl.Collator().compare(a.minStock.toString(), b.minStock.toString());
 
+/**
+ * Lambda to sort itemH items by updated_at
+ */
 export const sortItemsByUDateLambda = (a: ItemH, b: ItemH) =>
     Intl.Collator().compare(a.updated_at.toString(), b.updated_at.toString());
 
+/**
+ * Lambda to sort itemH items by created_at
+ */
 export const sortItemsByCDateLambda = (a: ItemH, b: ItemH) =>
     Intl.Collator().compare(a.created_at.toString(), b.created_at.toString());
 
-export const sortLocationsLambda = (a: LocationH, b: LocationH) => {
-    const temp = inserZerosForSort(a.warehouse, a.rack, a.shelf, b.warehouse, b.rack,  b.shelf)
-    return Intl.Collator().compare(temp[0], temp[1]);
-}
+/**
+ * Lambda to sort locations by W
+ */
+export const sortLocationsByWarehouseLambda = (a: LocationH, b: LocationH) => {
+    return Intl.Collator().compare(a.warehouse, b.warehouse);
+};
 
 // export const sortLocationsByRowLambda = (a: LocationH, b: LocationH) =>
 //     Intl.Collator().compare(
@@ -176,16 +208,23 @@ export const sortLocationsLambda = (a: LocationH, b: LocationH) => {
 //         b.row.toString() + b.warehouse + b.rack.toString() + b.shelf.toString()
 //     );
 
+/**
+ * Lambda to sort locations by R
+ */
 export const sortLocationsByRackLambda = (a: LocationH, b: LocationH) => {
-    const temp = inserZerosForSort(a.rack, a.warehouse, a.shelf, b.rack, b.warehouse, b.shelf)
+    const temp = inserZerosForSort(a.rack, b.rack);
     return Intl.Collator().compare(temp[0], temp[1]);
-}
+};
 
-export const sortLocationsByShelfLambda = (a: LocationH, b: LocationH) =>
-    Intl.Collator().compare(
-        a.shelf.toString() + a.warehouse + /*a.row.toString() + */a.rack.toString(),
-        b.shelf.toString() + b.warehouse + /*b.row.toString() + */b.rack.toString()
-    );
+/**
+ * Lambda to sort locations by S
+ */
+export const sortLocationsByShelfLambda = (a: LocationH, b: LocationH) => {
+    const temp = inserZerosForSort(a.shelf, b.shelf);
+    return Intl.Collator().compare(temp[0], temp[1]);
+};
+
+export const sortPositionsByItemLambda = (a: PositionH, b: PositionH) => {};
 
 export async function makeItemRequest(route: Route, request: string = "Items, please!"): Promise<ItemH[]> {
     return <ItemH[]>(
@@ -205,6 +244,10 @@ export async function makePositionRequest(route: Route, request: string = "Posit
     );
 }
 
+/**
+ * Disable all elements (which can be), that are grouped under give element
+ * @param e HTMLElement, of which all lower elements (here: inputs, buttons and selects) should be disabled
+ */
 export function disable(e: HTMLElement) {
     const i = e.getElementsByTagName("input");
     for (let j = 0; j < i.length; j++) {
@@ -235,22 +278,24 @@ export function unDisable(e: HTMLElement) {
     }
 }
 
-export function createDropdownDiv(id: string, type: string): HTMLDivElement {
-    let pointer: number = 0;
-    const div = document.createElement("div");
-    div.classList.add("dropdown");
-    const a = document.createElement("a");
-    //console.log(Object.keys(MachineType), type);
-    pointer = Object.keys(MachineType).indexOf(type);
-    a.innerText = Object.values(MachineType)[pointer];
-    a.classList.add("btn", "btn-secondary", "rounded-0");
-    a.href = "#";
-    a.setAttribute("data-type", type);
-    a.id = id + "type";
-    const ul = document.createElement("ul");
-    ul.classList.add("dropdown-menu", "type-dropdown");
-    ul.id = id + "fml";
-    
+/**
+ * Insert a "0" if the opposing object to be sorted is one or more magnitudes larger.
+ * @param a array of location variables of 1st location
+ * @param b
+ * @returns tuple (array) of strings, which can be properly sorted
+ */
+function inserZerosForSort(a: number, b: number): [string, string] {
+    let aStr = a.toString();
+    let bStr = b.toString();
+    while (aStr.length < bStr.length) {
+        aStr = "0" + aStr;
+    }
+    while (aStr.length > bStr.length) {
+        bStr = "0" + bStr;
+    }
+    return [aStr, bStr];
+}
+
 //AUTOCOMPLETE FUNCTION, props to the guys at: https://www.w3schools.com/howto/howto_js_autocomplete.asp
 /**
  * Autocompleting dropdown input for searching. can be used with any array.
