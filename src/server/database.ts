@@ -142,9 +142,9 @@ async function getOrCreateLocation(source: DataSource, location: Location): Prom
 
 async function createPosition(source: DataSource, position: Position): Promise<Position[]> {
     console.log("doing wizardry");
-    position.position = await source.manager.countBy(Position, {locationId: position.locationId});
-    position.item = await source.manager.findOneBy(Item, {id: position.itemId});
-    position.location = await source.manager.findOneBy(Location, {id: position.locationId});
+    position.position = await source.manager.countBy(Position, { locationId: position.locationId });
+    position.item = await source.manager.findOneBy(Item, { id: position.itemId });
+    position.location = await source.manager.findOneBy(Location, { id: position.locationId });
     await source.manager.save(Position, position);
     return await getEntities(source, Objects.POSITIONS);
 }
@@ -162,8 +162,8 @@ async function updateItem(source: DataSource, item: Item): Promise<Item[]> {
 }
 
 async function updatePosition(source: DataSource, position: Position) {
-    position.item = await source.manager.findOneBy(Item, {id: position.itemId});
-    position.location = await source.manager.findOneBy(Location, {id: position.locationId});
+    position.item = await source.manager.findOneBy(Item, { id: position.itemId });
+    position.location = await source.manager.findOneBy(Location, { id: position.locationId });
     const found: Position = await source.manager.findOneBy(Position, {
         id: position.id,
     });
@@ -220,13 +220,13 @@ async function deleteLocation(source: DataSource, locId: string): Promise<Locati
 }
 
 async function deletePosition(source: DataSource, posId: string): Promise<Position[]> {
-    const pos = await source.manager.findOneBy(Position, {id: posId});
+    const pos = await source.manager.findOneBy(Position, { id: posId });
     updatePositionPositions(source, pos.locationId);
     return await getEntities(source, Objects.POSITIONS);
 }
 
 async function updatePositionPositions(source: DataSource, locId: string) {
-    const posArray: Position[] = await source.manager.findBy(Position, {locationId: locId});
+    const posArray: Position[] = await source.manager.findBy(Position, { locationId: locId });
     posArray.sort((a: Position, b: Position) => a.position - b.position);
     for (let i = 0; i < posArray.length; i++) {
         posArray[i].position = i;
