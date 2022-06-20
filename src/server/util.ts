@@ -1,4 +1,4 @@
-import { ItemH, LocationH, MachineType, PositionH } from "../common/util";
+import { ItemH, LocationH, PositionH } from "../common/util";
 import { Item } from "./entities/item";
 import { Location } from "./entities/location";
 import { Position } from "./entities/position";

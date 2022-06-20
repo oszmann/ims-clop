@@ -1,4 +1,3 @@
-import { MachineType } from "../common/util";
 import {
     addCost,
     addDescription,
@@ -34,6 +33,7 @@ import {
     createPosition,
     disable,
     unDisable,
+    MachineType,
 } from "./util";
 
 let doUpdate: boolean = true;

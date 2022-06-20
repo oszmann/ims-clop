@@ -25,6 +25,17 @@ export enum Page {
     LOCATIONS,
 }
 
+export enum MachineType {
+    DEFAULT = "No type",
+    TIE_FIGHTER = "Tie Fighter",
+}
+
+export enum Category {
+    COMPONENT = "Component",
+    GOODS = "Goods",
+    MATERIAL = "Material",
+}
+
 //Create a new ItemH item
 export function createItem(partNumber: string, desc: string, cost: string, minStock: string, type: string): ItemH {
     if (partNumber === "") {

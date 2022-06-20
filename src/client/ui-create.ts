@@ -1,6 +1,6 @@
-import { ItemH, LocationH, MachineType, PositionH } from "../common/util";
+import { ItemH, LocationH, PositionH } from "../common/util";
 import { getItems, getLocations, updateItems, updateLocations, updatePositions } from "./ui";
-import { createItem, createPosition, makeItemRequest, makeLocationRequest, makePositionRequest, Route } from "./util";
+import { createItem, createPosition, MachineType, makeItemRequest, makeLocationRequest, makePositionRequest, Route } from "./util";
 
 /**
  * Here you can exclusively find functions, that is used for creating UI-Elements.

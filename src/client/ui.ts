@@ -1,15 +1,15 @@
-import { ItemH, LocationH, MachineType, PositionH } from "../common/util";
-import { sortArrayBy, SortBy, sortItemsByPartNumberLambda, sortLocationsByRackLambda, sortLocationsByShelfLambda, sortLocationsByWarehouseLambda } from "./search-and-sort";
+import { ItemH, LocationH, PositionH } from "../common/util";
+import {
+    sortArrayBy,
+    SortBy,
+    sortItemsByPartNumberLambda,
+    sortLocationsByRackLambda,
+    sortLocationsByShelfLambda,
+    sortLocationsByWarehouseLambda,
+} from "./search-and-sort";
 import { $, itemsDiv, locationsDiv, positionPartNoInput, positionsDiv, positionWarehouseInput } from "./static";
 import { createItemDiv, createLocationTable, createPositionDiv } from "./ui-create";
-import {
-    getActivePage,
-    Page,
-    makeItemRequest,
-    makeLocationRequest,
-    Route,
-    autocomplete,
-} from "./util";
+import { getActivePage, Page, makeItemRequest, makeLocationRequest, Route, autocomplete, MachineType } from "./util";
 
 let sortBy: SortBy;
 
