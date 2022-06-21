@@ -9,8 +9,10 @@ import {
     addRack,
     addShelf,
     addWarehouse,
-    dropdownMenu,
+    categoriesDropdown,
+    categoriesDropdownList,
     machinesDropdown,
+    machinesDropdownList,
     positionAmountInput,
     positionPartNoInput,
     positionRackInput,
@@ -34,6 +36,7 @@ import {
     disable,
     unDisable,
     MachineType,
+    Category,
 } from "./util";
 
 let doUpdate: boolean = true;
@@ -74,7 +77,7 @@ async function initHome() {
 }
 
 async function initItems() {
-    initTypeDropdown();
+    initItemDropdowns();
     updateItems(await makeItemRequest(Route.R));
     //BUTTON LISTENERS
     addItemButton.addEventListener("click", () => {
@@ -86,7 +89,8 @@ async function initItems() {
                     addDescription.value,
                     addCost.value,
                     addMinStock.value,
-                    dropdownMenu.getAttribute("data-type")
+                    machinesDropdown.getAttribute("data-type"),
+                    categoriesDropdown.getAttribute("data-type")
                 )
             )
         ).then(resp => {
@@ -97,8 +101,10 @@ async function initItems() {
         addDescription.value = "";
         addCost.value = "";
         addMinStock.value = "";
-        dropdownMenu.innerText = "Type";
-        dropdownMenu.setAttribute("data-type", "DEFAULT");
+        machinesDropdown.innerText = "Type";
+        machinesDropdown.setAttribute("data-type", "DEFAULT");
+        categoriesDropdown.innerText = "Category";
+        categoriesDropdown.setAttribute("data-type", "DEFAULT");
     });
 }
 
@@ -175,9 +181,7 @@ function init() {
     }
 }
 
-init();
-
-function initTypeDropdown() {
+function initItemDropdowns() {
     Object.values(MachineType).forEach((value, index) => {
         const li: HTMLLIElement = document.createElement("li");
         const a: HTMLAnchorElement = document.createElement("a");
@@ -186,16 +190,32 @@ function initTypeDropdown() {
         a.innerText = value;
         li.appendChild(a);
         li.addEventListener("click", () => {
-            dropdownMenu.innerText = value;
+            machinesDropdown.innerText = value;
             console.log(Object.keys(MachineType)[index]);
-            dropdownMenu.setAttribute("data-type", Object.keys(MachineType)[index]);
+            machinesDropdown.setAttribute("data-type", Object.keys(MachineType)[index]);
         });
-        machinesDropdown.appendChild(li);
+        machinesDropdownList.appendChild(li);
+    });
+    Object.values(Category).forEach((value, index) => {
+        const li: HTMLLIElement = document.createElement("li");
+        const a: HTMLAnchorElement = document.createElement("a");
+        a.classList.add("dropdown-item");
+        a.href = "#";
+        a.innerText = value;
+        li.appendChild(a);
+        li.addEventListener("click", () => {
+            categoriesDropdown.innerText = value;
+            console.log(Object.keys(Category)[index]);
+            categoriesDropdown.setAttribute("data-type", Object.keys(Category)[index]);
+        });
+        categoriesDropdownList.appendChild(li);
     });
 }
 
 async function main() {
     updateItems(await makeItemRequest(Route.R));
+
+    init();
     async function update() {
         doUpdate = false;
     }

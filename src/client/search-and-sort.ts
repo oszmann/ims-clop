@@ -1,6 +1,5 @@
 import { ItemH, LocationH, PositionH } from "../common/util";
 
-
 export enum SortBy {
     CREATE_DATE,
     UPDATE_DATE,
@@ -27,7 +26,7 @@ export enum SortBy {
  * @param callback
  * @returns sorted array
  */
- export function sortArrayBy(array: any[], callback: ((a: any, b: any) => any)[]): any[] {
+export function sortArrayBy(array: any[], callback: ((a: any, b: any) => any)[]): any[] {
     callback.forEach(call => (array = array.sort(call)));
     return array;
 }
@@ -96,14 +95,13 @@ export const sortLocationsByShelfLambda = (a: LocationH, b: LocationH) => {
 
 export const sortPositionsByItemLambda = (a: PositionH, b: PositionH) => {};
 
-
 /**
  * Insert a "0" if the opposing object to be sorted is one or more magnitudes larger.
  * @param a array of location variables of 1st location
  * @param b
  * @returns tuple (array) of strings, which can be properly sorted
  */
- function insertZerosForSort(a: number, b: number): [string, string] {
+function insertZerosForSort(a: number, b: number): [string, string] {
     let aStr = a.toString();
     let bStr = b.toString();
     while (aStr.length < bStr.length) {

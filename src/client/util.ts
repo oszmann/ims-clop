@@ -28,16 +28,19 @@ export enum Page {
 export enum MachineType {
     DEFAULT = "No type",
     TIE_FIGHTER = "Tie Fighter",
+    CAR = "Car",
+    BIKE = "Bike",
 }
 
 export enum Category {
-    COMPONENT = "Component",
+    DEFAULT = "None",
+    COMPONENTS = "Components",
     GOODS = "Goods",
-    MATERIAL = "Material",
+    MATERIALS = "Materials",
 }
 
 //Create a new ItemH item
-export function createItem(partNumber: string, desc: string, cost: string, minStock: string, type: string): ItemH {
+export function createItem(partNumber: string, desc: string, cost: string, minStock: string, type: string, category: string): ItemH {
     if (partNumber === "") {
         partNumber = "test item";
     }
@@ -58,6 +61,8 @@ export function createItem(partNumber: string, desc: string, cost: string, minSt
     itemH.cost = parseInt(cost);
     itemH.minStock = parseInt(minStock);
     itemH.machineType = type;
+    itemH.category = category;
+    console.log("aaaaaaaaaaaaaaaaa",category)
 
     return itemH;
 }
