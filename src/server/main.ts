@@ -28,7 +28,7 @@ app.get("/home", (req: Request, res: Response) => {
 
 app.get("/api/", async (req: Request, res: Response) => {
     console.log(req.url);
-    res.json(await insertPosition(AppDataSource));
+    // res.json(await insertPosition(AppDataSource));
 });
 
 app.get("/api/get", async (req: Request, res: Response) => {
