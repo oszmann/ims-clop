@@ -62,7 +62,7 @@ export function createItem(partNumber: string, desc: string, cost: string, minSt
     itemH.minStock = parseInt(minStock);
     itemH.machineType = type;
     itemH.category = category;
-    console.log("aaaaaaaaaaaaaaaaa",category)
+    // console.log("aaaaaaaaaaaaaaaaa",category);
 
     return itemH;
 }
