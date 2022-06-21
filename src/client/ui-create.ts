@@ -356,11 +356,13 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     const itemDiv = document.createElement("div");
     const itemDec = document.createElement("a");
     const partNo = document.createElement("a");
+    const c = document.createElement("a");
+    const category = document.createElement("a");
     const t = document.createElement("a");
     const type = document.createElement("a");
     const d = document.createElement("a");
     const desc = document.createElement("a");
-    const c = document.createElement("a");
+    const dollar = document.createElement("a");
     const cost = document.createElement("a");
 
     const locationDiv = document.createElement("div");
@@ -402,23 +404,28 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     itemDec.innerText = "Item:";
     itemDec.classList.add("border-0", "dec");
     partNo.innerText = item.partNumber;
+    c.classList.add("border-0", "dec");
+    c.innerText = "C:";
+    category.innerText = Object.values(Category)[Object.keys(Category).indexOf(item.category)];
     t.classList.add("border-0", "dec");
     t.innerText = "T:";
     type.innerText = Object.values(MachineType)[Object.keys(MachineType).indexOf(item.machineType)];
     d.classList.add("border-0", "dec");
     d.innerText = "D:";
     desc.innerText = item.description;
-    c.classList.add("border-0", "dec");
-    c.innerText = "C:";
+    dollar.classList.add("border-0", "dec");
+    dollar.innerText = "$:";
     cost.innerText = item.cost.toString();
 
     itemDiv.appendChild(itemDec);
     itemDiv.appendChild(partNo);
+    itemDiv.appendChild(c);
+    itemDiv.appendChild(category);
     itemDiv.appendChild(t);
     itemDiv.appendChild(type);
     itemDiv.appendChild(d);
     itemDiv.appendChild(desc);
-    itemDiv.appendChild(c);
+    itemDiv.appendChild(dollar);
     itemDiv.appendChild(cost);
 
     locationDec.innerText = "Location:";
