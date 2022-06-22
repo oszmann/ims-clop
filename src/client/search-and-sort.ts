@@ -27,6 +27,7 @@ export enum SortBy {
  * @returns sorted array
  */
 export function sortArrayBy(array: any[], callback: ((a: any, b: any) => any)[]): any[] {
+    console.log("sorting")
     callback.forEach(call => (array = array.sort(call)));
     return array;
 }
@@ -52,6 +53,12 @@ export const sortItemsByDescLambda = (a: ItemH, b: ItemH) => Intl.Collator().com
 export const sortItemsByMinStockLambda = (a: ItemH, b: ItemH) =>
     Intl.Collator().compare(a.minStock.toString(), b.minStock.toString());
 
+
+export const sortItemsByCategoryLambda = (a: ItemH, b: ItemH) =>
+    Intl.Collator().compare(a.category, b.category);
+
+export const sortItemsByTypeLambda = (a: ItemH, b: ItemH) =>
+    Intl.Collator().compare(a.machineType, b.machineType);
 /**
  * Lambda to sort itemH items by updated_at
  */
@@ -93,7 +100,43 @@ export const sortLocationsByShelfLambda = (a: LocationH, b: LocationH) => {
     return Intl.Collator().compare(temp[0], temp[1]);
 };
 
-export const sortPositionsByItemLambda = (a: PositionH, b: PositionH) => {};
+export const sortPositionsByItemPartNumberLambda = (a: PositionH, b: PositionH) => {
+    const aItem = getItems().find(x => x.id === a.itemId);
+    const bItem = getItems().find(x => x.id === b.itemId);
+    return sortItemsByPartNumberLambda(aItem, bItem);
+};
+
+
+export const sortPositionsByItemCategoryLambda = (a: PositionH, b: PositionH) => {
+    const aItem = getItems().find(x => x.id === a.itemId);
+    const bItem = getItems().find(x => x.id === b.itemId);
+    return sortItemsByCategoryLambda(aItem, bItem);
+}
+
+
+export const sortPositionsByItemTypeLambda = (a: PositionH, b: PositionH) => {
+    const aItem = getItems().find(x => x.id === a.itemId);
+    const bItem = getItems().find(x => x.id === b.itemId);
+    return sortItemsByTypeLambda(aItem, bItem);
+}
+
+export const sortPositionsByWarehouseLambda = (a: PositionH, b: PositionH) => {
+    const aLocation = getLocations().find(x => x.id === a.locationId);
+    const bLocation = getLocations().find(x => x.id === b.locationId);
+    return sortLocationsByWarehouseLambda(aLocation, bLocation);
+}
+
+export const sortPositionsByRackLambda = (a: PositionH, b: PositionH) => {
+    const aLocation = getLocations().find(x => x.id === a.locationId);
+    const bLocation = getLocations().find(x => x.id === b.locationId);
+    return sortLocationsByRackLambda(aLocation, bLocation);
+}
+
+export const sortPositionsByShelfLambda = (a: PositionH, b: PositionH) => {
+    const aLocation = getLocations().find(x => x.id === a.locationId);
+    const bLocation = getLocations().find(x => x.id === b.locationId);
+    return sortLocationsByShelfLambda(aLocation, bLocation);
+}
 
 /**
  * Insert a "0" if the opposing object to be sorted is one or more magnitudes larger.
