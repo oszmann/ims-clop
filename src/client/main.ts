@@ -19,6 +19,8 @@ import {
     positionRackInput,
     positionShelfInput,
     positionWarehouseInput,
+    searchDropdown,
+    searchDropdownList,
     toggleInsert,
     toggleRack,
     toggleShelf,
@@ -38,6 +40,7 @@ import {
     unDisable,
     MachineType,
     Category,
+    SearchBy,
 } from "./util";
 
 let doUpdate: boolean = true;
@@ -76,6 +79,20 @@ async function initHome() {
     });
     initSortByButtons();
     initAutocomplete();
+    Object.values(SearchBy).forEach((value, index) => {
+        const li: HTMLLIElement = document.createElement("li");
+        const a: HTMLAnchorElement = document.createElement("a");
+        a.classList.add("dropdown-item");
+        a.href = "#";
+        a.innerText = value;
+        li.appendChild(a);
+        li.addEventListener("click", () => {
+            searchDropdown.innerText = "Search by: " + value;
+            //console.log(Object.keys(SearchBy)[index]);
+            searchDropdown.setAttribute("data-search", Object.keys(SearchBy)[index]);
+        });
+        searchDropdownList.appendChild(li);
+    });
     updatePositions(await makePositionRequest(Route.R));
 }
 
