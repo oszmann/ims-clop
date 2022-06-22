@@ -184,9 +184,10 @@ export async function updatePositions(newPositions: PositionH[]) {
 export async function initAutocomplete() {
     updateItems(await makeItemRequest(Route.R));
     // Map data of items to a string[]
+    const prefixA = "Item: ";
     const a = items.map(i => {
         return (
-            "Item: " +
+            prefixA +
             i.partNumber +
             " : " +
             Object.values(MachineType)[Object.keys(MachineType).indexOf(i.machineType)] +
@@ -194,11 +195,12 @@ export async function initAutocomplete() {
             i.description
         );
     });
-    autocomplete(positionPartNoInput, a, 6);
+    autocomplete(positionPartNoInput, a, prefixA);
     updateLocations(await makeLocationRequest(Route.R));
     // Map data of locations to a string[]
+    const prefixB = "Location: "
     const b = locations.map(l => {
-        return "Location: " + l.warehouse + " : " + l.rack + " : " + l.shelf;
+        return prefixB + l.warehouse + " : " + l.rack + " : " + l.shelf;
     });
-    autocomplete(positionWarehouseInput, b, 10);
+    autocomplete(positionWarehouseInput, b, prefixB);
 }

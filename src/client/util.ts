@@ -205,9 +205,9 @@ export function unDisable(e: HTMLElement) {
  * Autocompleting dropdown input for searching. can be used with any array.
  * @param inputElement Inputelement Autocomplete is linked to
  * @param array Array of strings to display in Autocomplete
- * @param type !!TO BE CHANGED!! length of prefix in array strings (e.g. "Locations: " => 10)
+ * @param type !!TO BE CHANGED!! prefix in array strings (e.g. "Location: ")
  */
-export function autocomplete(inputElement: HTMLInputElement, array: any[], type: number) {
+export function autocomplete(inputElement: HTMLInputElement, array: any[], prefix: string) {
     let currentArrowKeyIndex: number;
     inputElement.addEventListener("input", () => {
         let inputValue = inputElement.value;
@@ -222,7 +222,7 @@ export function autocomplete(inputElement: HTMLInputElement, array: any[], type:
         inputElement.parentNode.appendChild(container);
         for (let i = 0; i < array.length; i++) {
             const a = sanitize(inputValue);
-            let b = array[i].substr(type);
+            let b = array[i].substr(prefix.length);
             let c = "";
             let index = 0;
             //calculate length of non-sanitised correct partial string
@@ -244,21 +244,24 @@ export function autocomplete(inputElement: HTMLInputElement, array: any[], type:
                 }
                 objectDiv.innerHTML +=
                     "<strong> <u>" +
-                    array[i].substr(0, type - 1) +
+                    array[i].substr(0, prefix.length - 1) +
                     "</u> " +
-                    array[i].substr(type - 1, index + 1) +
+                    array[i].substr(prefix.length - 1, index + 1) +
                     "</strong>";
-                objectDiv.innerHTML += array[i].substr(type + index);
-                objectDiv.setAttribute("data-input", array[i].substr(type));
+                objectDiv.innerHTML += array[i].substr(prefix.length + index);
+                objectDiv.setAttribute("data-input", array[i].substr(prefix.length));
                 objectDiv.addEventListener("click", () => {
-                    if (type === 10) {
+                    if (prefix === "Location: ") {
                         const temp = objectDiv.getAttribute("data-input").split(" : ");
                         //console.log(temp)
                         inputElement.value = temp[0];
                         positionRackInput.value = temp[1];
                         positionShelfInput.value = temp[2];
-                    } else {
+                    } else if (prefix === "Item: ") {
                         inputElement.value = objectDiv.getAttribute("data-input").split(" : ")[0];
+                    }
+                    else {
+                        //Do nothing
                     }
                     closeAllLists(inputElement);
                 });
