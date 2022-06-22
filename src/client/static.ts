@@ -6,7 +6,10 @@ export function $<T extends HTMLElement>(id: string): T {
 
 //STATIC - INDEX
 // export const deleteButton = <HTMLAreaElement>$("delete-all-button");
-export const positionsDiv = <HTMLDivElement>$("positions-div");
+export const sortOrderButton = <HTMLAnchorElement>$("sort-order");
+export const searchDropdown = <HTMLAnchorElement>$("navbar-search-dropdown");
+export const searchDropdownList = <HTMLUListElement>$("navbar-search-dropdown-list");
+export const searchInput = <HTMLInputElement>$("navbar-search");
 export const positionPartNoInput = <HTMLInputElement>$("position-part-no-input");
 export const positionWarehouseInput = <HTMLInputElement>$("position-warehouse-input");
 //export const positionRowInput = <HTMLInputElement>$("position-row-input");
@@ -14,6 +17,12 @@ export const positionRackInput = <HTMLInputElement>$("position-rack-input");
 export const positionShelfInput = <HTMLInputElement>$("position-shelf-input");
 export const positionAmountInput = <HTMLInputElement>$("position-amount-input");
 export const addPositionButton = <HTMLButtonElement>$("position-add-button");
+export const positionsDiv = <HTMLDivElement>$("positions-div");
+export const sortByItem = <HTMLAnchorElement>$("item");
+export const sortByCategory = <HTMLAnchorElement>$("category");
+export const sortByType = <HTMLAnchorElement>$("type");
+export const sortByLoaction = <HTMLAnchorElement>$("location");
+export const sortByUpdate = <HTMLAnchorElement>$("update");
 
 //STATIC - LOCATIONS
 export const toggleInsert = <HTMLButtonElement>$("toggle-insert");
