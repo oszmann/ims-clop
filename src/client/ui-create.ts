@@ -312,8 +312,22 @@ export function createLocationTable(locations: LocationH[]): HTMLTableElement {
     //create header
     table.appendChild(createLocationTableHeaders());
 
-    locations.forEach(location => {
+    locations.forEach((location, index) => {
         const tr: HTMLTableRowElement = document.createElement("tr");
+        if (index > 0 && locations[index- 1].warehouse !== location.warehouse || index === 0) {
+            const trf: HTMLTableRowElement = document.createElement("tr");
+            const tdf: HTMLTableCellElement = document.createElement("td");
+            const emptytdf: HTMLTableCellElement = document.createElement("td");
+            tdf.innerText = location.warehouse;
+            trf.style.backgroundColor = "var(--bg-secondary)";
+            emptytdf.innerText = " ";
+            trf.appendChild(emptytdf);
+            trf.appendChild(tdf);
+            // trf.appendChild(emptytdf);
+            // trf.appendChild(emptytdf);
+            // trf.appendChild(emptytdf);
+            table.appendChild(trf)
+        }
 
         //ID SHENANIGANS
         const id: HTMLAnchorElement = document.createElement("a");
