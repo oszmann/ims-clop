@@ -1,3 +1,4 @@
+import { initSortByButtons } from "./search-and-sort";
 import {
     addCost,
     addDescription,
@@ -41,6 +42,7 @@ import {
 
 let doUpdate: boolean = true;
 let toggleDropdown: string = "shelf";
+const dummyArray: string[] = ["hi", "there", "my", "name", "is", "dum", "dum"];
 
 async function initHome() {
     //BUTTON LISTENERS
@@ -72,6 +74,7 @@ async function initHome() {
         positionShelfInput.value = "";
         positionAmountInput.value = "";
     });
+    initSortByButtons();
     initAutocomplete();
     updatePositions(await makePositionRequest(Route.R));
 }
