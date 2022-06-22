@@ -25,9 +25,14 @@ export enum Page {
     LOCATIONS,
 }
 
+export enum SearchBy {
+    ITEM = "Item",
+    LOCATION = "Location",
+}
+
 export enum MachineType {
     DEFAULT = "No type",
-    TIE_FIGHTER = "Tie Fighter",
+    PLANE = "Plane",
     CAR = "Car",
     BIKE = "Bike",
 }
@@ -40,7 +45,14 @@ export enum Category {
 }
 
 //Create a new ItemH item
-export function createItem(partNumber: string, desc: string, cost: string, minStock: string, type: string, category: string): ItemH {
+export function createItem(
+    partNumber: string,
+    desc: string,
+    cost: string,
+    minStock: string,
+    type: string,
+    category: string
+): ItemH {
     if (partNumber === "") {
         partNumber = "test item";
     }
@@ -259,8 +271,7 @@ export function autocomplete(inputElement: HTMLInputElement, array: any[], prefi
                         positionShelfInput.value = temp[2];
                     } else if (prefix === "Item: ") {
                         inputElement.value = objectDiv.getAttribute("data-input").split(" : ")[0];
-                    }
-                    else {
+                    } else {
                         //Do nothing
                     }
                     closeAllLists(inputElement);
