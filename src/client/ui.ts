@@ -1,7 +1,6 @@
 import { ItemH, LocationH, PositionH } from "../common/util";
 import {
     sortArrayBy,
-    SortBy,
     sortItemsByPartNumberLambda,
     sortLocationsByRackLambda,
     sortLocationsByShelfLambda,
@@ -23,8 +22,6 @@ import {
     MachineType,
     Category,
 } from "./util";
-
-let sortBy: SortBy;
 
 let items: ItemH[] = [];
 export function getItems(): ItemH[] {
@@ -63,9 +60,6 @@ export function updateItems(newItems: ItemH[]) {
     items.forEach(newItem => {
         itemsDiv.appendChild(createItemDiv(newItem));
     });
-    if (!sortBy) {
-        sortBy = SortBy.PART_NO;
-    }
     //console.log(items);
 }
 

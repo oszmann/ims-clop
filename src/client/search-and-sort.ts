@@ -2,22 +2,6 @@ import { ItemH, LocationH, PositionH } from "../common/util";
 import { positionsDiv, sortByCategory, sortByItem, sortByLoaction, sortByType, sortByUpdate } from "./static";
 import { getItems, getLocations, getPositions } from "./ui";
 
-export enum SortBy {
-    CREATE_DATE,
-    UPDATE_DATE,
-    PART_NO,
-    DESCRIPTION,
-    COST,
-    MIN_STOCK,
-    WAREHOUSE,
-    ROW,
-    RACK,
-    SHELF,
-    ITEM,
-    LOCATION,
-    AMOUNT,
-}
-
 //------------------------Sort
 /**
  * Sort an array by Lambdas
