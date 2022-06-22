@@ -29,10 +29,10 @@
                                 <a class="nav-link active" href="/#" aria-current="page">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/items">Items</a>
+                                <a class="nav-link" href="/items">Manage items</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/locations">Locations</a>
+                                <a class="nav-link" href="/locations">Manage locations</a>
                             </li>
                         </ul>
                         <form class="d-flex">
@@ -50,15 +50,15 @@
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
                                 >
-                                    Sort by:
+                                    Search by:
                                 </a>
                                 <ul
-                                    id="search-dropdown-list"
+                                    id="navbar-search-dropdown-list"
                                     class="dropdown-menu"
                                     aria-labelledby="navbarDropdown"
                                 ></ul>
                             </div>
-                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                            <input id="navbar-search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
                             <!-- <a class="nav-link" href="#" style="color: red" id="delete-all-button">Delete all entries</a> -->
                         </form>
                     </div>
@@ -128,6 +128,13 @@
                             </button>
                         </div>
                     </div>
+                </div>
+                <div id="sort-bar">
+                    <a href="#" class="btn btn-secondary sort-button" id="item" type="button">ITEM <em class="fa-solid fa-caret-down"></em></a>
+                    <a href="#" class="btn btn-secondary sort-button" id="category" type="button">CATEGORY </a>
+                    <a href="#" class="btn btn-secondary sort-button" id="type" type="button">TYPE </a>
+                    <a href="#" class="btn btn-secondary sort-button" id="location" type="button">LOCATION </a>
+                    <a href="#" class="btn btn-secondary sort-button" id="update" type="button">UPDATE </a>
                 </div>
             </div>
         </nav>
