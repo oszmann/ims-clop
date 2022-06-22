@@ -84,7 +84,7 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     dates.appendChild(datesSpan);
 
     editButton.innerText = "Edit";
-    editButton.classList.add("btn", "btn-primary");
+    editButton.classList.add("btn", "btn-primary", "rounded");
     deleteButton.innerText = "Delete";
     deleteButton.classList.add("btn", "btn-primary");
     editButton.addEventListener("click", async () => {
@@ -109,6 +109,7 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     typeDropdown.classList.add("-w10");
     const categoryDropdown = createCategoryDropdownDiv(item.id, item.category);
     categoryDropdown.classList.add("-w10");
+    div.appendChild(editButton);
     div.appendChild(id);
     div.appendChild(partNumber);
     div.appendChild(description);
@@ -116,7 +117,6 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     div.appendChild(minStock);
     div.appendChild(typeDropdown);
     div.appendChild(categoryDropdown);
-    div.appendChild(editButton);
     div.appendChild(dates);
     div.appendChild(deleteButton);
     //console.log("created div")
