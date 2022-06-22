@@ -13,7 +13,16 @@ import {
 } from "./search-and-sort";
 import { $, itemsDiv, locationsDiv, positionPartNoInput, positionsDiv, positionWarehouseInput } from "./static";
 import { createItemDiv, createLocationTable, createPositionDiv } from "./ui-create";
-import { getActivePage, Page, makeItemRequest, makeLocationRequest, Route, autocomplete, MachineType } from "./util";
+import {
+    getActivePage,
+    Page,
+    makeItemRequest,
+    makeLocationRequest,
+    Route,
+    autocomplete,
+    MachineType,
+    Category,
+} from "./util";
 
 let sortBy: SortBy;
 
@@ -92,7 +101,12 @@ export async function updatePositions(newPositions: PositionH[]) {
     updateItems(await makeItemRequest(Route.R));
     updateLocations(await makeLocationRequest(Route.R));
 
-    positions = sortArrayBy(newPositions, [sortPositionsByShelfLambda, sortPositionsByRackLambda, sortPositionsByWarehouseLambda, sortPositionsByItemPartNumberLambda]);
+    positions = sortArrayBy(newPositions, [
+        sortPositionsByShelfLambda,
+        sortPositionsByRackLambda,
+        sortPositionsByWarehouseLambda,
+        sortPositionsByItemPartNumberLambda,
+    ]);
 
     //dont try to access variables you dont need to
     if (getActivePage() !== Page.HOME) {
@@ -101,13 +115,13 @@ export async function updatePositions(newPositions: PositionH[]) {
     }
 
     while (positionsDiv.firstChild) {
-        console.log("removing")
+        console.log("removing");
         positionsDiv.firstChild.remove();
     }
     positions.forEach(pos => {
-        console.log("bruh")
+        console.log("bruh");
         positionsDiv.appendChild(createPositionDiv(pos));
-    })
+    });
     //TODO
     //positions = sortArrayBy(positions, );
 }
@@ -124,6 +138,8 @@ export async function initAutocomplete() {
             prefixA +
             i.partNumber +
             " : " +
+            Object.values(Category)[Object.keys(Category).indexOf(i.category)] +
+            " : " +
             Object.values(MachineType)[Object.keys(MachineType).indexOf(i.machineType)] +
             " : " +
             i.description
@@ -132,7 +148,7 @@ export async function initAutocomplete() {
     autocomplete(positionPartNoInput, a, prefixA);
     updateLocations(await makeLocationRequest(Route.R));
     // Map data of locations to a string[]
-    const prefixB = "Location: "
+    const prefixB = "Location: ";
     const b = locations.map(l => {
         return prefixB + l.warehouse + " : " + l.rack + " : " + l.shelf;
     });

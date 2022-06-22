@@ -1,6 +1,15 @@
 import { ItemH, LocationH, PositionH } from "../common/util";
 import { getItems, getLocations, updateItems, updateLocations, updatePositions } from "./ui";
-import { Category, createItem, createPosition, MachineType, makeItemRequest, makeLocationRequest, makePositionRequest, Route } from "./util";
+import {
+    Category,
+    createItem,
+    createPosition,
+    MachineType,
+    makeItemRequest,
+    makeLocationRequest,
+    makePositionRequest,
+    Route,
+} from "./util";
 
 /**
  * Here you can exclusively find functions, that is used for creating UI-Elements.
@@ -207,14 +216,14 @@ export function createTypeDropdownDiv(id: string, type: string): HTMLDivElement 
  * @param category
  * @returns
  */
- export function createCategoryDropdownDiv(id: string, category: string): HTMLDivElement {
+export function createCategoryDropdownDiv(id: string, category: string): HTMLDivElement {
     let pointer: number = 0;
     const div = document.createElement("div");
     div.classList.add("dropdown");
     const a = document.createElement("a");
     pointer = Object.keys(Category).indexOf(category);
-    
-    console.log(Object.values(Category).length, pointer, category)
+
+    console.log(Object.values(Category).length, pointer, category);
     a.innerText = Object.values(Category)[Object.keys(Category).indexOf(category)];
     a.classList.add("btn", "btn-secondary", "rounded-0");
     a.href = "#";

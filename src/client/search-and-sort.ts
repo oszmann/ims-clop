@@ -171,7 +171,7 @@ export function initSortByButtons() {
                 sortPositionsByShelfLambda,
                 sortPositionsByRackLambda,
                 sortPositionsByWarehouseLambda,
-                sortPositionsByItemPartNumberLambda
+                sortPositionsByItemPartNumberLambda,
             ]);
         } else {
             removeAllEms();
@@ -180,7 +180,7 @@ export function initSortByButtons() {
                 sortPositionsByShelfLambda,
                 sortPositionsByRackLambda,
                 sortPositionsByWarehouseLambda,
-                sortPositionsByItemPartNumberLambda
+                sortPositionsByItemPartNumberLambda,
             ]);
             getPositions().reverse();
         }
@@ -195,7 +195,7 @@ export function initSortByButtons() {
                 sortPositionsByRackLambda,
                 sortPositionsByWarehouseLambda,
                 sortPositionsByItemPartNumberLambda,
-                sortPositionsByItemCategoryLambda
+                sortPositionsByItemCategoryLambda,
             ]);
         } else {
             removeAllEms();
@@ -205,7 +205,7 @@ export function initSortByButtons() {
                 sortPositionsByRackLambda,
                 sortPositionsByWarehouseLambda,
                 sortPositionsByItemPartNumberLambda,
-                sortPositionsByItemCategoryLambda
+                sortPositionsByItemCategoryLambda,
             ]);
             getPositions().reverse();
         }
@@ -220,7 +220,7 @@ export function initSortByButtons() {
                 sortPositionsByRackLambda,
                 sortPositionsByWarehouseLambda,
                 sortPositionsByItemPartNumberLambda,
-                sortPositionsByItemTypeLambda
+                sortPositionsByItemTypeLambda,
             ]);
         } else {
             removeAllEms();
@@ -230,7 +230,7 @@ export function initSortByButtons() {
                 sortPositionsByRackLambda,
                 sortPositionsByWarehouseLambda,
                 sortPositionsByItemPartNumberLambda,
-                sortPositionsByItemTypeLambda
+                sortPositionsByItemTypeLambda,
             ]);
             getPositions().reverse();
         }
@@ -244,7 +244,7 @@ export function initSortByButtons() {
                 sortPositionsByItemPartNumberLambda,
                 sortPositionsByShelfLambda,
                 sortPositionsByRackLambda,
-                sortPositionsByWarehouseLambda
+                sortPositionsByWarehouseLambda,
             ]);
         } else {
             removeAllEms();
@@ -253,7 +253,7 @@ export function initSortByButtons() {
                 sortPositionsByItemPartNumberLambda,
                 sortPositionsByShelfLambda,
                 sortPositionsByRackLambda,
-                sortPositionsByWarehouseLambda
+                sortPositionsByWarehouseLambda,
             ]);
             getPositions().reverse();
         }
@@ -268,7 +268,7 @@ export function initSortByButtons() {
                 sortPositionsByRackLambda,
                 sortPositionsByWarehouseLambda,
                 sortPositionsByItemPartNumberLambda,
-                sortPositionsByUpdatedAt
+                sortPositionsByUpdatedAt,
             ]);
         } else {
             removeAllEms();
@@ -278,7 +278,7 @@ export function initSortByButtons() {
                 sortPositionsByRackLambda,
                 sortPositionsByWarehouseLambda,
                 sortPositionsByItemPartNumberLambda,
-                sortPositionsByUpdatedAt
+                sortPositionsByUpdatedAt,
             ]);
             getPositions().reverse();
         }
