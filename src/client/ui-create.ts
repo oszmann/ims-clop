@@ -47,7 +47,7 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     partNumber.classList.add("form-control");
     partNumber.style.minWidth = "20%";
     description.classList.add("form-control");
-    description.style.minWidth = "40%";
+    description.style.minWidth = "30%";
     cost.classList.add("form-control");
     minStock.classList.add("form-control");
 
@@ -352,6 +352,7 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     const div = document.createElement("div");
     div.classList.add("input-group", "rounded", "position-outer-div");
     div.style.backgroundColor = "var(--bg-secondary)";
+    div.id = position.id;
 
     const itemDiv = document.createElement("div");
     const itemDec = document.createElement("a");
