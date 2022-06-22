@@ -6,7 +6,6 @@ export function $<T extends HTMLElement>(id: string): T {
 
 //STATIC - INDEX
 // export const deleteButton = <HTMLAreaElement>$("delete-all-button");
-export const sortOrderButton = <HTMLAnchorElement>$("sort-order");
 export const searchDropdown = <HTMLAnchorElement>$("navbar-search-dropdown");
 export const searchDropdownList = <HTMLUListElement>$("navbar-search-dropdown-list");
 export const searchInput = <HTMLInputElement>$("navbar-search");
