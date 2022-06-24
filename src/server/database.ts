@@ -1,5 +1,6 @@
 import { Request } from "express";
 import { DataSource } from "typeorm";
+import { Category } from "./entities/category";
 import { Item } from "./entities/item";
 import { Location } from "./entities/location";
 import { Position } from "./entities/position";
@@ -272,4 +273,40 @@ export async function insertPosition(source: DataSource) {
     pos.location = l;
     console.log(await source.manager.save(pos));
     return await source.manager.find(Position);
+}
+
+async function insertCategory(source: DataSource, newCategory: Category, parentId: string) {
+    const parent = await source.manager.findOneBy(Category, { id: parentId });
+    const descendants = await source.manager.getTreeRepository(Category).findDescendants(parent);
+    if (!parent) {
+        console.log("parent doesn't exist");
+        return;
+    } else if (descendants.map(x => x.name).includes(newCategory.name)) {
+        console.log("decendant with name already exists");
+        return;
+    }
+    newCategory.parent = parent;
+    await source.manager.save(Category, newCategory);
+}
+
+export async function setDefaultCategories(source: DataSource) {
+    await source.manager.remove(Category, await source.manager.find(Category));
+    const root = new Category();
+    root.name = "root";
+    root.description = "";
+    root.id = "00000000-0000-0000-0000-000000000000";
+    await source.manager.save(Category, root);
+    const a = createCategory("a", "a");
+    const b = createCategory("b", "b");
+    await insertCategory(source, a, root.id);
+    await insertCategory(source, b, root.id);
+    console.log(JSON.stringify(await source.manager.getTreeRepository(Category).findTrees()));
+    return await source.manager.getTreeRepository(Category).findTrees();
+}
+
+function createCategory(name: string, description: string = ""): Category {
+    const cat = new Category();
+    cat.name = name;
+    cat.description = description;
+    return cat;
 }
