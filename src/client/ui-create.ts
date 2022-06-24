@@ -327,6 +327,11 @@ export function createLocationTable(locations: LocationH[]): HTMLTableElement {
             // trf.appendChild(emptytdf);
             // trf.appendChild(emptytdf);
             table.appendChild(trf)
+        } else if (index > 0 && locations[index -1].rack !== location.rack) {
+            const trf: HTMLTableRowElement = document.createElement("tr");
+            const tdf: HTMLTableCellElement = document.createElement("td");
+            trf.appendChild(tdf);
+            table.appendChild(trf)
         }
 
         //ID SHENANIGANS
