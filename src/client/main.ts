@@ -21,6 +21,7 @@ import {
     positionWarehouseInput,
     searchDropdown,
     searchDropdownList,
+    searchInput,
     toggleInsert,
     toggleRack,
     toggleShelf,
@@ -92,6 +93,13 @@ async function initHome() {
             searchDropdown.setAttribute("data-search", Object.keys(SearchBy)[index]);
         });
         searchDropdownList.appendChild(li);
+    });
+    searchInput.addEventListener("input", e => {
+        //console.log(e);
+        console.log(searchInput.value);
+        if (!searchDropdown.getAttribute("data-search") || searchDropdown.getAttribute("data-search") === "ITEM") {
+            //do searching stuff
+        }
     });
     updatePositions(await makePositionRequest(Route.R));
 }
