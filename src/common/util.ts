@@ -30,3 +30,10 @@ export class LocationH {
     rack: number;
     shelf: number;
 }
+
+export class CategoryH {
+    id: string;
+    name: string;
+    description: string;
+    children: CategoryH[];
+}

@@ -5,8 +5,9 @@ import { DataSource } from "typeorm";
 import { Item } from "./entities/item";
 import { Location } from "./entities/location";
 import { Position } from "./entities/position";
-import { init, insertPosition, createRequest, readRequest, deleteRequest, updateRequest } from "./database";
-import { itemFromItemH, toNumber } from "./util";
+import { init, createRequest, readRequest, deleteRequest, updateRequest, setDefaultCategories } from "./database";
+import { toNumber } from "./util";
+import { Category } from "./entities/category";
 
 // -------------------firing express app
 const app = express();
@@ -72,7 +73,7 @@ const AppDataSource = new DataSource({
     username: "postgres",
     password: "3221",
     database: "postgres",
-    entities: [Item, Location, Position],
+    entities: [Item, Location, Position, Category],
     synchronize: true,
     logging: false,
 });
