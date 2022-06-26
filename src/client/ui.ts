@@ -80,8 +80,10 @@ export async function updateItems(newItems: ItemH[]) {
 
 export function updateCategories(newCategories: CategoryH[]) {
     categories = newCategories[0];
-    categoryModalBody.firstChild.remove();
-    categoryModalBody.appendChild(createCategoryDiv(categories));
+    if (getActivePage() === Page.ITEMS) {
+        categoryModalBody.firstChild?.remove();
+        categoryModalBody.appendChild(createCategoryDiv(categories));
+    }
 }
 
 //--------------------LOCATIONS

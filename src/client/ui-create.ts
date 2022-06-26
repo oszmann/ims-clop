@@ -300,7 +300,8 @@ export function createCategoryDropdownDiv(id: string, category: string): HTMLDiv
 }
 
 export function createCategoryDiv(category: CategoryH): HTMLDivElement {
-    return;
+    const div = document.createElement("div");
+    return div;
 }
 
 //-------------------------------Location
