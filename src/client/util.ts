@@ -1,5 +1,5 @@
 import { sanitize } from "string-sanitizer";
-import { ItemH, LocationH, PositionH } from "../common/util";
+import { CategoryH, ItemH, LocationH, PositionH } from "../common/util";
 import { $, positionRackInput, positionShelfInput } from "./static";
 import { getItems, getLocations } from "./ui";
 
@@ -14,9 +14,10 @@ export enum Route {
 export const localhost = "http://localhost:3000";
 
 export enum VarType {
-    item = "?item=",
-    location = "?loc=",
-    position = "?pos=",
+    item = "/?item=",
+    location = "/?loc=",
+    position = "/?pos=",
+    category = "/?cat=",
 }
 
 export enum Page {
@@ -161,21 +162,19 @@ export function getActivePage(): Page {
 }
 
 export async function makeItemRequest(route: Route, request: string = "Items, please!"): Promise<ItemH[]> {
-    return <ItemH[]>(
-        await (await fetch(route + "/" + VarType.item + request)).json()
-    );
+    return <ItemH[]>await (await fetch(route + VarType.item + request)).json();
+}
+
+export async function makeCategoryRequest(route: Route, request: string = "Categories, please!"): Promise<CategoryH[]> {
+    return <CategoryH[]>await (await fetch(route + VarType.category + request)).json();
 }
 
 export async function makeLocationRequest(route: Route, request: string = "Locations, please!"): Promise<LocationH[]> {
-    return <LocationH[]>(
-        await (await fetch(route + "/" + VarType.location + request)).json()
-    );
+    return <LocationH[]>await (await fetch(route + VarType.location + request)).json();
 }
 
 export async function makePositionRequest(route: Route, request: string = "Positions, please!"): Promise<PositionH[]> {
-    return <PositionH[]>(
-        await (await fetch(route + "/" + VarType.position + request)).json()
-    );
+    return <PositionH[]>await (await fetch(route + VarType.position + request)).json();
 }
 
 /**

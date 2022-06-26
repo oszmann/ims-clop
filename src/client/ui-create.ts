@@ -1,4 +1,4 @@
-import { ItemH, LocationH, PositionH } from "../common/util";
+import { CategoryH, ItemH, LocationH, PositionH } from "../common/util";
 import { getItems, getLocations, updateItems, updateLocations, updatePositions } from "./ui";
 import {
     Category,
@@ -299,6 +299,10 @@ export function createCategoryDropdownDiv(id: string, category: string): HTMLDiv
     return div;
 }
 
+export function createCategoryDiv(category: CategoryH): HTMLDivElement {
+    return;
+}
+
 //-------------------------------Location
 
 /**
@@ -314,7 +318,7 @@ export function createLocationTable(locations: LocationH[]): HTMLTableElement {
 
     locations.forEach((location, index) => {
         const tr: HTMLTableRowElement = document.createElement("tr");
-        if (index > 0 && locations[index- 1].warehouse !== location.warehouse || index === 0) {
+        if ((index > 0 && locations[index - 1].warehouse !== location.warehouse) || index === 0) {
             const trf: HTMLTableRowElement = document.createElement("tr");
             const tdf: HTMLTableCellElement = document.createElement("td");
             const emptytdf: HTMLTableCellElement = document.createElement("td");
@@ -326,12 +330,12 @@ export function createLocationTable(locations: LocationH[]): HTMLTableElement {
             // trf.appendChild(emptytdf);
             // trf.appendChild(emptytdf);
             // trf.appendChild(emptytdf);
-            table.appendChild(trf)
-        } else if (index > 0 && locations[index -1].rack !== location.rack) {
+            table.appendChild(trf);
+        } else if (index > 0 && locations[index - 1].rack !== location.rack) {
             const trf: HTMLTableRowElement = document.createElement("tr");
             const tdf: HTMLTableCellElement = document.createElement("td");
             trf.appendChild(tdf);
-            table.appendChild(trf)
+            table.appendChild(trf);
         }
 
         //ID SHENANIGANS

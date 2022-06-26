@@ -44,4 +44,6 @@ export const machinesDropdownList = <HTMLUListElement>$("machines-type-dropdown-
 export const categoriesDropdown = <HTMLAnchorElement>$("category-dropdown-button");
 export const categoriesDropdownList = <HTMLUListElement>$("category-dropdown-menu");
 export const addItemButton = <HTMLButtonElement>$("add-item-button");
+export const categoryModal = <HTMLDivElement>$("category-modal");
+export const categoryModalBody = <HTMLDivElement>$("category-body");
 export const itemsDiv = <HTMLDivElement>$("items-div");

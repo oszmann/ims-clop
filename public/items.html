@@ -33,6 +33,11 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="/locations">Manage locations</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#category-modal"
+                                    >Manage categories</a
+                                >
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -110,6 +115,29 @@
                 </div>
             </div>
         </nav>
+        <div
+            class="modal fade"
+            id="category-modal"
+            tabindex="-1"
+            aria-labelledby="category-modal-label"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="category-modal-label">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div id="category-body" class="modal-body"></div>
+                    <div class="modal-footer">
+                        <button id="modal-close-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="fart"></div>
         <div id="items-div"></div>
         <script src="./js/main.js"></script>

@@ -1,4 +1,4 @@
-import { ItemH, LocationH, PositionH } from "../common/util";
+import { CategoryH, ItemH, LocationH, PositionH } from "../common/util";
 import {
     sortArrayBy,
     sortItemsByPartNumberLambda,
@@ -10,8 +10,16 @@ import {
     sortPositionsByShelfLambda,
     sortPositionsByWarehouseLambda,
 } from "./search-and-sort";
-import { $, itemsDiv, locationsDiv, positionPartNoInput, positionsDiv, positionWarehouseInput } from "./static";
-import { createItemDiv, createLocationTable, createPositionDiv } from "./ui-create";
+import {
+    $,
+    categoryModalBody,
+    itemsDiv,
+    locationsDiv,
+    positionPartNoInput,
+    positionsDiv,
+    positionWarehouseInput,
+} from "./static";
+import { createCategoryDiv, createItemDiv, createLocationTable, createPositionDiv } from "./ui-create";
 import {
     getActivePage,
     Page,
@@ -21,11 +29,17 @@ import {
     autocomplete,
     MachineType,
     Category,
+    makeCategoryRequest,
 } from "./util";
 
 let items: ItemH[] = [];
 export function getItems(): ItemH[] {
     return items;
+}
+
+let categories: CategoryH = new CategoryH();
+export function getCategories(): CategoryH {
+    return categories;
 }
 
 let locations: LocationH[] = [];
@@ -44,8 +58,9 @@ export function getPositions(): PositionH[] {
  * @param newItems
  * @returns
  */
-export function updateItems(newItems: ItemH[]) {
+export async function updateItems(newItems: ItemH[]) {
     items = sortArrayBy(newItems, [sortItemsByPartNumberLambda]);
+    updateCategories(await makeCategoryRequest(Route.R));
     if (getActivePage() !== Page.ITEMS) {
         console.log("Not open.");
         return;
@@ -63,6 +78,12 @@ export function updateItems(newItems: ItemH[]) {
     //console.log(items);
 }
 
+export function updateCategories(newCategories: CategoryH[]) {
+    categories = newCategories[0];
+    categoryModalBody.firstChild.remove();
+    categoryModalBody.appendChild(createCategoryDiv(categories));
+}
+
 //--------------------LOCATIONS
 /**
  * Update locations array
@@ -71,6 +92,7 @@ export function updateItems(newItems: ItemH[]) {
  */
 export function updateLocations(newLocations: LocationH[]) {
     locations = newLocations;
+    console.log(locations);
     locations = sortArrayBy(locations, [
         sortLocationsByShelfLambda,
         sortLocationsByRackLambda,
