@@ -1,4 +1,5 @@
-import { ItemH, LocationH, PositionH } from "../common/util";
+import { CategoryH, ItemH, LocationH, PositionH } from "../common/util";
+import { Category } from "./entities/category";
 import { Item } from "./entities/item";
 import { Location } from "./entities/location";
 import { Position } from "./entities/position";
@@ -37,6 +38,13 @@ export function positionFromPositionH(positionH: PositionH, update: boolean = fa
     position.locationId = positionH.locationId;
     position.amount = positionH.amount;
     return position;
+}
+
+export function categoryFromCategoryH(category: CategoryH): Category {
+    const cat = new Category();
+    cat.name = category.name;
+    cat.description = category.description;
+    return cat;
 }
 
 export function toNumber(input?: string, radix = 10) {

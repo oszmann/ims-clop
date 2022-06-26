@@ -4,12 +4,13 @@ import { Category } from "./entities/category";
 import { Item } from "./entities/item";
 import { Location } from "./entities/location";
 import { Position } from "./entities/position";
-import { itemFromItemH, positionFromPositionH } from "./util";
+import { categoryFromCategoryH, itemFromItemH, positionFromPositionH } from "./util";
 
 enum Objects {
     ITEMS,
     LOCATIONS,
     POSITIONS,
+    CATEGORIES,
 }
 
 /**
@@ -21,9 +22,9 @@ export function init(source: DataSource) {
         .initialize()
         .then(async () => {
             console.log("There are " + (await source.manager.count(Item)) + " items in the database.");
+            console.log("There are " + (await source.manager.count(Category)) + " categories in the database.");
             console.log("There are " + (await source.manager.count(Location)) + " locations in the database.");
             console.log("There are " + (await source.manager.count(Position)) + " positions in the database.");
-            //insertPosition(source);
         })
         .catch(error => {
             console.log("error: ", error);
@@ -43,13 +44,19 @@ export function init(source: DataSource) {
  * @returns Updated Entity[] to be sent to client
  */
 export async function createRequest(source: DataSource, req: Request): Promise<any> {
-    if (req.query.item !== "") {
+    if (req.query.item && req.query.item !== "") {
         console.log("inserting item");
         return await createItem(source, itemFromItemH(JSON.parse(req.query.item.toString())));
-    } else if (req.query.loc !== "") {
+    } else if (req.query.cat && req.query.cat !== "") {
+        return await createCategory(
+            source,
+            categoryFromCategoryH(JSON.parse(req.query.cat.toString())),
+            req.query.parentId.toString()
+        );
+    } else if (req.query.loc && req.query.loc !== "") {
         console.log("inserting location");
         return await createLocation(source, JSON.parse(req.query.loc.toString()));
-    } else if (req.query.pos !== "") {
+    } else if (req.query.pos && req.query.pos !== "") {
         console.log("inserting position");
         return await createPosition(source, positionFromPositionH(JSON.parse(req.query.pos.toString())));
     }
@@ -65,6 +72,8 @@ export async function createRequest(source: DataSource, req: Request): Promise<a
 export async function readRequest(source: DataSource, req: Request): Promise<any> {
     if (req.query.item && req.query.item !== "") {
         return await getEntities(source, Objects.ITEMS);
+    } else if (req.query.cat && req.query.cat !== "") {
+        return await getEntities(source, Objects.CATEGORIES);
     } else if (req.query.loc && req.query.loc !== "") {
         return await getEntities(source, Objects.LOCATIONS);
     } else if (req.query.pos && req.query.pos !== "") {
@@ -80,12 +89,16 @@ export async function readRequest(source: DataSource, req: Request): Promise<any
  * @returns Updated Entity[] to be sent to client
  */
 export async function updateRequest(source: DataSource, req: Request): Promise<any> {
-    if (req.query.item !== "") {
+    if (req.query.item && req.query.item !== "") {
         return await updateItem(source, itemFromItemH(JSON.parse(req.query.item.toString()), true));
-    } else if (req.query.loc !== "") {
+    } else if (req.query.cat && req.query.cat !== "") {
+        console.warn("NOT YET IMPLEMENTED");
+        //TODO
+        return await getEntities(source, Objects.CATEGORIES);
+    } else if (req.query.loc && req.query.loc !== "") {
         console.warn("CANNOT UPDATE LOCATION");
         return await getEntities(source, Objects.LOCATIONS);
-    } else if (req.query.pos !== "") {
+    } else if (req.query.pos && req.query.pos !== "") {
         return await updatePosition(source, positionFromPositionH(JSON.parse(req.query.pos.toString()), true));
     }
 }
@@ -98,11 +111,15 @@ export async function updateRequest(source: DataSource, req: Request): Promise<a
  * @returns Updated Entity[] to be sent to client
  */
 export async function deleteRequest(source: DataSource, req: Request): Promise<any> {
-    if (req.query.item !== "") {
+    if (req.query.item && req.query.item !== "") {
         return await deleteItem(source, req.query.item.toString());
-    } else if (req.query.loc !== "") {
+    } else if (req.query.cat && req.query.cat !== "") {
+        console.warn("NOT YET IMPLEMENTED");
+        //TODO
+        return await getEntities(source, Objects.CATEGORIES);
+    } else if (req.query.loc && req.query.loc !== "") {
         return await deleteLocation(source, req.query.loc.toString());
-    } else if (req.query.pos !== "") {
+    } else if (req.query.pos && req.query.pos !== "") {
         console.warn("NOT YET IMPLEMENTED");
         //TODO
         return await getEntities(source, Objects.POSITIONS);
@@ -118,6 +135,21 @@ async function createItem(source: DataSource, item: Item): Promise<Item[]> {
     await source.manager.save(item);
     console.log(`item has been saved. id: ${item.id}`);
     return await getEntities(source, Objects.ITEMS);
+}
+
+async function createCategory(source: DataSource, category: Category, parentId: string): Promise<Category> {
+    const parent = await source.manager.findOneBy(Category, { id: parentId });
+    const descendants = await source.manager.getTreeRepository(Category).findDescendants(parent);
+    if (!parent) {
+        console.log("parent doesn't exist");
+        return;
+    } else if (descendants.map(x => x.name).includes(category.name)) {
+        console.log("decendant with name already exists");
+        return;
+    }
+    category.parent = parent;
+    await source.manager.save(Category, category);
+    return (await getEntities(source, Objects.CATEGORIES))[0];
 }
 
 async function createLocation(source: DataSource, location: Location): Promise<Location[]> {
@@ -239,10 +271,14 @@ export async function getEntities(source: DataSource, type: Objects): Promise<an
     switch (type) {
         case Objects.ITEMS:
             return source.manager.find(Item);
+        case Objects.CATEGORIES:
+            return source.manager.getTreeRepository(Category).findTrees();
         case Objects.LOCATIONS:
             return source.manager.find(Location);
         case Objects.POSITIONS:
             return source.manager.find(Position);
+        default:
+            console.log("not implemented");
     }
 }
 
@@ -296,17 +332,10 @@ export async function setDefaultCategories(source: DataSource) {
     root.description = "";
     root.id = "00000000-0000-0000-0000-000000000000";
     await source.manager.save(Category, root);
-    const a = createCategory("a", "a");
-    const b = createCategory("b", "b");
+    const a = categoryFromCategoryH({ name: "a", description: "a", id: "", children: [] });
+    const b = categoryFromCategoryH({ name: "b", description: "b", id: "", children: [] });
     await insertCategory(source, a, root.id);
     await insertCategory(source, b, root.id);
     console.log(JSON.stringify(await source.manager.getTreeRepository(Category).findTrees()));
     return await source.manager.getTreeRepository(Category).findTrees();
-}
-
-function createCategory(name: string, description: string = ""): Category {
-    const cat = new Category();
-    cat.name = name;
-    cat.description = description;
-    return cat;
 }
