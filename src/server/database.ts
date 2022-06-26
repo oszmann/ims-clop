@@ -44,19 +44,19 @@ export function init(source: DataSource) {
  * @returns Updated Entity[] to be sent to client
  */
 export async function createRequest(source: DataSource, req: Request): Promise<any> {
-    if (req.query.item && req.query.item !== "") {
+    if (req.query.item) {
         console.log("inserting item");
         return await createItem(source, itemFromItemH(JSON.parse(req.query.item.toString())));
-    } else if (req.query.cat && req.query.cat !== "") {
+    } else if (req.query.cat) {
         return await createCategory(
             source,
             categoryFromCategoryH(JSON.parse(req.query.cat.toString())),
             req.query.parentId.toString()
         );
-    } else if (req.query.loc && req.query.loc !== "") {
+    } else if (req.query.loc) {
         console.log("inserting location");
         return await createLocation(source, JSON.parse(req.query.loc.toString()));
-    } else if (req.query.pos && req.query.pos !== "") {
+    } else if (req.query.pos) {
         console.log("inserting position");
         return await createPosition(source, positionFromPositionH(JSON.parse(req.query.pos.toString())));
     }
@@ -70,13 +70,13 @@ export async function createRequest(source: DataSource, req: Request): Promise<a
  * @returns Updated Entity[] to be sent to client
  */
 export async function readRequest(source: DataSource, req: Request): Promise<any> {
-    if (req.query.item && req.query.item !== "") {
+    if (req.query.item) {
         return await getEntities(source, Objects.ITEMS);
-    } else if (req.query.cat && req.query.cat !== "") {
+    } else if (req.query.cat) {
         return await getEntities(source, Objects.CATEGORIES);
-    } else if (req.query.loc && req.query.loc !== "") {
+    } else if (req.query.loc) {
         return await getEntities(source, Objects.LOCATIONS);
-    } else if (req.query.pos && req.query.pos !== "") {
+    } else if (req.query.pos) {
         return await getEntities(source, Objects.POSITIONS);
     }
 }
@@ -89,16 +89,16 @@ export async function readRequest(source: DataSource, req: Request): Promise<any
  * @returns Updated Entity[] to be sent to client
  */
 export async function updateRequest(source: DataSource, req: Request): Promise<any> {
-    if (req.query.item && req.query.item !== "") {
+    if (req.query.item) {
         return await updateItem(source, itemFromItemH(JSON.parse(req.query.item.toString()), true));
-    } else if (req.query.cat && req.query.cat !== "") {
+    } else if (req.query.cat) {
         console.warn("NOT YET IMPLEMENTED");
         //TODO
         return await getEntities(source, Objects.CATEGORIES);
-    } else if (req.query.loc && req.query.loc !== "") {
+    } else if (req.query.loc) {
         console.warn("CANNOT UPDATE LOCATION");
         return await getEntities(source, Objects.LOCATIONS);
-    } else if (req.query.pos && req.query.pos !== "") {
+    } else if (req.query.pos) {
         return await updatePosition(source, positionFromPositionH(JSON.parse(req.query.pos.toString()), true));
     }
 }
@@ -111,15 +111,15 @@ export async function updateRequest(source: DataSource, req: Request): Promise<a
  * @returns Updated Entity[] to be sent to client
  */
 export async function deleteRequest(source: DataSource, req: Request): Promise<any> {
-    if (req.query.item && req.query.item !== "") {
+    if (req.query.item) {
         return await deleteItem(source, req.query.item.toString());
-    } else if (req.query.cat && req.query.cat !== "") {
+    } else if (req.query.cat) {
         console.warn("NOT YET IMPLEMENTED");
         //TODO
         return await getEntities(source, Objects.CATEGORIES);
-    } else if (req.query.loc && req.query.loc !== "") {
+    } else if (req.query.loc) {
         return await deleteLocation(source, req.query.loc.toString());
-    } else if (req.query.pos && req.query.pos !== "") {
+    } else if (req.query.pos) {
         console.warn("NOT YET IMPLEMENTED");
         //TODO
         return await getEntities(source, Objects.POSITIONS);
