@@ -15,8 +15,8 @@ export const localhost = "http://localhost:3000";
 
 export enum VarType {
     item = "?item=",
-    location = "&loc=",
-    position = "&pos=",
+    location = "?loc=",
+    position = "?pos=",
 }
 
 export enum Page {
@@ -162,19 +162,19 @@ export function getActivePage(): Page {
 
 export async function makeItemRequest(route: Route, request: string = "Items, please!"): Promise<ItemH[]> {
     return <ItemH[]>(
-        await (await fetch(route + "/" + VarType.item + request + VarType.location + VarType.position)).json()
+        await (await fetch(route + "/" + VarType.item + request)).json()
     );
 }
 
 export async function makeLocationRequest(route: Route, request: string = "Locations, please!"): Promise<LocationH[]> {
     return <LocationH[]>(
-        await (await fetch(route + "/" + VarType.item + VarType.location + request + VarType.position)).json()
+        await (await fetch(route + "/" + VarType.location + request)).json()
     );
 }
 
 export async function makePositionRequest(route: Route, request: string = "Positions, please!"): Promise<PositionH[]> {
     return <PositionH[]>(
-        await (await fetch(route + "/" + VarType.item + VarType.location + VarType.position + request)).json()
+        await (await fetch(route + "/" + VarType.position + request)).json()
     );
 }
 

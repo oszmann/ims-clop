@@ -63,11 +63,11 @@ export async function createRequest(source: DataSource, req: Request): Promise<a
  * @returns Updated Entity[] to be sent to client
  */
 export async function readRequest(source: DataSource, req: Request): Promise<any> {
-    if (req.query.item !== "") {
+    if (req.query.item && req.query.item !== "") {
         return await getEntities(source, Objects.ITEMS);
-    } else if (req.query.loc !== "") {
+    } else if (req.query.loc && req.query.loc !== "") {
         return await getEntities(source, Objects.LOCATIONS);
-    } else if (req.query.pos !== "") {
+    } else if (req.query.pos && req.query.pos !== "") {
         return await getEntities(source, Objects.POSITIONS);
     }
 }
