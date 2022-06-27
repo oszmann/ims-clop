@@ -122,13 +122,25 @@
             aria-labelledby="category-modal-label"
             aria-hidden="true"
         >
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="category-modal-label">Modal title</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div id="category-body" class="modal-body"></div>
+                    <div id="category-add" class="modal-body input-group">
+                        <a id="category-add-node" class="form-control">Node: </a>
+                        <div class="form-floating">
+                            <input id="category-add-name" placeholder="Name:" type="text" class="form-control"/>
+                            <label for="category-add-name">Name:</label>
+                        </div>
+                        <div class="form-floating">
+                            <input id="category-add-desc" placeholder="Name:" type="text" class="form-control"/>
+                            <label for="category-add-desc">Description:</label>
+                        </div>
+                        <button class="btn btn-primary" id="category-add-button">Add Category</button>
+                    </div>
                     <div class="modal-footer">
                         <button id="modal-close-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                             Close

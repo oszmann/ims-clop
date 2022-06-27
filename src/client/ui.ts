@@ -19,7 +19,7 @@ import {
     positionsDiv,
     positionWarehouseInput,
 } from "./static";
-import { createCategoryDiv, createItemDiv, createLocationTable, createPositionDiv } from "./ui-create";
+import { createCategoryLi, createItemDiv, createLocationTable, createPositionDiv } from "./ui-create";
 import {
     getActivePage,
     Page,
@@ -82,7 +82,10 @@ export function updateCategories(newCategories: CategoryH[]) {
     categories = newCategories[0];
     if (getActivePage() === Page.ITEMS) {
         categoryModalBody.firstChild?.remove();
-        categoryModalBody.appendChild(createCategoryDiv(categories));
+        const ul = document.createElement("ul");
+        ul.classList.add("tree");
+        ul.appendChild(createCategoryLi(categories));
+        categoryModalBody.appendChild(ul);
     }
 }
 

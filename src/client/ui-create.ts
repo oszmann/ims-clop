@@ -1,4 +1,5 @@
 import { CategoryH, ItemH, LocationH, PositionH } from "../common/util";
+import { categoryAddNode } from "./static";
 import { getItems, getLocations, updateItems, updateLocations, updatePositions } from "./ui";
 import {
     Category,
@@ -299,9 +300,26 @@ export function createCategoryDropdownDiv(id: string, category: string): HTMLDiv
     return div;
 }
 
-export function createCategoryDiv(category: CategoryH): HTMLDivElement {
-    const div = document.createElement("div");
-    return div;
+export function createCategoryLi(category: CategoryH): HTMLLIElement {
+    const li = document.createElement("li");
+    const span = document.createElement("span");
+    span.innerText = category.name;
+    span.addEventListener("click", () => {
+        document.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
+        span.classList.add("cat-active");
+        categoryAddNode.innerText = "Node: " + category.name + ":";
+
+    });
+    li.appendChild(span);
+
+    const ul = document.createElement("ul");
+    category.children.forEach(ch => {
+        ul.appendChild(createCategoryLi(ch));
+    });
+    if(ul.firstChild) {
+        li.appendChild(ul);
+    }
+    return li;
 }
 
 //-------------------------------Location
@@ -328,9 +346,9 @@ export function createLocationTable(locations: LocationH[]): HTMLTableElement {
             emptytdf.innerText = " ";
             trf.appendChild(emptytdf);
             trf.appendChild(tdf);
-            // trf.appendChild(emptytdf);
-            // trf.appendChild(emptytdf);
-            // trf.appendChild(emptytdf);
+            trf.appendChild(emptytdf.cloneNode());
+            trf.appendChild(emptytdf.cloneNode());
+            trf.appendChild(emptytdf.cloneNode());
             table.appendChild(trf);
         } else if (index > 0 && locations[index - 1].rack !== location.rack) {
             const trf: HTMLTableRowElement = document.createElement("tr");
