@@ -80,6 +80,16 @@ export function createItem(
     return itemH;
 }
 
+export function createCategory(name: string, description: string): CategoryH {
+    const categoryH = new CategoryH();
+    if (name === "") {
+        name = "0";
+    }
+    categoryH.name = name;
+    categoryH.description = description;
+    return categoryH;
+}
+
 export function createLocation(warehouse: string, rack: string, shelf: string): LocationH {
     // if (row === "") {
     //     row = "0";
@@ -140,20 +150,16 @@ export function createPosition(
 }
 
 export function getActivePage(): Page {
-    switch (window.location.href) {
+    const href = window.location.href.split("#")[0];
+    switch (href) {
         case localhost + "":
         case localhost + "/":
-        case localhost + "/#":
             return Page.HOME;
         case localhost + "/locations":
-        case localhost + "/locations#":
         case localhost + "/locations.html":
-        case localhost + "/locations.html#":
             return Page.LOCATIONS;
         case localhost + "/items":
-        case localhost + "/items#":
         case localhost + "/items.html":
-        case localhost + "/items.html#":
             return Page.ITEMS;
         default:
             console.log("route not found,", window.location.href);

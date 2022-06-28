@@ -1,5 +1,5 @@
 import { CategoryH, ItemH, LocationH, PositionH } from "../common/util";
-import { categoryAddNode } from "./static";
+import { categoryAddBody, categoryAddNode } from "./static";
 import { getItems, getLocations, updateItems, updateLocations, updatePositions } from "./ui";
 import {
     Category,
@@ -304,11 +304,13 @@ export function createCategoryLi(category: CategoryH): HTMLLIElement {
     const li = document.createElement("li");
     const span = document.createElement("span");
     span.innerText = category.name;
+    span.id = category.id;
     span.addEventListener("click", () => {
         document.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
         span.classList.add("cat-active");
         categoryAddNode.innerText = "Node: " + category.name + ":";
-
+        categoryAddNode.setAttribute("data-parent-id", category.id);
+        categoryAddBody.classList.remove("hidden-body");
     });
     li.appendChild(span);
 
@@ -316,7 +318,7 @@ export function createCategoryLi(category: CategoryH): HTMLLIElement {
     category.children.forEach(ch => {
         ul.appendChild(createCategoryLi(ch));
     });
-    if(ul.firstChild) {
+    if (ul.firstChild) {
         li.appendChild(ul);
     }
     return li;

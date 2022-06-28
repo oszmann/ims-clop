@@ -12,6 +12,11 @@ import {
     addWarehouse,
     categoriesDropdown,
     categoriesDropdownList,
+    categoryAddBody,
+    categoryAddButton,
+    categoryAddDescription,
+    categoryAddName,
+    categoryAddNode,
     machinesDropdown,
     machinesDropdownList,
     positionAmountInput,
@@ -26,7 +31,7 @@ import {
     toggleRack,
     toggleShelf,
 } from "./static";
-import { initAutocomplete, updateItems, updateLocations, updatePositions } from "./ui";
+import { initAutocomplete, updateCategories, updateItems, updateLocations, updatePositions } from "./ui";
 import {
     Route,
     makeItemRequest,
@@ -42,6 +47,8 @@ import {
     MachineType,
     Category,
     SearchBy,
+    makeCategoryRequest,
+    createCategory,
 } from "./util";
 
 let doUpdate: boolean = true;
@@ -133,6 +140,19 @@ async function initItems() {
         machinesDropdown.setAttribute("data-type", "DEFAULT");
         categoriesDropdown.innerText = "Category";
         categoriesDropdown.setAttribute("data-type", "DEFAULT");
+    });
+    categoryAddButton.addEventListener("click", async () => {
+        const a = document.getElementsByClassName("cat-active")[0];
+        categoryAddBody.classList.add("hidden-body");
+        updateCategories(
+            await makeCategoryRequest(
+                Route.C,
+                JSON.stringify(createCategory(categoryAddName.value, categoryAddDescription.value)) +
+                    "&parentId=" +
+                    categoryAddNode.getAttribute("data-parent-id")
+            )
+        );
+        // document.getElementById(a.id);
     });
 }
 

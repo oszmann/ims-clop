@@ -50,4 +50,5 @@ export const categoryAddBody = <HTMLDivElement>$("category-add");
 export const categoryAddNode = <HTMLAnchorElement>$("category-add-node");
 export const categoryAddName = <HTMLInputElement>$("category-add-name");
 export const categoryAddDescription = <HTMLInputElement>$("category-add-desc");
+export const categoryAddButton = <HTMLButtonElement>$("category-add-button");
 export const itemsDiv = <HTMLDivElement>$("items-div");

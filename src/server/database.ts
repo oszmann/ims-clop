@@ -137,19 +137,20 @@ async function createItem(source: DataSource, item: Item): Promise<Item[]> {
     return await getEntities(source, Objects.ITEMS);
 }
 
-async function createCategory(source: DataSource, category: Category, parentId: string): Promise<Category> {
+async function createCategory(source: DataSource, category: Category, parentId: string): Promise<Category[]> {
     const parent = await source.manager.findOneBy(Category, { id: parentId });
     const descendants = await source.manager.getTreeRepository(Category).findDescendants(parent);
     if (!parent) {
         console.log("parent doesn't exist");
-        return;
+        return await getEntities(source, Objects.CATEGORIES);
     } else if (descendants.map(x => x.name).includes(category.name)) {
         console.log("decendant with name already exists");
-        return;
+        return await getEntities(source, Objects.CATEGORIES);
     }
+    console.log("inserting category");
     category.parent = parent;
     await source.manager.save(Category, category);
-    return (await getEntities(source, Objects.CATEGORIES))[0];
+    return await getEntities(source, Objects.CATEGORIES);
 }
 
 async function createLocation(source: DataSource, location: Location): Promise<Location[]> {
