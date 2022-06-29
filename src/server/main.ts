@@ -5,7 +5,7 @@ import { DataSource } from "typeorm";
 import { Item } from "./entities/item";
 import { Location } from "./entities/location";
 import { Position } from "./entities/position";
-import { init, createRequest, readRequest, deleteRequest, updateRequest, setDefaultCategories } from "./database";
+import { init, createRequest, readRequest, deleteRequest, updateRequest, setDefaultCategories, getEntities, Objects } from "./database";
 import { toNumber } from "./util";
 import { Category } from "./entities/category";
 
@@ -28,6 +28,11 @@ app.get("/home", (req: Request, res: Response) => {
 });
 
 app.get("/api/", async (req: Request, res: Response) => {
+    console.log(req.url);
+    res.json(await getEntities(AppDataSource, Objects.CATEGORIES));
+});
+
+app.get("/api/catreset", async (req: Request, res: Response) => {
     console.log(req.url);
     res.json(await setDefaultCategories(AppDataSource));
 });

@@ -306,11 +306,19 @@ export function createCategoryLi(category: CategoryH): HTMLLIElement {
     span.innerText = category.name;
     span.id = category.id;
     span.addEventListener("click", () => {
-        document.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
-        span.classList.add("cat-active");
-        categoryAddNode.innerText = "Node: " + category.name + ":";
-        categoryAddNode.setAttribute("data-parent-id", category.id);
-        categoryAddBody.classList.remove("hidden-body");
+        if (document.getElementsByClassName("cat-active")[0]?.id === category.id) {
+            document.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
+            categoryAddNode.innerText = "Node: ";
+            categoryAddNode.setAttribute("data-parent-id", "");
+            categoryAddBody.classList.add("hidden-body");
+        }
+        else {
+            document.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
+            span.classList.add("cat-active");
+            categoryAddNode.innerText = "Node: " + category.name;
+            categoryAddNode.setAttribute("data-parent-id", category.id);
+            categoryAddBody.classList.remove("hidden-body");
+        }
     });
     li.appendChild(span);
 

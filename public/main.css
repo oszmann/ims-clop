@@ -295,14 +295,6 @@ td {
     align-items: center;
 }
 
-#category-add {
-    border-top: 1px solid #dee2e6;
-}
-
-#category-add-node {
-    padding-top: 0.85rem;
-}
-
 .tree,
 .tree ul,
 .tree li {
@@ -393,6 +385,26 @@ td {
     background-color: var(--text-tertiary);
 }
 
+#category-add {
+    border-top: 1px solid #dee2e6;
+    max-height: fit-content;
+    justify-content: center;
+}
+
+#category-add-node {
+    padding-top: 1.05rem;
+    max-width: fit-content;
+}
+
+#category-body {
+    display: flex;
+    justify-content: center;
+    max-height: 60vh;
+    overflow: auto;
+}
+
 .hidden-body {
     visibility: hidden;
+    max-height: 0px !important;
+    padding: 0px;
 }

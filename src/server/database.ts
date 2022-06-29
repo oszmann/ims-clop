@@ -6,7 +6,7 @@ import { Location } from "./entities/location";
 import { Position } from "./entities/position";
 import { categoryFromCategoryH, itemFromItemH, positionFromPositionH } from "./util";
 
-enum Objects {
+export enum Objects {
     ITEMS,
     LOCATIONS,
     POSITIONS,
