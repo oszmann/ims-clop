@@ -26,9 +26,6 @@ export class Item extends BaseEntity {
     @Column("int")
     minStock: number;
 
-    @Column("text")
-    machineType: string;
-
     @Column("text", { nullable: true })
     category: string;
 

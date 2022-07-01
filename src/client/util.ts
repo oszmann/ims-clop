@@ -31,13 +31,6 @@ export enum SearchBy {
     LOCATION = "Location",
 }
 
-export enum MachineType {
-    DEFAULT = "No type",
-    PLANE = "Plane",
-    CAR = "Car",
-    BIKE = "Bike",
-}
-
 export enum Category {
     DEFAULT = "None",
     COMPONENTS = "Components",
@@ -51,7 +44,6 @@ export function createItem(
     desc: string,
     cost: string,
     minStock: string,
-    type: string,
     category: string
 ): ItemH {
     if (partNumber === "") {
@@ -73,7 +65,6 @@ export function createItem(
     itemH.description = desc;
     itemH.cost = parseInt(cost);
     itemH.minStock = parseInt(minStock);
-    itemH.machineType = type;
     itemH.category = category;
     // console.log("aaaaaaaaaaaaaaaaa",category);
 

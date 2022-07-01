@@ -17,8 +17,6 @@ import {
     categoryAddDescription,
     categoryAddName,
     categoryAddNode,
-    machinesDropdown,
-    machinesDropdownList,
     positionAmountInput,
     positionPartNoInput,
     positionRackInput,
@@ -44,7 +42,6 @@ import {
     createPosition,
     disable,
     unDisable,
-    MachineType,
     Category,
     SearchBy,
     makeCategoryRequest,
@@ -124,7 +121,6 @@ async function initItems() {
                     addDescription.value,
                     addCost.value,
                     addMinStock.value,
-                    machinesDropdown.getAttribute("data-type"),
                     categoriesDropdown.getAttribute("data-type")
                 )
             )
@@ -136,8 +132,6 @@ async function initItems() {
         addDescription.value = "";
         addCost.value = "";
         addMinStock.value = "";
-        machinesDropdown.innerText = "Type";
-        machinesDropdown.setAttribute("data-type", "DEFAULT");
         categoriesDropdown.innerText = "Category";
         categoriesDropdown.setAttribute("data-type", "DEFAULT");
     });
@@ -230,20 +224,6 @@ function init() {
 }
 
 function initItemDropdowns() {
-    Object.values(MachineType).forEach((value, index) => {
-        const li: HTMLLIElement = document.createElement("li");
-        const a: HTMLAnchorElement = document.createElement("a");
-        a.classList.add("dropdown-item");
-        a.href = "#";
-        a.innerText = value;
-        li.appendChild(a);
-        li.addEventListener("click", () => {
-            machinesDropdown.innerText = value;
-            console.log(Object.keys(MachineType)[index]);
-            machinesDropdown.setAttribute("data-type", Object.keys(MachineType)[index]);
-        });
-        machinesDropdownList.appendChild(li);
-    });
     Object.values(Category).forEach((value, index) => {
         const li: HTMLLIElement = document.createElement("li");
         const a: HTMLAnchorElement = document.createElement("a");

@@ -7,7 +7,6 @@ export class ItemH {
     description: string;
     cost: number;
     minStock: number;
-    machineType: string;
     category: string;
     created_at: Date;
     updated_at: Date;

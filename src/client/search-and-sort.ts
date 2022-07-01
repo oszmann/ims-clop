@@ -1,5 +1,5 @@
 import { ItemH, LocationH, PositionH } from "../common/util";
-import { positionsDiv, sortByCategory, sortByItem, sortByLoaction, sortByType, sortByUpdate } from "./static";
+import { positionsDiv, sortByCategory, sortByItem, sortByLoaction, sortByUpdate } from "./static";
 import { getItems, getLocations, getPositions } from "./ui";
 
 //------------------------Sort
@@ -41,7 +41,6 @@ export const sortItemsByMinStockLambda = (a: ItemH, b: ItemH) =>
 
 export const sortItemsByCategoryLambda = (a: ItemH, b: ItemH) => Intl.Collator().compare(a.category, b.category);
 
-export const sortItemsByTypeLambda = (a: ItemH, b: ItemH) => Intl.Collator().compare(a.machineType, b.machineType);
 /**
  * Lambda to sort itemH items by updated_at
  */
@@ -93,12 +92,6 @@ export const sortPositionsByItemCategoryLambda = (a: PositionH, b: PositionH) =>
     const aItem = getItems().find(x => x.id === a.itemId);
     const bItem = getItems().find(x => x.id === b.itemId);
     return sortItemsByCategoryLambda(aItem, bItem);
-};
-
-export const sortPositionsByItemTypeLambda = (a: PositionH, b: PositionH) => {
-    const aItem = getItems().find(x => x.id === a.itemId);
-    const bItem = getItems().find(x => x.id === b.itemId);
-    return sortItemsByTypeLambda(aItem, bItem);
 };
 
 export const sortPositionsByWarehouseLambda = (a: PositionH, b: PositionH) => {
@@ -195,31 +188,6 @@ export function initSortByButtons() {
         }
         orderPositionDivs();
     });
-    sortByType.addEventListener("click", () => {
-        if (!sortByType.children[0] || sortByType.children[0].classList.contains("fa-caret-up")) {
-            removeAllEms();
-            sortByType.appendChild(emD);
-            sortArrayBy(getPositions(), [
-                sortPositionsByShelfLambda,
-                sortPositionsByRackLambda,
-                sortPositionsByWarehouseLambda,
-                sortPositionsByItemPartNumberLambda,
-                sortPositionsByItemTypeLambda,
-            ]);
-        } else {
-            removeAllEms();
-            sortByType.appendChild(emU);
-            sortArrayBy(getPositions(), [
-                sortPositionsByShelfLambda,
-                sortPositionsByRackLambda,
-                sortPositionsByWarehouseLambda,
-                sortPositionsByItemPartNumberLambda,
-                sortPositionsByItemTypeLambda,
-            ]);
-            getPositions().reverse();
-        }
-        orderPositionDivs();
-    });
     sortByLoaction.addEventListener("click", () => {
         if (!sortByLoaction.children[0] || sortByLoaction.children[0].classList.contains("fa-caret-up")) {
             removeAllEms();
@@ -273,7 +241,6 @@ export function initSortByButtons() {
 function removeAllEms() {
     sortByItem.getElementsByTagName("em")[0]?.remove();
     sortByCategory.getElementsByTagName("em")[0]?.remove();
-    sortByType.getElementsByTagName("em")[0]?.remove();
     sortByLoaction.getElementsByTagName("em")[0]?.remove();
     sortByUpdate.getElementsByTagName("em")[0]?.remove();
 }

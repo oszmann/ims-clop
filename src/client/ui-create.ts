@@ -3,9 +3,6 @@ import { categoryAddBody, categoryAddNode } from "./static";
 import { getItems, getLocations, updateItems, updateLocations, updatePositions } from "./ui";
 import {
     Category,
-    createItem,
-    createPosition,
-    MachineType,
     makeItemRequest,
     makeLocationRequest,
     makePositionRequest,
@@ -39,7 +36,6 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     const id: HTMLAnchorElement = document.createElement("a");
     const idSpan: HTMLSpanElement = document.createElement("span");
 
-    const editButton: HTMLButtonElement = document.createElement("button");
     const deleteButton: HTMLButtonElement = document.createElement("button");
 
     id.id = item.id + "id";
@@ -84,130 +80,37 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
 
     dates.appendChild(datesSpan);
 
-    editButton.innerText = "Edit";
-    editButton.classList.add("btn", "btn-primary", "rounded");
     deleteButton.innerText = "Delete";
     deleteButton.classList.add("btn", "btn-primary");
-    editButton.addEventListener("click", async () => {
-        const typeA = <HTMLAnchorElement>typeDropdown.children[0];
-        const categoryA = <HTMLAnchorElement>categoryDropdown.children[0];
-        const temp = createItem(
-            partNumber.value,
-            description.value,
-            cost.value,
-            minStock.value,
-            typeA.getAttribute("data-type"),
-            categoryA.getAttribute("data-category")
-        );
-        temp.id = item.id;
-        //console.log(temp)
-        updateItems(await makeItemRequest(Route.U, JSON.stringify(temp)));
-    });
+    // editButton.addEventListener("click", async () => {
+    //     const typeA = <HTMLAnchorElement>typeDropdown.children[0];
+    //     const categoryA = <HTMLAnchorElement>categoryDropdown.children[0];
+    //     const temp = createItem(
+    //         partNumber.value,
+    //         description.value,
+    //         cost.value,
+    //         minStock.value,
+    //         typeA.getAttribute("data-type"),
+    //         categoryA.getAttribute("data-category")
+    //     );
+    //     temp.id = item.id;
+    //     //console.log(temp)
+    //     updateItems(await makeItemRequest(Route.U, JSON.stringify(temp)));
+    // });
     deleteButton.addEventListener("click", async () => {
         updateItems(await makeItemRequest(Route.D, item.id));
     });
-    const typeDropdown = createTypeDropdownDiv(item.id, item.machineType);
-    typeDropdown.classList.add("-w10");
     const categoryDropdown = createCategoryDropdownDiv(item.id, item.category);
     categoryDropdown.classList.add("-w10");
-    div.appendChild(editButton);
     div.appendChild(id);
     div.appendChild(partNumber);
     div.appendChild(description);
     div.appendChild(cost);
     div.appendChild(minStock);
-    div.appendChild(typeDropdown);
     div.appendChild(categoryDropdown);
     div.appendChild(dates);
     div.appendChild(deleteButton);
     //console.log("created div")
-    return div;
-}
-
-/**
- * Creates type-dropdown for Items
- * @param id
- * @param type
- * @returns
- */
-export function createTypeDropdownDiv(id: string, type: string): HTMLDivElement {
-    let pointer: number = 0;
-    const div = document.createElement("div");
-    div.classList.add("dropdown");
-    const a = document.createElement("a");
-    //console.log(Object.keys(MachineType), type);
-    pointer = Object.keys(MachineType).indexOf(type);
-    a.innerText = Object.values(MachineType)[pointer];
-    a.classList.add("btn", "btn-secondary", "rounded-0");
-    a.href = "#";
-    a.setAttribute("data-type", type);
-    a.id = id + "type";
-    const ul = document.createElement("ul");
-    ul.classList.add("dropdown-menu", "type-dropdown");
-    ul.id = id + "fml";
-
-    a.addEventListener("click", () => {
-        ul.classList.add("visible");
-        ul.children[pointer].classList.add("type-dropdown-active");
-    });
-    a.addEventListener("blur", () => {
-        setTimeout(() => {
-            if (ul.getAttribute("clicked")) {
-                ul.removeAttribute("clicked");
-            }
-            ul.classList.remove("visible");
-        }, 100);
-    });
-    a.addEventListener("keydown", e => {
-        if (e.key === "ArrowDown") {
-            //console.log("go down");
-            pointer++;
-            moveSelected();
-        }
-        if (e.key === "ArrowUp") {
-            //console.log("go up");
-            pointer--;
-            moveSelected();
-        }
-        if (e.key === "Enter") {
-            const temp = <HTMLAnchorElement>ul.children[pointer];
-            temp.click();
-            a.blur();
-        }
-    });
-
-    function moveSelected() {
-        for (let i = 0; i < ul.children.length; i++) {
-            ul.children[i].classList.remove("type-dropdown-active");
-        }
-        if (pointer < 0) {
-            pointer = 0;
-        } else if (pointer >= Object.values(MachineType).length) {
-            pointer = Object.values(MachineType).length - 1;
-        }
-        //console.log(pointer)
-        ul.children[pointer].classList.add("type-dropdown-active");
-    }
-    Object.values(MachineType).forEach((value, index) => {
-        const li: HTMLLIElement = document.createElement("li");
-        const lia: HTMLAnchorElement = document.createElement("a");
-        lia.classList.add("dropdown-item");
-        lia.innerText = value;
-        li.appendChild(lia);
-        li.addEventListener("click", () => {
-            ul.setAttribute("clicked", "clicked");
-            a.innerText = value;
-            //console.log(Object.keys(MachineType)[index]);
-            a.setAttribute("data-type", Object.keys(MachineType)[index]);
-            pointer = index;
-            moveSelected();
-            //ul.classList.remove("visible")
-        });
-        ul.appendChild(li);
-    });
-    div.appendChild(a);
-    div.appendChild(ul);
-    div.style.backgroundColor = "var(--bg-primary)";
     return div;
 }
 
@@ -323,7 +226,7 @@ export function createCategoryLi(category: CategoryH): HTMLLIElement {
     const tooltip = document.createElement("a");
     tooltip.innerText = category.description;
     tooltip.classList.add("cat-tooptip", "rounded");
-    span.appendChild(tooltip)
+    span.appendChild(tooltip);
     li.appendChild(span);
 
     const ul = document.createElement("ul");
@@ -489,8 +392,6 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     const partNo = document.createElement("a");
     const c = document.createElement("a");
     const category = document.createElement("a");
-    const t = document.createElement("a");
-    const type = document.createElement("a");
     const d = document.createElement("a");
     const desc = document.createElement("a");
     const dollar = document.createElement("a");
@@ -509,7 +410,6 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     // const pos = document.createElement("a");
     const dates = document.createElement("a");
     const datesSpan = document.createElement("span");
-    const editButton = document.createElement("button");
     const deleteButton = document.createElement("button");
 
     amount.id = position.id + "amount";
@@ -538,9 +438,6 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     c.classList.add("border-0", "dec");
     c.innerText = "C:";
     category.innerText = Object.values(Category)[Object.keys(Category).indexOf(item.category)];
-    t.classList.add("border-0", "dec");
-    t.innerText = "T:";
-    type.innerText = Object.values(MachineType)[Object.keys(MachineType).indexOf(item.machineType)];
     d.classList.add("border-0", "dec");
     d.innerText = "D:";
     desc.innerText = item.description;
@@ -552,8 +449,6 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     itemDiv.appendChild(partNo);
     itemDiv.appendChild(c);
     itemDiv.appendChild(category);
-    itemDiv.appendChild(t);
-    itemDiv.appendChild(type);
     itemDiv.appendChild(d);
     itemDiv.appendChild(desc);
     itemDiv.appendChild(dollar);
@@ -581,24 +476,22 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
 
     dates.appendChild(datesSpan);
 
-    editButton.innerText = "Edit";
-    editButton.classList.add("btn", "btn-primary");
     deleteButton.innerText = "Delete";
     deleteButton.classList.add("btn", "btn-primary");
 
-    editButton.addEventListener("click", async () => {
-        const temp = createPosition(
-            partNo.innerText,
-            warehouse.innerText,
-            rack.innerText,
-            shelf.innerText,
-            amount.value
-        );
-        temp.id = position.id;
-        temp.position = position.position;
+    // editButton.addEventListener("click", async () => {
+    //     const temp = createPosition(
+    //         partNo.innerText,
+    //         warehouse.innerText,
+    //         rack.innerText,
+    //         shelf.innerText,
+    //         amount.value
+    //     );
+    //     temp.id = position.id;
+    //     temp.position = position.position;
 
-        updatePositions(await makePositionRequest(Route.U, JSON.stringify(temp)));
-    });
+    //     updatePositions(await makePositionRequest(Route.U, JSON.stringify(temp)));
+    // });
     deleteButton.addEventListener("click", async () => {
         updateItems(await makeItemRequest(Route.D, position.id));
     });
@@ -608,7 +501,6 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     div.appendChild(amount);
     // div.appendChild(posDec);
     // div.appendChild(pos);
-    div.appendChild(editButton);
     div.appendChild(dates);
     div.appendChild(deleteButton);
 

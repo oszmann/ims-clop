@@ -27,7 +27,6 @@ import {
     makeLocationRequest,
     Route,
     autocomplete,
-    MachineType,
     Category,
     makeCategoryRequest,
 } from "./util";
@@ -160,8 +159,6 @@ export async function initAutocomplete() {
             i.partNumber +
             " : " +
             Object.values(Category)[Object.keys(Category).indexOf(i.category)] +
-            " : " +
-            Object.values(MachineType)[Object.keys(MachineType).indexOf(i.machineType)] +
             " : " +
             i.description
         );

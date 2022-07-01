@@ -19,7 +19,6 @@ export const addPositionButton = <HTMLButtonElement>$("position-add-button");
 export const positionsDiv = <HTMLDivElement>$("positions-div");
 export const sortByItem = <HTMLAnchorElement>$("item");
 export const sortByCategory = <HTMLAnchorElement>$("category");
-export const sortByType = <HTMLAnchorElement>$("type");
 export const sortByLoaction = <HTMLAnchorElement>$("location");
 export const sortByUpdate = <HTMLAnchorElement>$("update");
 
@@ -39,8 +38,6 @@ export const addPartNo = <HTMLInputElement>$("insert-part-no");
 export const addDescription = <HTMLInputElement>$("insert-description");
 export const addCost = <HTMLInputElement>$("insert-cost");
 export const addMinStock = <HTMLInputElement>$("insert-min-stock");
-export const machinesDropdown = <HTMLAnchorElement>$("machines-type-dropdown-button");
-export const machinesDropdownList = <HTMLUListElement>$("machines-type-dropdown-menu");
 export const categoriesDropdown = <HTMLAnchorElement>$("category-dropdown-button");
 export const categoriesDropdownList = <HTMLUListElement>$("category-dropdown-menu");
 export const addItemButton = <HTMLButtonElement>$("add-item-button");
