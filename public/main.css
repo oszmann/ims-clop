@@ -88,8 +88,16 @@
     justify-content: center;
 }
 
+.cat-tooptip {
+    position: absolute;
+    transform: translate(-50%, 70%);
+    padding: 5px;
+    border: solid 0.1rem #666;
+}
+
 .tooltip-span,
-.tooltip-dates {
+.tooltip-dates,
+.cat-tooptip {
     visibility: hidden;
     background-color: white;
     border: 1px solid black;
@@ -99,7 +107,8 @@
 }
 
 a:hover .tooltip-span,
-a:hover .tooltip-dates {
+a:hover .tooltip-dates,
+span:hover .cat-tooptip {
     visibility: visible;
 }
 

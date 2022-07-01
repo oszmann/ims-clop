@@ -320,6 +320,10 @@ export function createCategoryLi(category: CategoryH): HTMLLIElement {
             categoryAddBody.classList.remove("hidden-body");
         }
     });
+    const tooltip = document.createElement("a");
+    tooltip.innerText = category.description;
+    tooltip.classList.add("cat-tooptip", "rounded");
+    span.appendChild(tooltip)
     li.appendChild(span);
 
     const ul = document.createElement("ul");
