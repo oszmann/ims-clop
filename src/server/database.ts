@@ -143,8 +143,16 @@ async function createCategory(source: DataSource, category: Category, parentId: 
     if (!parent) {
         console.log("parent doesn't exist");
         return await getEntities(source, Objects.CATEGORIES);
-    } else if (descendants.map(x => x.name).includes(category.name)) {
-        console.log("decendant with name already exists");
+    } else if (descendants.map(x => {
+        if (x.id !== parent.id)
+        {
+            return x.name
+        }
+        else {
+            return "";
+        }
+    }).includes(category.name)) {
+        console.log("descendant with name already exists");
         return await getEntities(source, Objects.CATEGORIES);
     }
     console.log("inserting category");
@@ -312,20 +320,6 @@ export async function insertPosition(source: DataSource) {
     return await source.manager.find(Position);
 }
 
-async function insertCategory(source: DataSource, newCategory: Category, parentId: string) {
-    const parent = await source.manager.findOneBy(Category, { id: parentId });
-    const descendants = await source.manager.getTreeRepository(Category).findDescendants(parent);
-    if (!parent) {
-        console.log("parent doesn't exist");
-        return;
-    } else if (descendants.map(x => x.name).includes(newCategory.name)) {
-        console.log("decendant with name already exists");
-        return;
-    }
-    newCategory.parent = parent;
-    await source.manager.save(Category, newCategory);
-}
-
 export async function setDefaultCategories(source: DataSource) {
     await source.manager.remove(Category, await source.manager.find(Category));
     const root = new Category();
@@ -335,8 +329,8 @@ export async function setDefaultCategories(source: DataSource) {
     await source.manager.save(Category, root);
     const a = categoryFromCategoryH({ name: "a", description: "a", id: "", children: [] });
     const b = categoryFromCategoryH({ name: "b", description: "b", id: "", children: [] });
-    await insertCategory(source, a, root.id);
-    await insertCategory(source, b, root.id);
+    await createCategory(source, a, root.id);
+    await createCategory(source, b, root.id);
     console.log(JSON.stringify(await source.manager.getTreeRepository(Category).findTrees()));
     return await source.manager.getTreeRepository(Category).findTrees();
 }
