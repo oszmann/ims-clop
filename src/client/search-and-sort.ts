@@ -13,7 +13,7 @@ import { getItems, getLocations, getPositions } from "./ui";
  * @returns sorted array
  */
 export function sortArrayBy(array: any[], callback: ((a: any, b: any) => any)[]): any[] {
-    console.log("sorting");
+    //console.log("sorting");
     callback.forEach(call => (array = array.sort(call)));
     return array;
 }

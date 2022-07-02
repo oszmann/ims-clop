@@ -123,83 +123,86 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
 export function createCategoryDropdownDiv(id: string, category: string): HTMLDivElement {
     let pointer: number = 0;
     const div = document.createElement("div");
-    div.classList.add("dropdown");
-    const a = document.createElement("a");
-    pointer = Object.keys(Category).indexOf(category);
 
-    console.log(Object.values(Category).length, pointer, category);
-    a.innerText = Object.values(Category)[Object.keys(Category).indexOf(category)];
-    a.classList.add("btn", "btn-secondary", "rounded-0");
-    a.href = "#";
-    a.setAttribute("data-category", category);
-    a.id = id + "category";
-    const ul = document.createElement("ul");
-    ul.classList.add("dropdown-menu", "type-dropdown");
-    ul.id = id + "fml";
+    //TODO
 
-    a.addEventListener("click", () => {
-        ul.classList.add("visible");
-        ul.children[pointer].classList.add("type-dropdown-active");
-    });
-    a.addEventListener("blur", () => {
-        setTimeout(() => {
-            if (ul.getAttribute("clicked")) {
-                ul.removeAttribute("clicked");
-            }
-            ul.classList.remove("visible");
-        }, 100);
-    });
-    a.addEventListener("keydown", e => {
-        if (e.key === "ArrowDown") {
-            //console.log("go down");
-            pointer++;
-            moveSelected();
-        }
-        if (e.key === "ArrowUp") {
-            //console.log("go up");
-            pointer--;
-            moveSelected();
-        }
-        if (e.key === "Enter") {
-            const temp = <HTMLAnchorElement>ul.children[pointer];
-            temp.click();
-            a.blur();
-        }
-    });
+    // div.classList.add("dropdown");
+    // const a = document.createElement("a");
+    // pointer = Object.keys(Category).indexOf(category);
 
-    function moveSelected() {
-        for (let i = 0; i < ul.children.length; i++) {
-            ul.children[i].classList.remove("type-dropdown-active");
-        }
-        if (pointer < 0) {
-            pointer = 0;
-        } else if (pointer >= Object.values(Category).length) {
-            pointer = Object.values(Category).length - 1;
-        }
-        //console.log(pointer)
-        ul.children[pointer].classList.add("type-dropdown-active");
-    }
-    Object.values(Category).forEach((value, index) => {
-        const li: HTMLLIElement = document.createElement("li");
-        const lia: HTMLAnchorElement = document.createElement("a");
-        lia.classList.add("dropdown-item");
-        lia.href = "#";
-        lia.innerText = value;
-        li.appendChild(lia);
-        li.addEventListener("click", () => {
-            ul.setAttribute("clicked", "clicked");
-            a.innerText = value;
-            //console.log(Object.keys(Category)[index]);
-            a.setAttribute("data-category", Object.keys(Category)[index]);
-            pointer = index;
-            moveSelected();
-            //ul.classList.remove("visible")
-        });
-        ul.appendChild(li);
-    });
-    div.appendChild(a);
-    div.appendChild(ul);
-    div.style.backgroundColor = "var(--bg-primary)";
+    // //console.log(Object.values(Category).length, pointer, category);
+    // a.innerText = Object.values(Category)[Object.keys(Category).indexOf(category)];
+    // a.classList.add("btn", "btn-secondary", "rounded-0");
+    // a.href = "#";
+    // a.setAttribute("data-category", category);
+    // a.id = id + "category";
+    // const ul = document.createElement("ul");
+    // ul.classList.add("dropdown-menu", "type-dropdown");
+    // ul.id = id + "fml";
+
+    // a.addEventListener("click", () => {
+    //     ul.classList.add("visible");
+    //     ul.children[pointer].classList.add("type-dropdown-active");
+    // });
+    // a.addEventListener("blur", () => {
+    //     setTimeout(() => {
+    //         if (ul.getAttribute("clicked")) {
+    //             ul.removeAttribute("clicked");
+    //         }
+    //         ul.classList.remove("visible");
+    //     }, 100);
+    // });
+    // a.addEventListener("keydown", e => {
+    //     if (e.key === "ArrowDown") {
+    //         //console.log("go down");
+    //         pointer++;
+    //         moveSelected();
+    //     }
+    //     if (e.key === "ArrowUp") {
+    //         //console.log("go up");
+    //         pointer--;
+    //         moveSelected();
+    //     }
+    //     if (e.key === "Enter") {
+    //         const temp = <HTMLAnchorElement>ul.children[pointer];
+    //         temp.click();
+    //         a.blur();
+    //     }
+    // });
+
+    // function moveSelected() {
+    //     for (let i = 0; i < ul.children.length; i++) {
+    //         ul.children[i].classList.remove("type-dropdown-active");
+    //     }
+    //     if (pointer < 0) {
+    //         pointer = 0;
+    //     } else if (pointer >= Object.values(Category).length) {
+    //         pointer = Object.values(Category).length - 1;
+    //     }
+    //     //console.log(pointer)
+    //     ul.children[pointer].classList.add("type-dropdown-active");
+    // }
+    // Object.values(Category).forEach((value, index) => {
+    //     const li: HTMLLIElement = document.createElement("li");
+    //     const lia: HTMLAnchorElement = document.createElement("a");
+    //     lia.classList.add("dropdown-item");
+    //     lia.href = "#";
+    //     lia.innerText = value;
+    //     li.appendChild(lia);
+    //     li.addEventListener("click", () => {
+    //         ul.setAttribute("clicked", "clicked");
+    //         a.innerText = value;
+    //         //console.log(Object.keys(Category)[index]);
+    //         a.setAttribute("data-category", Object.keys(Category)[index]);
+    //         pointer = index;
+    //         moveSelected();
+    //         //ul.classList.remove("visible")
+    //     });
+    //     ul.appendChild(li);
+    // });
+    // div.appendChild(a);
+    // div.appendChild(ul);
+    // div.style.backgroundColor = "var(--bg-primary)";
     return div;
 }
 
@@ -213,6 +216,7 @@ export function createCategoryLi(category: CategoryH): HTMLLIElement {
             document.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
             categoryAddNode.innerText = "Node: ";
             categoryAddNode.setAttribute("data-parent-id", "");
+            categoryAddNode.setAttribute("data-name", "");
             categoryAddBody.classList.add("hidden-body");
         }
         else {
@@ -220,6 +224,7 @@ export function createCategoryLi(category: CategoryH): HTMLLIElement {
             span.classList.add("cat-active");
             categoryAddNode.innerText = "Node: " + category.name;
             categoryAddNode.setAttribute("data-parent-id", category.id);
+            categoryAddNode.setAttribute("data-name", category.name);
             categoryAddBody.classList.remove("hidden-body");
         }
     });

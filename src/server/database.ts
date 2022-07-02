@@ -115,8 +115,7 @@ export async function deleteRequest(source: DataSource, req: Request): Promise<a
         return await deleteItem(source, req.query.item.toString());
     } else if (req.query.cat) {
         console.warn("NOT YET IMPLEMENTED");
-        //TODO
-        return await getEntities(source, Objects.CATEGORIES);
+        return await deleteCategory(source, req.query.cat.toString());
     } else if (req.query.loc) {
         return await deleteLocation(source, req.query.loc.toString());
     } else if (req.query.pos) {
@@ -244,6 +243,19 @@ async function deleteItem(source: DataSource, req: string): Promise<Item[]> {
                 });
             });
         }
+    }
+}
+
+async function deleteCategory(source: DataSource, id: string): Promise<Category[]> {
+    if (id !== "00000000-0000-0000-0000-000000000000") {
+        const kids: Category[] = await source.getTreeRepository(Category).findDescendants(await source.manager.findOneBy(Category, {id: id}));
+        console.log(kids);
+        await source.manager.remove(Category, kids);
+        console.log("scrub")
+        return await getEntities(source, Objects.CATEGORIES);        
+    }
+    else {
+        return await getEntities(source, Objects.CATEGORIES);
     }
 }
 

@@ -17,6 +17,11 @@ import {
     categoryAddDescription,
     categoryAddName,
     categoryAddNode,
+    categoryAddRemove,
+    categoryConfirmBody,
+    categoryConfirmHeader,
+    categoryConfirmModal,
+    categoryConfirmYes,
     positionAmountInput,
     positionPartNoInput,
     positionRackInput,
@@ -29,7 +34,7 @@ import {
     toggleRack,
     toggleShelf,
 } from "./static";
-import { initAutocomplete, updateCategories, updateItems, updateLocations, updatePositions } from "./ui";
+import { getCategories, initAutocomplete, updateCategories, updateItems, updateLocations, updatePositions } from "./ui";
 import {
     Route,
     makeItemRequest,
@@ -148,6 +153,16 @@ async function initItems() {
         );
         // document.getElementById(a.id);
     });
+    categoryAddRemove.addEventListener("click", () => {
+        //TODO CONFIGURE TEXT IN
+        categoryConfirmHeader.innerText = `Delete the "${categoryAddNode.getAttribute("data-name")}" category?`
+        categoryConfirmBody.innerText = "This will also permanently delete all children categories."
+        categoryConfirmYes.innerText = `Yes, delete "${categoryAddNode.getAttribute("data-name")}"`;
+    });
+    categoryConfirmYes.addEventListener("click", async () => {
+        updateCategories(await makeCategoryRequest(Route.D, categoryAddNode.getAttribute("data-parent-id")))
+    })
+
 }
 
 async function initLocations() {

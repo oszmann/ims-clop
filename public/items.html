@@ -43,7 +43,8 @@
                 </div>
                 <div id="insert-item-container">
                     <div id="insert-item-div" class="input-group rounded nav-item">
-                        <div class="form-floating rounded-start -w20">
+                        <button id="edit-items-button" class="btn btn-danger rounded -w10 for form-floating">Edit items</button>
+                        <div class="form-floating -w20">
                             <input
                                 id="insert-part-no"
                                 placeholder="Part Number:"
@@ -61,11 +62,11 @@
                             />
                             <label for="insert-description">Description:</label>
                         </div>
-                        <div class="form-floating -w15">
+                        <div class="form-floating -w10">
                             <input id="insert-cost" placeholder="Cost (number):" type="number" class="form-control" />
                             <label for="insert-cost">Cost (number):</label>
                         </div>
-                        <div class="form-floating -w15">
+                        <div class="form-floating -w10">
                             <input
                                 id="insert-min-stock"
                                 placeholder="Minimum stock (number):"
@@ -112,7 +113,7 @@
                     </div>
                     <div id="category-body" class="modal-body"></div>
                     <div id="category-add" class="modal-body input-group hidden-body">
-                        <button class="btn btn-danger" id="category-remove-button">Delete node</button>
+                        <button class="btn btn-danger" id="category-remove-button" data-bs-toggle="modal" data-bs-target="#category-confirm-modal">Delete node</button>
                         <a id="category-add-node" class="form-control">Node: </a>
                         <div class="form-floating">
                             <input id="category-add-name" placeholder="Name:" type="text" class="form-control" />
@@ -125,14 +126,27 @@
                         <button class="btn btn-primary" id="category-add-button">Add Category</button>
                     </div>
                     <div class="modal-footer">
-                        <button id="modal-close-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <button id="modal-close-button" type="button" class="btn btn-secondary">
                             Close
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-
+        <div class="modal modal-alert py-5 modal-fade" id="category-confirm-modal" tabindex="-1" role="dialog" style="z-index: 3000;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content rounded-3 shadow">
+                    <div class="modal-body p-4 text-center">
+                        <h5 class="mb-0" id="confirm-heading">blupp</h5>
+                        <p class="mb-0" id="confirm-body">burp</p>
+                    </div>
+                    <div class="modal-footer flex-nowrap p-0">
+                        <button type="button" id="confirm-yes" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-end" data-bs-toggle="modal" data-bs-target="#category-modal"><strong>Yes, delete</strong></button>
+                        <button type="button" id="confirm-no" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0" data-bs-toggle="modal" data-bs-target="#category-modal">No, I've changed my mind</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="fart"></div>
         <div id="items-div"></div>
         <script src="./js/main.js"></script>
