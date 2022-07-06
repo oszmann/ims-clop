@@ -83,15 +83,17 @@
                                 id="category-dropdown-button"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
-                                data-type="DEFAULT"
+                                data-category="00000000-0000-0000-0000-000000000000"
                             >
                                 Category
                             </a>
-                            <ul
-                                class="dropdown-menu"
-                                id="category-dropdown-menu"
-                                aria-labelledby="category-dropdown-button"
-                            ></ul>
+                            <div class="dropdown-menu">
+                                <ul
+                                    class="tree"
+                                    id="category-dropdown-menu"
+                                    aria-labelledby="category-dropdown-button"
+                                ></ul>
+                            </div>
                         </div>
                         <button id="add-item-button" class="btn btn-secondary rounded-end -w10">Insert item</button>
                     </div>

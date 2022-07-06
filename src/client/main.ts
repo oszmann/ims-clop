@@ -1,5 +1,7 @@
+import { CategoryH } from "../common/util";
 import { initSortByButtons } from "./search-and-sort";
 import {
+    $,
     addCost,
     addDescription,
     addItemButton,
@@ -20,7 +22,6 @@ import {
     categoryAddRemove,
     categoryConfirmBody,
     categoryConfirmHeader,
-    categoryConfirmModal,
     categoryConfirmYes,
     positionAmountInput,
     positionPartNoInput,
@@ -35,6 +36,7 @@ import {
     toggleShelf,
 } from "./static";
 import { getCategories, initAutocomplete, updateCategories, updateItems, updateLocations, updatePositions } from "./ui";
+import { createCategoryLi } from "./ui-create";
 import {
     Route,
     makeItemRequest,
@@ -47,7 +49,6 @@ import {
     createPosition,
     disable,
     unDisable,
-    Category,
     SearchBy,
     makeCategoryRequest,
     createCategory,
@@ -55,7 +56,6 @@ import {
 
 let doUpdate: boolean = true;
 let toggleDropdown: string = "shelf";
-const dummyArray: string[] = ["hi", "there", "my", "name", "is", "dum", "dum"];
 
 async function initHome() {
     //BUTTON LISTENERS
@@ -114,8 +114,9 @@ async function initHome() {
 }
 
 async function initItems() {
-    initItemDropdowns();
+    updateCategories(await makeCategoryRequest(Route.R));
     updateItems(await makeItemRequest(Route.R));
+    initItemDropdown();
     //BUTTON LISTENERS
     addItemButton.addEventListener("click", () => {
         makeItemRequest(
@@ -126,7 +127,7 @@ async function initItems() {
                     addDescription.value,
                     addCost.value,
                     addMinStock.value,
-                    categoriesDropdown.getAttribute("data-type")
+                    categoriesDropdown.getAttribute("data-category")
                 )
             )
         ).then(resp => {
@@ -138,7 +139,7 @@ async function initItems() {
         addCost.value = "";
         addMinStock.value = "";
         categoriesDropdown.innerText = "Category";
-        categoriesDropdown.setAttribute("data-type", "DEFAULT");
+        categoriesDropdown.setAttribute("data-category", "00000000-0000-0000-0000-000000000000");
     });
     categoryAddButton.addEventListener("click", async () => {
         const a = document.getElementsByClassName("cat-active")[0];
@@ -238,21 +239,13 @@ function init() {
     }
 }
 
-function initItemDropdowns() {
-    Object.values(Category).forEach((value, index) => {
-        const li: HTMLLIElement = document.createElement("li");
-        const a: HTMLAnchorElement = document.createElement("a");
-        a.classList.add("dropdown-item");
-        a.href = "#";
-        a.innerText = value;
-        li.appendChild(a);
-        li.addEventListener("click", () => {
-            categoriesDropdown.innerText = value;
-            console.log(Object.keys(Category)[index]);
-            categoriesDropdown.setAttribute("data-type", Object.keys(Category)[index]);
-        });
-        categoriesDropdownList.appendChild(li);
-    });
+function initItemDropdown() {
+    categoriesDropdownList.appendChild(createCategoryLi(getCategories(), (category: CategoryH) => {
+        categoriesDropdownList.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
+        $(category.id).classList.add("cat-active")
+        categoriesDropdown.innerText = category.name;
+        categoriesDropdown.setAttribute("data-category", category.id);
+    }));
 }
 
 async function main() {

@@ -36,6 +36,7 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     const id: HTMLAnchorElement = document.createElement("a");
     const idSpan: HTMLSpanElement = document.createElement("span");
 
+    const editButton: HTMLButtonElement = document.createElement("button");
     const deleteButton: HTMLButtonElement = document.createElement("button");
 
     id.id = item.id + "id";
@@ -209,28 +210,15 @@ export function createCategoryDropdownDiv(id: string, category: string): HTMLDiv
     return div;
 }
 
-export function createCategoryLi(category: CategoryH): HTMLLIElement {
+export function createCategoryLi(category: CategoryH, callback: (category: CategoryH) => any, itemId?: string): HTMLLIElement {
     const li = document.createElement("li");
     const span = document.createElement("span");
     span.innerText = category.name;
     span.id = category.id;
-    span.addEventListener("click", () => {
-        if (document.getElementsByClassName("cat-active")[0]?.id === category.id) {
-            document.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
-            categoryAddNode.innerText = "Node: ";
-            categoryAddNode.setAttribute("data-parent-id", "");
-            categoryAddNode.setAttribute("data-name", "");
-            categoryAddBody.classList.add("hidden-body");
-        }
-        else {
-            document.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
-            span.classList.add("cat-active");
-            categoryAddNode.innerText = "Node: " + category.name;
-            categoryAddNode.setAttribute("data-parent-id", category.id);
-            categoryAddNode.setAttribute("data-name", category.name);
-            categoryAddBody.classList.remove("hidden-body");
-        }
-    });
+    if (itemId) {
+        span.id = category.id + itemId;
+    }
+    span.addEventListener("click", () => callback(category));
     const tooltip = document.createElement("a");
     tooltip.innerText = category.description;
     tooltip.classList.add("cat-tooptip", "rounded");
@@ -239,7 +227,7 @@ export function createCategoryLi(category: CategoryH): HTMLLIElement {
 
     const ul = document.createElement("ul");
     category.children.forEach(ch => {
-        ul.appendChild(createCategoryLi(ch));
+        ul.appendChild(createCategoryLi(ch, callback, itemId));
     });
     if (ul.firstChild) {
         li.appendChild(ul);
