@@ -326,8 +326,15 @@ export function findCategoryById(categories: CategoryH, id: string): CategoryH {
     if (categories.id === id) {
         return categories;
     } else { 
-        return categories.children.find(category => {
-            return findCategoryById(category, id);
+        let a: CategoryH;
+        categories.children.forEach(category => {
+            const temp = findCategoryById(category, id);
+            if (temp) {
+                a = temp;
+            }
         });
+        if (a) {
+            return a
+        };
     }
 }

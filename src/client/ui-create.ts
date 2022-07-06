@@ -132,7 +132,7 @@ export function createCategoryDropdownDiv(id: string, categoryID: string): HTMLD
     div.id = id + "dropdown";
     const a = document.createElement("a");
     const ul = document.createElement("ul");
-    const div2 = document.createElement("div")
+    const div2 = document.createElement("div");
     a.innerText = findCategoryById(getCategories(), categoryID)?.name;
     a.classList.add("btn", "btn-secondary", "rounded-0");
     a.href = "#";
