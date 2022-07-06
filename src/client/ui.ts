@@ -87,15 +87,13 @@ export function updateCategories(newCategories: CategoryH[]) {
         ul.classList.add("tree");
         ul.appendChild(createCategoryLi(categories, (category: CategoryH) => {
             if (ul.getElementsByClassName("cat-active")[0]?.id === category.id + "modal") {
-                // ul.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
+                ul.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
                 categoryAddNode.innerText = "Node: ";
                 categoryAddNode.setAttribute("data-parent-id", "");
                 categoryAddNode.setAttribute("data-name", "");
                 categoryAddBody.classList.add("hidden-body");
             }
             else {
-                console.log(ul)
-                console.log("adding catactive")
                 ul.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
                 const a = $(category.id + "modal")
                 a.classList.add("cat-active");
