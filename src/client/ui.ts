@@ -12,6 +12,8 @@ import {
 } from "./search-and-sort";
 import {
     $,
+    categoryAddBody,
+    categoryAddNode,
     categoryModalBody,
     itemsDiv,
     locationsDiv,
@@ -83,7 +85,26 @@ export function updateCategories(newCategories: CategoryH[]) {
         categoryModalBody.firstChild?.remove();
         const ul = document.createElement("ul");
         ul.classList.add("tree");
-        ul.appendChild(createCategoryLi(categories));
+        ul.appendChild(createCategoryLi(categories, (category: CategoryH) => {
+            if (ul.getElementsByClassName("cat-active")[0]?.id === category.id + "modal") {
+                // ul.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
+                categoryAddNode.innerText = "Node: ";
+                categoryAddNode.setAttribute("data-parent-id", "");
+                categoryAddNode.setAttribute("data-name", "");
+                categoryAddBody.classList.add("hidden-body");
+            }
+            else {
+                console.log(ul)
+                console.log("adding catactive")
+                ul.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
+                const a = $(category.id + "modal")
+                a.classList.add("cat-active");
+                categoryAddNode.innerText = "Node: " + category.name;
+                categoryAddNode.setAttribute("data-parent-id", category.id);
+                categoryAddNode.setAttribute("data-name", category.name);
+                categoryAddBody.classList.remove("hidden-body");
+            }
+        }, "modal"));
         categoryModalBody.appendChild(ul);
     }
 }
@@ -172,3 +193,4 @@ export async function initAutocomplete() {
     });
     autocomplete(positionWarehouseInput, b, prefixB);
 }
+
