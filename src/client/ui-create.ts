@@ -80,23 +80,25 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
 
     dates.appendChild(datesSpan);
 
+    editButton.innerText = "Edit";
+    editButton.classList.add("btn", "btn-primary", "rounded");
+
     deleteButton.innerText = "Delete";
     deleteButton.classList.add("btn", "btn-primary");
-    // editButton.addEventListener("click", async () => {
-    //     const typeA = <HTMLAnchorElement>typeDropdown.children[0];
-    //     const categoryA = <HTMLAnchorElement>categoryDropdown.children[0];
-    //     const temp = createItem(
-    //         partNumber.value,
-    //         description.value,
-    //         cost.value,
-    //         minStock.value,
-    //         typeA.getAttribute("data-type"),
-    //         categoryA.getAttribute("data-category")
-    //     );
-    //     temp.id = item.id;
-    //     //console.log(temp)
-    //     updateItems(await makeItemRequest(Route.U, JSON.stringify(temp)));
-    // });
+
+    editButton.addEventListener("click", async () => {
+        const categoryA = <HTMLAnchorElement>categoryDropdown.children[0];
+        const temp = createItem(
+            partNumber.value,
+            description.value,
+            cost.value,
+            minStock.value,
+            categoryA.getAttribute("data-category")
+        );
+        temp.id = item.id;
+        //console.log(temp)
+        updateItems(await makeItemRequest(Route.U, JSON.stringify(temp)));
+    });
     deleteButton.addEventListener("click", async () => {
         updateItems(await makeItemRequest(Route.D, item.id));
     });
@@ -107,6 +109,7 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     div.appendChild(description);
     div.appendChild(cost);
     div.appendChild(minStock);
+    div.appendChild(editButton);
     div.appendChild(categoryDropdown);
     div.appendChild(dates);
     div.appendChild(deleteButton);
