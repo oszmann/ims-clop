@@ -114,7 +114,6 @@ export async function deleteRequest(source: DataSource, req: Request): Promise<a
     if (req.query.item) {
         return await deleteItem(source, req.query.item.toString());
     } else if (req.query.cat) {
-        console.warn("NOT YET IMPLEMENTED");
         return await deleteCategory(source, req.query.cat.toString());
     } else if (req.query.loc) {
         return await deleteLocation(source, req.query.loc.toString());
