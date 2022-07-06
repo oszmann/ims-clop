@@ -321,3 +321,13 @@ export function autocomplete(inputElement: HTMLInputElement, array: any[], prefi
         }
     }
 }
+
+export function findCategoryById(categories: CategoryH, id: string): CategoryH {
+    if (categories.id === id) {
+        return categories;
+    } else { 
+        return categories.children.find(category => {
+            return findCategoryById(category, id);
+        });
+    }
+}
