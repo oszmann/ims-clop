@@ -144,7 +144,7 @@ export function createCategoryDropdownDiv(id: string, categoryID: string): HTMLD
             div2.classList.remove("visible");
         }, 150);
     });
-    div2.classList.add("dropdown-menu", "type-dropdown");
+    div2.classList.add("dropdown-menu", "category-dropdown");
     ul.appendChild(createCategoryLi(getCategories(), (category: CategoryH) => {
         a.setAttribute("data-category", category.id);
         a.innerText = category.name;
