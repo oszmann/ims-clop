@@ -359,7 +359,7 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     const item = getItems().find(x => x.id === position.itemId);
     const location = getLocations().find(x => x.id === position.locationId);
     const div = document.createElement("div");
-    div.classList.add("input-group", "rounded", "position-outer-div");
+    div.classList.add("input-group", "rounded", "position-outer-div", "overflow-b");
     div.style.backgroundColor = "var(--bg-secondary)";
     div.id = position.id;
 
@@ -395,8 +395,8 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     amount.type = "number";
     amount.placeholder = "Amount:";
 
-    itemDiv.classList.add("form-control", "overflow-a", "pos-loc-div", "-w30");
-    locationDiv.classList.add("form-control", "overflow-a", "pos-loc-div", "-w15");
+    itemDiv.classList.add("form-control", "overflow-barless", "pos-loc-div", "-w30");
+    locationDiv.classList.add("form-control", "overflow-barless", "pos-loc-div", "-w15");
     amountDec.classList.add("form-control", "dec");
     amountDec.style.maxWidth = "82px";
     amount.classList.add("form-control");

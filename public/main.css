@@ -277,7 +277,7 @@ td {
     margin-left: 5px;
 }
 
-.overflow-a {
+.overflow-barless {
     overflow: auto;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */
