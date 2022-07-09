@@ -2,7 +2,6 @@ import { CategoryH, ItemH, LocationH, PositionH } from "../common/util";
 import { $ } from "./static";
 import { getCategories, getItems, getLocations, updateItems, updateLocations, updatePositions } from "./ui";
 import {
-    Category,
     createItem,
     findCategoryById,
     makeItemRequest,
@@ -134,15 +133,10 @@ export function createCategoryDropdownDiv(id: string, categoryID: string): HTMLD
     const ul = document.createElement("ul");
     const div2 = document.createElement("div");
     a.innerText = findCategoryById(getCategories(), categoryID)?.name;
-    a.classList.add("btn", "btn-secondary", "rounded-0");
+    a.classList.add("btn", "btn-secondary", "rounded-0", "dropdown-a");
     a.href = "#";
     a.addEventListener("click", () => {
-        div2.classList.add("visible");
-    });
-    a.addEventListener("blur", () => {
-        setTimeout(() => {
-            div2.classList.remove("visible");
-        }, 150);
+        div2.classList.toggle("visible");
     });
     div2.classList.add("dropdown-menu", "category-dropdown");
     ul.appendChild(createCategoryLi(getCategories(), (category: CategoryH) => {
@@ -150,8 +144,8 @@ export function createCategoryDropdownDiv(id: string, categoryID: string): HTMLD
         a.innerText = category.name;
         div.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
         $(category.id + id).classList.add("cat-active");
+        div2.classList.remove("visible");
     }, id));
-    ul.classList.add("tree");
     div2.appendChild(ul);
     div.appendChild(a);
     div.appendChild(div2)
@@ -161,26 +155,64 @@ export function createCategoryDropdownDiv(id: string, categoryID: string): HTMLD
 export function createCategoryLi(category: CategoryH, callback: (category: CategoryH) => any, itemId?: string): HTMLLIElement {
     const li = document.createElement("li");
     const span = document.createElement("span");
+    const div = document.createElement("div");
     span.innerText = category.name;
     span.id = category.id;
     if (itemId) {
         span.id = category.id + itemId;
     }
     span.addEventListener("click", () => callback(category));
+    span.classList.add("category-span");
     const tooltip = document.createElement("a");
     tooltip.innerText = category.description;
-    tooltip.classList.add("cat-tooptip", "rounded");
+    tooltip.classList.add("category-tooltip", "rounded");
     span.appendChild(tooltip);
-    li.appendChild(span);
+    div.appendChild(span);
 
     const ul = document.createElement("ul");
+    ul.classList.add("nested", "category-ul");
     category.children.forEach(ch => {
         ul.appendChild(createCategoryLi(ch, callback, itemId));
     });
+
+    li.appendChild(div);
+
     if (ul.firstChild) {
+        const emR = document.createElement("em");
+        emR.classList.add("btn","btn-secondary","fa-solid", "fa-caret-right");
+        emR.classList.add("category-em", "border");
+        emR.addEventListener("click", e => {
+            if (ul.classList.contains("active")) {
+                resetBranch(li);
+            }
+            else {
+                const a = <HTMLElement>li.parentElement.getElementsByClassName("active")[0];
+                if (a) {
+                    resetBranch(a.parentElement);
+                }
+                ul.classList.add("active");
+                emR.classList.add("caret-down");
+            }
+            e.preventDefault();
+        });
+        div.prepend(emR);
         li.appendChild(ul);
     }
+    else {
+        span.classList.add("no-ul")
+    }
     return li;
+}
+
+function resetBranch(e: HTMLElement) {
+    const a = e.getElementsByClassName("active");
+    for (let i = 0; i < a.length; i++) {
+        a[i].classList.remove("active");
+    }
+    const b = e.getElementsByClassName("caret-down");
+    for (let i = 0; i < b.length; i++) {
+        b[i].classList.remove("caret-down");
+    }
 }
 
 //-------------------------------Location
@@ -381,7 +413,7 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     partNo.innerText = item.partNumber;
     c.classList.add("border-0", "dec");
     c.innerText = "C:";
-    category.innerText = Object.values(Category)[Object.keys(Category).indexOf(item.category)];
+    category.innerText = findCategoryById(getCategories(), item.category)?.name;
     d.classList.add("border-0", "dec");
     d.innerText = "D:";
     desc.innerText = item.description;

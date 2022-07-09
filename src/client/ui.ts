@@ -84,7 +84,6 @@ export function updateCategories(newCategories: CategoryH[]) {
     if (getActivePage() === Page.ITEMS) {
         categoryModalBody.firstChild?.remove();
         const ul = document.createElement("ul");
-        ul.classList.add("tree");
         ul.appendChild(createCategoryLi(categories, (category: CategoryH) => {
             if (ul.getElementsByClassName("cat-active")[0]?.id === category.id + "modal") {
                 ul.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");

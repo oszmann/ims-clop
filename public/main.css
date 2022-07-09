@@ -65,7 +65,7 @@
     margin-left: 10%;
 }
 
-#items-div a {
+.dropdown-a {
     max-width: 200px;
     display: inline-block;
     bottom: 0;
@@ -92,7 +92,7 @@
     justify-content: center;
 }
 
-.cat-tooptip {
+.category-tooltip {
     position: absolute;
     transform: translate(-50%, 70%);
     padding: 5px;
@@ -101,7 +101,7 @@
 
 .tooltip-span,
 .tooltip-dates,
-.cat-tooptip {
+.category-tooltip {
     visibility: hidden;
     background-color: white;
     border: 1px solid black;
@@ -112,7 +112,7 @@
 
 a:hover .tooltip-span,
 a:hover .tooltip-dates,
-span:hover .cat-tooptip {
+span:hover .category-tooltip {
     visibility: visible;
 }
 
@@ -308,90 +308,40 @@ td {
     align-items: center;
 }
 
-.tree,
-.tree ul,
-.tree li {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: relative;
+ul {
+    list-style-type: none;
 }
 
-.tree {
-    margin: 0 0 1em;
-    text-align: center;
+.nested {
+    display: none;
 }
 
-.tree,
-.tree ul {
-    display: table;
+.active {
+    display: block;
 }
 
-.tree ul {
-    width: 100%;
+.category-em {
+    padding: 0 5px 0 3px;
+    margin-bottom: 4px;
 }
 
-.tree li {
-    display: table-cell;
-    padding: 0.5em 0;
-    vertical-align: top;
+.caret-down {
+    transform: rotate(90deg);
 }
 
-.tree li:before {
-    outline: solid 1px #666;
-    content: "";
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
+.category-span {
+    padding: 0 25px;
+    cursor: pointer;
 }
 
-.tree li:first-child:before {
-    left: 50%;
+.category-ul {
+    border: 1px solid black;
+    border-right: none;
+    border-left: none;
 }
 
-.tree li:last-child:before {
-    right: 50%;
-}
-
-.tree span {
-    border: solid 0.1em #666;
-    border-radius: 0.2em;
-    display: inline-block;
-    margin: 0 0.2em 0.5em;
-    padding: 0.2em 0.5em;
-    position: relative;
-}
-
-.tree ul:before,
-.tree span:before {
-    outline: solid 1px #666;
-    content: "";
-    height: 0.5em;
-    left: 50%;
-    position: absolute;
-}
-
-.tree ul:before {
-    top: -0.5em;
-}
-
-.tree span:before {
-    top: -0.55em;
-}
-
-.tree > li {
-    margin-top: 0;
-}
-
-.tree > li:before,
-.tree > li:after,
-.tree > li > span:before {
-    outline: none;
-}
-
-.tree span:hover {
-    background-color: green;
+.no-ul {
+    margin-left: 18px;
 }
 
 .cat-active {
