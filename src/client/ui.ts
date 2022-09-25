@@ -103,6 +103,7 @@ export function updateCategories(newCategories: CategoryH[]) {
             }
         }, "modal"));
         categoryModalBody.appendChild(ul);
+        (<HTMLSpanElement>($("00000000-0000-0000-0000-000000000000modal").parentElement.children[0])).click();
     }
 }
 

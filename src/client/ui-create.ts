@@ -1,5 +1,5 @@
 import { CategoryH, ItemH, LocationH, PositionH } from "../common/util";
-import { $ } from "./static";
+import { $, categoryAddBody } from "./static";
 import { getCategories, getItems, getLocations, updateItems, updateLocations, updatePositions } from "./ui";
 import {
     createItem,
@@ -11,12 +11,12 @@ import {
 } from "./util";
 
 /**
- * Here you can exclusively find functions, that is used for creating UI-Elements.
+ * Here you can find functions, that are used for creating UI-Elements.
  */
 
 //-------------------------------Item
 /**
- * Return a proper formatted Div for a given ItemH object.
+ * Return a proper formatted editable Div for a given ItemH object.
  * @param item input item
  * @returns div to be inserted into item list
  */
@@ -104,7 +104,7 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     deleteButton.addEventListener("click", async () => {
         updateItems(await makeItemRequest(Route.D, item.id));
     });
-    const categoryDropdown = createCategoryDropdownDiv(item.id, item.category);
+    const categoryDropdown = createCategoryDropdownDiv(item.id, item.category, true);
     categoryDropdown.classList.add("-w10");
     div.appendChild(id);
     div.appendChild(partNumber);
@@ -125,7 +125,7 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
  * @param categoryID
  * @returns
  */
-export function createCategoryDropdownDiv(id: string, categoryID: string): HTMLDivElement {
+export function createCategoryDropdownDiv(id: string, categoryID: string, editable: boolean = false): HTMLDivElement {
     const div = document.createElement("div");
     div.classList.add("dropdown")
     div.id = id + "dropdown";
@@ -137,21 +137,67 @@ export function createCategoryDropdownDiv(id: string, categoryID: string): HTMLD
     a.href = "#";
     a.addEventListener("click", () => {
         div2.classList.toggle("visible");
+        div2.focus();
+        a.blur();
     });
     div2.classList.add("dropdown-menu", "category-dropdown");
-    ul.appendChild(createCategoryLi(getCategories(), (category: CategoryH) => {
-        a.setAttribute("data-category", category.id);
-        a.innerText = category.name;
-        div.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
-        $(category.id + id).classList.add("cat-active");
-        div2.classList.remove("visible");
-    }, id));
+    div2.tabIndex = 0;
+    if (editable) {
+        ul.appendChild(createCategoryLi(getCategories(), (category: CategoryH) => {
+            a.setAttribute("data-category", category.id);
+            a.innerText = category.name;
+            div.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
+            $(category.id + id).classList.add("cat-active");
+            div2.blur();
+        }, id));
+    }
+    else {
+        ul.appendChild(createCategoryLi(getCategories(), () => {}, id));
+    }
+
+    activatePath(ul, categoryID + id);
+    
+    function activatePath(ul: HTMLUListElement, idToFind: string): boolean {
+        if (!ul) {
+            return false;
+        }
+        const lis = ul.children;
+        for (let i = 0; i < lis.length; i++) {
+            if (lis[i].children[0].children[1] && lis[i].children[0].children[1].id === idToFind) {
+                lis[i].children[0].children[1].classList.add("cat-active");
+                return true;
+            }
+            else if (lis[i].children[0].children[0].id === idToFind) {
+                lis[i].children[0].children[0].classList.add("cat-active");
+                return true;
+            }
+            if (activatePath(<HTMLUListElement>lis[i].children[1], idToFind)) {
+                console.log("clicking for", categoryID);
+                (<HTMLElement>lis[i].children[0].children[0])
+                lis[i].children[1].classList.add("active");
+                lis[i].children[0].children[0].classList.add("caret-down");;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    div2.addEventListener("blur", () => {
+        setTimeout(() => div2.classList.remove("visible"), 100);
+    });
     div2.appendChild(ul);
     div.appendChild(a);
-    div.appendChild(div2)
+    div.appendChild(div2);
     return div;
 }
 
+/**
+ * Create Li Element of category (with sub-uls if children are present)
+ * @param category categoryH object of which li is to be created
+ * @param callback Listener to be added to span of each category element (the span)
+ * @param itemId optional Parameter, to be used to find the li-s when many of these lists are created
+ * @returns li element
+ */
 export function createCategoryLi(category: CategoryH, callback: (category: CategoryH) => any, itemId?: string): HTMLLIElement {
     const li = document.createElement("li");
     const span = document.createElement("span");
@@ -166,7 +212,10 @@ export function createCategoryLi(category: CategoryH, callback: (category: Categ
     const tooltip = document.createElement("a");
     tooltip.innerText = category.description;
     tooltip.classList.add("category-tooltip", "rounded");
-    span.appendChild(tooltip);
+    if (tooltip.innerText !== "") {
+        span.appendChild(tooltip);
+    }
+    div.classList.add("border", "rounded", "border-success");
     div.appendChild(span);
 
     const ul = document.createElement("ul");
@@ -202,16 +251,20 @@ export function createCategoryLi(category: CategoryH, callback: (category: Categ
         span.classList.add("no-ul")
     }
     return li;
-}
 
-function resetBranch(e: HTMLElement) {
-    const a = e.getElementsByClassName("active");
-    for (let i = 0; i < a.length; i++) {
-        a[i].classList.remove("active");
-    }
-    const b = e.getElementsByClassName("caret-down");
-    for (let i = 0; i < b.length; i++) {
-        b[i].classList.remove("caret-down");
+    /**
+     * remove all "active" classes from element and children
+     * @param e 
+     */
+     function resetBranch(e: HTMLElement) {
+        const a = e.getElementsByClassName("active");
+        for (let i = 0; i < a.length; i++) {
+            a[i].classList.remove("active");
+        }
+        const b = e.getElementsByClassName("caret-down");
+        for (let i = 0; i < b.length; i++) {
+            b[i].classList.remove("caret-down");
+        }
     }
 }
 
