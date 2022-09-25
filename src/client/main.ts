@@ -57,7 +57,7 @@ import {
 } from "./util";
 
 let doUpdate: boolean = true;
-let toggleDropdown: string = "shelf";
+let toggleDropdown: string = "rack";
 
 async function initHome() {
     //BUTTON LISTENERS

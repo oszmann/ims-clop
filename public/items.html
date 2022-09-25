@@ -42,80 +42,81 @@
                         </ul>
                     </div>
                 </div>
-                <div id="item-toolbar" class="input-group nav-item ">
-                    <button id="add-item-modal-button" class="btn btn-secondary rounded" data-bs-toggle="modal" data-bs-target="#add-item-modal">Add Items</button>
+                <div class="input-group nav-item toolbar">
+                    <button class="btn btn-secondary rounded" data-bs-toggle="modal" data-bs-target="#add-item-modal">Add Items</button>
                 </div>
             </div>
         </nav>
+
         <div class="modal fade" id="add-item-modal" tabindex="-1">
             <div class="modal-dialog modal-xl">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Modal title</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="insert-item-div" class="rounded ">
-                        <div class="-w50 item-modal-row">
-                            <a href="">Part Number:</a>
-                            <input
-                                id="insert-part-no"
-                                type="text"
-                                class="right"
-                            />
-                        </div>
-                        <div class="-w50 item-modal-row">
-                            <a href="">Description:</a>
-                            <input
-                                id="insert-description"
-                                type="text"
-                                class="right"
-                            />
-                        </div>
-                        <div class="-w50 item-modal-row">
-                            <a href="">Cost (number):</a>
-                            <input 
-                                id="insert-cost" 
-                                type="number" 
-                                class="right"
-                            />
-                        </div>
-                        <div class="-w50 item-modal-row">
-                            <a href="">Minimum stock (number):</a>
-                            <input
-                                id="insert-min-stock"
-                                type="number"
-                                class="right"
-                            />
-                        </div>
-                        <div class="-w50">
-                            <a
-                                class="btn btn-primary form-control rounded-0"
-                                href="#"
-                                role="button"
-                                id="category-dropdown-button"
-                                aria-expanded="false"
-                                data-category="00000000-0000-0000-0000-000000000000"
-                            >
-                                Category
-                            </a>
-                            <div class="category-dropdown-div category-dropdown">
-                                <ul
-                                    class="category-ul"
-                                    id="category-dropdown-menu"
-                                    aria-labelledby="category-dropdown-button"
-                                ></ul>
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="insert-item-div" class="rounded ">
+                            <div class="-w50 modal-row">
+                                <a>Part Number:</a>
+                                <input
+                                    id="insert-part-no"
+                                    type="text"
+                                    class="right"
+                                />
+                            </div>
+                            <div class="-w50 modal-row">
+                                <a>Description:</a>
+                                <input
+                                    id="insert-description"
+                                    type="text"
+                                    class="right"
+                                />
+                            </div>
+                            <div class="-w50 modal-row">
+                                <a>Cost (number):</a>
+                                <input 
+                                    id="insert-cost" 
+                                    type="number" 
+                                    class="right"
+                                />
+                            </div>
+                            <div class="-w50 modal-row">
+                                <a>Minimum stock (number):</a>
+                                <input
+                                    id="insert-min-stock"
+                                    type="number"
+                                    class="right"
+                                />
+                            </div>
+                            <div class="-w50">
+                                <a
+                                    class="btn btn-primary form-control rounded-0"
+                                    href="#"
+                                    role="button"
+                                    id="category-dropdown-button"
+                                    aria-expanded="false"
+                                    data-category="00000000-0000-0000-0000-000000000000"
+                                >
+                                    Category
+                                </a>
+                                <div class="category-dropdown-div category-dropdown">
+                                    <ul
+                                        class="category-ul"
+                                        id="category-dropdown-menu"
+                                        aria-labelledby="category-dropdown-button"
+                                    ></ul>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="add-item-button" class="btn btn-primary">Add Item</button>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" id="add-item-button" class="btn btn-primary">Add Item</button>
-                </div>
-              </div>
             </div>
-          </div>
+        </div>
           
         <div
             class="modal fade"

@@ -4,7 +4,7 @@
         <meta name="viewport" content="width=device-width" />
         <title>clop</title>
         <link href="/bs/dist/css/bootstrap.min.css" rel="stylesheet" />
-        <script src="/bs/dist/js/bootstrap.min.js"></script>
+        <script src="/bs/dist/js/bootstrap.bundle.min.js"></script>
         <link rel="stylesheet" href="/fa/css/all.css" />
     </head>
     <body>
@@ -67,71 +67,8 @@
                         </form>
                     </div>
                 </div>
-                <div id="insert-position-container">
-                    <div id="insert-position-div">
-                        <div class="input-group">
-                            <div class="form-floating -w40">
-                                <input
-                                    type="text"
-                                    class="form-control rounded-start"
-                                    id="position-part-no-input"
-                                    placeholder="Part Number:"
-                                />
-                                <label for="position-part-no-input">Part Number:</label>
-                            </div>
-                            <div class="form-floating -w25">
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="position-warehouse-input"
-                                    placeholder="Warehouse:"
-                                />
-                                <label for="position-warehouse-input">Warehouse:</label>
-                            </div>
-                            <!-- <div class="form-floating -w7">
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="position-row-input"
-                                    placeholder="Row:"
-                                    disabled
-                                />
-                                <label for="position-row-input">Row:</label>
-                            </div> -->
-                            <div class="form-floating -w7">
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="position-rack-input"
-                                    placeholder="Rack:"
-                                    disabled
-                                />
-                                <label for="position-rack-input">Rack:</label>
-                            </div>
-                            <div class="form-floating -w7">
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="position-shelf-input"
-                                    placeholder="Shelf:"
-                                    disabled
-                                />
-                                <label for="position-shelf-input">Shelf:</label>
-                            </div>
-                            <div class="form-floating -w9">
-                                <input
-                                    type="number"
-                                    class="form-control"
-                                    id="position-amount-input"
-                                    placeholder="Amount:"
-                                />
-                                <label for="position-amount-input">Amount:</label>
-                            </div>
-                            <button class="btn btn-primary -w15 rounded-end" type="button" id="position-add-button">
-                                Add Position
-                            </button>
-                        </div>
-                    </div>
+                <div class="input-group nav-item toolbar">
+                    <button class="btn btn-secondary rounded" data-bs-toggle="modal" data-bs-target="#add-position-modal">Add Position</button>
                 </div>
                 <div id="sort-bar">
                     <a href="#" class="btn btn-secondary sort-button" id="item" type="button"
@@ -143,6 +80,97 @@
                 </div>
             </div>
         </nav>
+
+        <div class="modal fade" id="add-position-modal" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="insert-position-container" class="rounded ">
+                            <div class="-w50 modal-row">
+                                <a>Part Number:</a>
+                                <input
+                                    type="text"
+                                    class="form-control rounded-start"
+                                    id="position-part-no-input"
+                                />
+                            </div>
+                            <div class="-w50 modal-row">
+                                <a>Warehouse:</a>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="position-warehouse-input"
+                                    disabled
+                                />
+                            </div>
+                            <div class="-w50 modal-row">
+                                <a>Rack:</a>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="position-rack-input"
+                                    disabled
+                                />
+                            </div>
+                            <!-- <div class="-w50 modal-row">
+                                <a>Row:</a>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="position-row-input"
+                                    disabled
+                                />
+                            </div> -->
+                            <div class="-w50 modal-row">
+                                <a>Shelf:</a>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="position-shelf-input"
+                                    disabled
+                                />
+                            </div>
+                            <div class="-w50 modal-row">
+                                <a>Amount:</a>
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    id="position-amount-input"
+                                />
+                            </div>
+                            <div class="-w50">
+                                <a
+                                    class="btn btn-primary form-control rounded-0"
+                                    href="#"
+                                    role="button"
+                                    id="category-dropdown-button"
+                                    aria-expanded="false"
+                                    data-category="00000000-0000-0000-0000-000000000000"
+                                >
+                                    Category
+                                </a>
+                                <div class="category-dropdown-div category-dropdown">
+                                    <ul
+                                        class="category-ul"
+                                        id="category-dropdown-menu"
+                                        aria-labelledby="category-dropdown-button"
+                                    ></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="position-add-button" class="btn btn-primary">Add Position</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="positions-container">
             <div id="positions-div"></div>
         </div>

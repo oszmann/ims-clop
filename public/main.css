@@ -36,9 +36,7 @@
     overflow: hidden;
 }
 
-#insert-position-container,
-#item-toolbar,
-#insert-location-container {
+.toolbar {
     width: 100%;
     background-color: var(--bg-secondary);
 }
@@ -64,7 +62,7 @@
     float: right;
 }
 
-.item-modal-row {
+.modal-row {
     min-height: 50px;
 }
 
