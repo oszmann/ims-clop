@@ -4,7 +4,7 @@
         <meta name="viewport" content="width=device-width" />
         <title>clop - manage items</title>
         <link href="/bs/dist/css/bootstrap.min.css" rel="stylesheet" />
-        <script src="/bs/dist/js/bootstrap.min.js"></script>
+        <script src="/bs/dist/js/bootstrap.bundle.min.js"></script>
         <link rel="stylesheet" href="/fa/css/all.css" />
     </head>
     <body>
@@ -42,53 +42,64 @@
                         </ul>
                     </div>
                 </div>
-                <div id="insert-item-container">
-                    <div id="insert-item-div" class="input-group rounded nav-item">
-                        <button id="edit-items-button" class="btn btn-danger rounded -w10 for form-floating">Edit items</button>
-                        <div class="form-floating -w20">
+                <div id="item-toolbar" class="input-group nav-item ">
+                    <button id="add-item-modal-button" class="btn btn-secondary rounded" data-bs-toggle="modal" data-bs-target="#add-item-modal">Add Items</button>
+                </div>
+            </div>
+        </nav>
+        <div class="modal fade" id="add-item-modal" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Modal title</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="insert-item-div" class="rounded ">
+                        <div class="-w50 item-modal-row">
+                            <a href="">Part Number:</a>
                             <input
                                 id="insert-part-no"
-                                placeholder="Part Number:"
                                 type="text"
-                                class="form-control rounded-start"
+                                class="right"
                             />
-                            <label for="insert-part-no">Part Number:</label>
                         </div>
-                        <div class="form-floating -w20">
+                        <div class="-w50 item-modal-row">
+                            <a href="">Description:</a>
                             <input
                                 id="insert-description"
-                                placeholder="Description:"
                                 type="text"
-                                class="form-control"
+                                class="right"
                             />
-                            <label for="insert-description">Description:</label>
                         </div>
-                        <div class="form-floating -w10">
-                            <input id="insert-cost" placeholder="Cost (number):" type="number" class="form-control" />
-                            <label for="insert-cost">Cost (number):</label>
+                        <div class="-w50 item-modal-row">
+                            <a href="">Cost (number):</a>
+                            <input 
+                                id="insert-cost" 
+                                type="number" 
+                                class="right"
+                            />
                         </div>
-                        <div class="form-floating -w10">
+                        <div class="-w50 item-modal-row">
+                            <a href="">Minimum stock (number):</a>
                             <input
                                 id="insert-min-stock"
-                                placeholder="Minimum stock (number):"
                                 type="number"
-                                class="form-control"
+                                class="right"
                             />
-                            <label for="insert-min-stock">Minimum stock (number):</label>
                         </div>
-                        <div class="dropdown form-floating -w10">
+                        <div class="-w50">
                             <a
-                                class="align-m btn btn-primary dropdown-toggle form-control rounded-0"
+                                class="btn btn-primary form-control rounded-0"
                                 href="#"
                                 role="button"
                                 id="category-dropdown-button"
-                                data-bs-toggle="dropdown"
                                 aria-expanded="false"
                                 data-category="00000000-0000-0000-0000-000000000000"
                             >
                                 Category
                             </a>
-                            <div class="dropdown-menu">
+                            <div class="category-dropdown-div category-dropdown">
                                 <ul
                                     class="category-ul"
                                     id="category-dropdown-menu"
@@ -96,11 +107,16 @@
                                 ></ul>
                             </div>
                         </div>
-                        <button id="add-item-button" class="btn btn-secondary rounded-end -w10">Insert item</button>
                     </div>
                 </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" id="add-item-button" class="btn btn-primary">Add Item</button>
+                </div>
+              </div>
             </div>
-        </nav>
+          </div>
+          
         <div
             class="modal fade"
             id="category-modal"
@@ -129,7 +145,7 @@
                         <button class="btn btn-primary" id="category-add-button">Add Category</button>
                     </div>
                     <div class="modal-footer">
-                        <button id="modal-close-button" type="button" class="btn btn-secondary">
+                        <button id="modal-close-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                             Close
                         </button>
                     </div>
@@ -150,7 +166,6 @@
                 </div>
             </div>
         </div>
-        <div id="fart"></div>
         <div id="items-div"></div>
         <script src="./js/main.js"></script>
         <link rel="stylesheet" href="main.css" />
