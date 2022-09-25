@@ -58,7 +58,7 @@ app.get("/api/remove/", async (req: Request, res: Response) => {
 });
 
 // --------------------Listen
-const PORT = process.env.PORT || 3000;
+const PORT = toNumber(process.env.PORT) || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on  http://localhost:${PORT}`);
 });

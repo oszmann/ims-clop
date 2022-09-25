@@ -34,6 +34,7 @@ export const addLocationButton = <HTMLButtonElement>$("add-location-button");
 export const locationsDiv = <HTMLDivElement>$("locations-div");
 
 //STATIC - ITEMS
+export const addItemDiv = <HTMLDivElement>$("insert-item-div");
 export const addPartNo = <HTMLInputElement>$("insert-part-no");
 export const addDescription = <HTMLInputElement>$("insert-description");
 export const addCost = <HTMLInputElement>$("insert-cost");
