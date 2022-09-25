@@ -214,9 +214,12 @@ td {
     padding-left: 0 !important;
 }
 
-/**.category-dropdown-div {
+.category-dropdown-div {
+    position: absolute;
+    border: solid 1px black;
+    background-color: white;
     display: none;
-}**/
+}
 
 .-w50 {
     width: 50% !important;
@@ -280,7 +283,7 @@ td {
 }
 
 .visible {
-    display: flex;
+    display: flex !important;
 }
 
 #position-part-no-inputautocomplete-list {

@@ -5,6 +5,7 @@ import {
     addCost,
     addDescription,
     addItemButton,
+    addItemDiv,
     addLocationButton,
     addMinStock,
     addPartNo,
@@ -23,6 +24,7 @@ import {
     categoryConfirmBody,
     categoryConfirmHeader,
     categoryConfirmYes,
+    itemsDiv,
     positionAmountInput,
     positionPartNoInput,
     positionRackInput,
@@ -118,6 +120,11 @@ async function initItems() {
     updateItems(await makeItemRequest(Route.R));
     initItemDropdown();
     //BUTTON LISTENERS
+    categoriesDropdown.addEventListener("click", () => {
+        categoriesDropdownList.parentElement.classList.toggle("visible");
+        categoriesDropdownList.focus();
+        categoriesDropdown.blur();
+    });
     addItemButton.addEventListener("click", () => {
         makeItemRequest(
             Route.C,
@@ -242,9 +249,10 @@ function init() {
 function initItemDropdown() {
     categoriesDropdownList.appendChild(createCategoryLi(getCategories(), (category: CategoryH) => {
         categoriesDropdownList.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
-        $(category.id).classList.add("cat-active")
+        $(category.id).classList.add("cat-active");
         categoriesDropdown.innerText = category.name;
         categoriesDropdown.setAttribute("data-category", category.id);
+        categoriesDropdown.click();
     }));
 }
 
