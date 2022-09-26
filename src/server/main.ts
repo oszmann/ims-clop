@@ -15,6 +15,7 @@ app.use(express.json());
 
 //Serve stuff
 app.use("/", express.static(path.join(process.cwd(), "public")));
+app.use("/images", express.static(path.join(process.cwd(), "images")));
 app.use("/js", express.static(path.join(process.cwd(), "dist", "client")));
 app.use("/bs", express.static(path.join(process.cwd(), "node_modules/bootstrap")));
 app.use("/fa", express.static(path.join(process.cwd(), "node_modules/@fortawesome/fontawesome-free/")));
