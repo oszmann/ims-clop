@@ -66,6 +66,17 @@
     min-height: 50px;
 }
 
+#search-results-div {
+    width: 500px;
+    min-height: 10px;
+    max-height: 300px;
+    position: absolute;
+    transform: translateY(40px);
+    z-index: 2;
+    display: none;
+    background-color: white;
+}
+
 #buttons-bar {
     background-color: grey;
 }

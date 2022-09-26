@@ -9,6 +9,7 @@ export function $<T extends HTMLElement>(id: string): T {
 export const searchDropdown = <HTMLAnchorElement>$("navbar-search-dropdown");
 export const searchDropdownList = <HTMLUListElement>$("navbar-search-dropdown-list");
 export const searchInput = <HTMLInputElement>$("navbar-search");
+// export const searchResultDiv = <HTMLDivElement>$("search-results-div")
 export const positionPartNoInput = <HTMLInputElement>$("position-part-no-input");
 export const positionWarehouseInput = <HTMLInputElement>$("position-warehouse-input");
 //export const positionRowInput = <HTMLInputElement>$("position-row-input");

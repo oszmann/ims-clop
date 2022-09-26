@@ -1,11 +1,10 @@
-import { CategoryH } from "../common/util";
-import { initSortByButtons } from "./search-and-sort";
+import { CategoryH, PositionH } from "../common/util";
+import { initSortByButtons, searchLocationInPositions, searchNameInPositions } from "./search-and-sort";
 import {
     $,
     addCost,
     addDescription,
     addItemButton,
-    addItemDiv,
     addLocationButton,
     addMinStock,
     addPartNo,
@@ -24,10 +23,10 @@ import {
     categoryConfirmBody,
     categoryConfirmHeader,
     categoryConfirmYes,
-    itemsDiv,
     positionAmountInput,
     positionPartNoInput,
     positionRackInput,
+    positionsDiv,
     positionShelfInput,
     positionWarehouseInput,
     searchDropdown,
@@ -37,8 +36,8 @@ import {
     toggleRack,
     toggleShelf,
 } from "./static";
-import { getCategories, initAutocomplete, updateCategories, updateItems, updateLocations, updatePositions } from "./ui";
-import { createCategoryLi } from "./ui-create";
+import { getCategories, getItems, getLocations, getPositions, initAutocomplete, updateCategories, updateItems, updateLocations, updatePositions } from "./ui";
+import { createCategoryLi, createPositionDiv } from "./ui-create";
 import {
     Route,
     makeItemRequest,
@@ -105,12 +104,20 @@ async function initHome() {
         });
         searchDropdownList.appendChild(li);
     });
-    searchInput.addEventListener("input", e => {
-        //console.log(e);
-        console.log(searchInput.value);
-        if (!searchDropdown.getAttribute("data-search") || searchDropdown.getAttribute("data-search") === "ITEM") {
-            //do searching stuff
+    searchInput.addEventListener("input", async () => {
+        while (positionsDiv.firstChild) {
+            positionsDiv.firstChild.remove();
         }
+        let results: PositionH[];
+        if (searchDropdown.getAttribute("data-search") === "ITEM") {
+            results = searchNameInPositions(searchInput.value)
+        }
+        else if (searchDropdown.getAttribute("data-search") === "LOCATION") {
+            results = searchLocationInPositions(searchInput.value)
+        }
+        results.forEach(pos => {
+            positionsDiv.appendChild(createPositionDiv(pos));
+        });
     });
     updatePositions(await makePositionRequest(Route.R));
 }

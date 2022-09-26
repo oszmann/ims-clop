@@ -154,15 +154,11 @@ export async function updatePositions(newPositions: PositionH[]) {
     }
 
     while (positionsDiv.firstChild) {
-        console.log("removing");
         positionsDiv.firstChild.remove();
     }
     positions.forEach(pos => {
-        console.log("bruh");
         positionsDiv.appendChild(createPositionDiv(pos));
     });
-    //TODO
-    //positions = sortArrayBy(positions, );
 }
 
 /**

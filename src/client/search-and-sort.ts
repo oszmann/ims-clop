@@ -1,6 +1,7 @@
 import { ItemH, LocationH, PositionH } from "../common/util";
 import { positionsDiv, sortByCategory, sortByItem, sortByLoaction, sortByUpdate } from "./static";
 import { getItems, getLocations, getPositions } from "./ui";
+import { sanitize } from "string-sanitizer";
 
 //------------------------Sort
 /**
@@ -255,4 +256,56 @@ function orderPositionDivs() {
             }
         }
     });
+}
+
+//------------------------Search
+/**
+ * search for a string in names
+ * @param keyword searchstring
+ * @returns search results
+ */
+export function searchNameInPositions(keyword: string): PositionH[] {
+    keyword = sanitize(keyword).toUpperCase();
+    const positions: PositionH[] = getPositions();
+    const items: ItemH[] = getItems();
+    let results: PositionH[] = [];
+    positions.forEach(pos => {
+        const item = items.find(i => i.id === pos.itemId);
+        if (item && item.partNumber.substring(0, keyword.length) === keyword) {
+            results.push(pos);
+        }
+    });
+    return results;
+}
+
+/**
+ * search for a string in the locations
+ * @param keyword searchstring
+ * @returns search results
+ */
+export function searchLocationInPositions(keyword: string): PositionH[] {
+    const positions: PositionH[] = getPositions();
+    const locations: LocationH[] = getLocations();
+    let results: PositionH[] = [];
+    positions.forEach(pos => {
+        const location = locations.find(l => l.id === pos.locationId);
+        if ((location.warehouse + location.rack + location.shelf).substring(0, keyword.length) === keyword.toUpperCase()) {
+            results.push(pos);
+        }
+    });
+    return results;
+}
+
+/**
+ * search for positions in a category
+ * @param categoryId categoryid
+ * @returns search results
+ */
+export function searchCategoryInPositions(categoryId: string): PositionH[] {
+    const positions: PositionH[] = getPositions();
+    const items: ItemH[] = getItems();
+    let results: PositionH[];
+    positions.forEach(pos => {
+    });
+    return results;
 }
