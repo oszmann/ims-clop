@@ -121,6 +121,7 @@ async function initHome() {
                 searchInput.classList.remove("off");
                 categorySearchResultDiv.classList.add("off");
                 positionsDiv.classList.remove("off");
+                searchCategoryButton.innerText = "Category";
             }
         });
         searchDropdownList.appendChild(li);
