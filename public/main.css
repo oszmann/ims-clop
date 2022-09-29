@@ -432,3 +432,11 @@ ul {
     margin: 10px 10px 10px 50px;
     padding-left: 5px;
 }
+
+#positions-search-result {
+    text-align: center;
+}
+
+#positions-search-result > a {
+    margin-top: 50%;
+}

@@ -133,12 +133,19 @@ async function initHome() {
         }
         let results: PositionH[];
         if (searchDropdown.getAttribute("data-search") === "ITEM") {
+            positionsSearchResultDiv.innerText = "Results for itemname: \"" + searchInput.value + "\"";
             results = searchNameInPositions(searchInput.value)
         }
         else if (searchDropdown.getAttribute("data-search") === "LOCATION") {
+            positionsSearchResultDiv.innerText = "Results for location: \"" + searchInput.value + "\"";
             results = searchLocationInPositions(searchInput.value)
         }
-        positionsSearchResultDiv.innerText = "Results for : \"" + searchInput.value + "\"";
+        if (results.length === 0) {
+            const a = document.createElement("a");
+            a.innerText = "No positions found.";
+            positionsSearchResultDiv.appendChild(document.createElement("p"))
+            positionsSearchResultDiv.appendChild(a);
+        }
         results.forEach(pos => {
             positionsSearchResultDiv.appendChild(createPositionDiv(pos));
         });
