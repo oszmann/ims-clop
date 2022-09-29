@@ -32,13 +32,6 @@ export enum SearchBy {
     CATEGORY = "Category",
 }
 
-export enum Category {
-    DEFAULT = "None",
-    COMPONENTS = "Components",
-    GOODS = "Goods",
-    MATERIALS = "Materials",
-}
-
 //Create a new ItemH item
 export function createItem(
     partNumber: string,

@@ -34,8 +34,8 @@ import {
     makeLocationRequest,
     Route,
     autocomplete,
-    Category,
     makeCategoryRequest,
+    findCategoryById,
 } from "./util";
 
 let items: ItemH[] = [];
@@ -200,7 +200,7 @@ export async function initAutocomplete() {
             prefixA +
             i.partNumber +
             " : " +
-            Object.values(Category)[Object.keys(Category).indexOf(i.category)] +
+            findCategoryById(getCategories(), i.category).name +
             " : " +
             i.description
         );
