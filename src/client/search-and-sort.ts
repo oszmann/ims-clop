@@ -1,7 +1,8 @@
-import { ItemH, LocationH, PositionH } from "../common/util";
+import { CategoryH, ItemH, LocationH, PositionH } from "../common/util";
 import { positionsDiv, sortByCategory, sortByItem, sortByLoaction, sortByUpdate } from "./static";
 import { getItems, getLocations, getPositions } from "./ui";
 import { sanitize } from "string-sanitizer";
+import { findCategoryById } from "./util";
 
 //------------------------Sort
 /**
@@ -298,14 +299,18 @@ export function searchLocationInPositions(keyword: string): PositionH[] {
 
 /**
  * search for positions in a category
- * @param categoryId categoryid
- * @returns search results
+ * @param category category to search for
+ * @returns positions with item in given category
  */
-export function searchCategoryInPositions(categoryId: string): PositionH[] {
+export function searchCategoryInPositions(category: CategoryH): PositionH[] {
     const positions: PositionH[] = getPositions();
     const items: ItemH[] = getItems();
-    let results: PositionH[];
+    let results: PositionH[] = [];
+    const itemsOfCategory = items.filter(i => i.category === category.id);
     positions.forEach(pos => {
+        if (itemsOfCategory.find(i => i.id === pos.itemId)) {
+            results.push(pos);
+        }
     });
     return results;
 }

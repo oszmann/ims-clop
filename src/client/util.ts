@@ -29,6 +29,7 @@ export enum Page {
 export enum SearchBy {
     ITEM = "Item",
     LOCATION = "Location",
+    CATEGORY = "Category",
 }
 
 export enum Category {

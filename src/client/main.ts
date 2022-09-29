@@ -23,12 +23,16 @@ import {
     categoryConfirmBody,
     categoryConfirmHeader,
     categoryConfirmYes,
+    categorySearchResultDiv,
     positionAmountInput,
     positionPartNoInput,
     positionRackInput,
     positionsDiv,
     positionShelfInput,
     positionWarehouseInput,
+    searchCategoryButton,
+    searchCategoryDiv,
+    searchCategoryDropdown,
     searchDropdown,
     searchDropdownList,
     searchInput,
@@ -58,6 +62,9 @@ import {
 let doUpdate: boolean = true;
 let toggleDropdown: string = "rack";
 
+/**
+ * 
+ */
 async function initHome() {
     //BUTTON LISTENERS
     // deleteButton.addEventListener("click", () => {
@@ -90,6 +97,10 @@ async function initHome() {
     });
     initSortByButtons();
     initAutocomplete();
+    searchCategoryButton.addEventListener("click", () => {
+        searchCategoryDropdown.parentElement.classList.toggle("visible");
+        searchCategoryDropdown.focus();
+    })
     Object.values(SearchBy).forEach((value, index) => {
         const li: HTMLLIElement = document.createElement("li");
         const a: HTMLAnchorElement = document.createElement("a");
@@ -101,6 +112,16 @@ async function initHome() {
             searchDropdown.innerText = "Search by: " + value;
             //console.log(Object.keys(SearchBy)[index]);
             searchDropdown.setAttribute("data-search", Object.keys(SearchBy)[index]);
+            if (value === SearchBy.CATEGORY) {
+                console.log("fasz");
+                searchCategoryDiv.classList.remove("off");
+                searchInput.classList.add("off");
+            } else {
+                searchCategoryDiv.classList.add("off");
+                searchInput.classList.remove("off");
+                categorySearchResultDiv.classList.add("off");
+                positionsDiv.classList.remove("off");
+            }
         });
         searchDropdownList.appendChild(li);
     });
@@ -122,6 +143,9 @@ async function initHome() {
     updatePositions(await makePositionRequest(Route.R));
 }
 
+/**
+ * 
+ */
 async function initItems() {
     updateCategories(await makeCategoryRequest(Route.R));
     updateItems(await makeItemRequest(Route.R));
@@ -180,6 +204,9 @@ async function initItems() {
 
 }
 
+/**
+ * 
+ */
 async function initLocations() {
     updateLocations(await makeLocationRequest(Route.R));
     //BUTTON LISTENERS

@@ -59,12 +59,31 @@
                                 ></ul>
                             </div>
                             <input
-                                id="navbar-search"
+                                id="navbar-search-input"
                                 class="form-control me-2"
                                 type="search"
                                 placeholder="Search"
                                 aria-label="Search"
                             />
+                            <div id="navbar-search-category-div" class="off">
+                                <a
+                                    class="btn btn-primary rounded-0"
+                                    href="#"
+                                    role="button"
+                                    id="navbar-search-category-button"
+                                    aria-expanded="false"
+                                    data-category="00000000-0000-0000-0000-000000000000"
+                                >
+                                    Category
+                                </a>
+                                <div class="category-dropdown-div category-dropdown">
+                                    <ul
+                                        class="category-ul"
+                                        id="navbar-search-category-dropdown"
+                                        aria-labelledby="category-dropdown-button"
+                                    ></ul>
+                                </div>
+                            </div>
                             <!-- <div id="search-results-div"></div> -->
                             <!-- <a class="nav-link" href="#" style="color: red" id="delete-all-button">Delete all entries</a> -->
                         </form>
@@ -176,6 +195,7 @@
 
         <div id="positions-container">
             <div id="positions-div"></div>
+            <div id="category-search-result"></div>
         </div>
         <script src="./js/main.js"></script>
         <link rel="stylesheet" href="main.css" />

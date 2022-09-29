@@ -1,5 +1,6 @@
 import { CategoryH, ItemH, LocationH, PositionH } from "../common/util";
 import {
+    searchCategoryInPositions,
     sortArrayBy,
     sortItemsByPartNumberLambda,
     sortLocationsByRackLambda,
@@ -15,11 +16,15 @@ import {
     categoryAddBody,
     categoryAddNode,
     categoryModalBody,
+    categorySearchResultDiv,
     itemsDiv,
     locationsDiv,
     positionPartNoInput,
     positionsDiv,
     positionWarehouseInput,
+    searchCategoryButton,
+    searchCategoryDiv,
+    searchCategoryDropdown,
 } from "./static";
 import { createCategoryLi, createItemDiv, createLocationTable, createPositionDiv } from "./ui-create";
 import {
@@ -104,6 +109,28 @@ export function updateCategories(newCategories: CategoryH[]) {
         }, "modal"));
         categoryModalBody.appendChild(ul);
         (<HTMLSpanElement>($("00000000-0000-0000-0000-000000000000modal").parentElement.children[0])).click();
+    }
+    else if (getActivePage() === Page.HOME) {
+        searchCategoryDropdown.firstChild?.remove();
+        searchCategoryDropdown.appendChild(createCategoryLi(categories, (category: CategoryH) => {
+            searchCategoryButton.innerText = category.name;
+            positionsDiv.classList.add("off");
+            categorySearchResultDiv.firstChild?.remove();
+            categorySearchResultDiv.classList.remove("off");
+            function createCategoryResultDiv(category: CategoryH): HTMLDivElement {
+                const div = document.createElement("div");
+                div.id = category.id + "result";
+                div.classList.add("cat-res-div");
+                const a = document.createElement("a");
+                a.innerText = category.name;
+                div.appendChild(a);
+                searchCategoryInPositions(category).forEach(pos => div.appendChild(createPositionDiv(pos)));
+                category.children.forEach(child => div.appendChild(createCategoryResultDiv(child)));
+                return div;
+            }
+            categorySearchResultDiv.appendChild(createCategoryResultDiv(category));
+            searchCategoryDropdown.parentElement.classList.remove("visible");
+        }));
     }
 }
 
