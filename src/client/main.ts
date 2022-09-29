@@ -23,7 +23,7 @@ import {
     categoryConfirmBody,
     categoryConfirmHeader,
     categoryConfirmYes,
-    categorySearchResultDiv,
+    positionsSearchResultDiv,
     positionAmountInput,
     positionPartNoInput,
     positionRackInput,
@@ -113,22 +113,23 @@ async function initHome() {
             //console.log(Object.keys(SearchBy)[index]);
             searchDropdown.setAttribute("data-search", Object.keys(SearchBy)[index]);
             if (value === SearchBy.CATEGORY) {
-                console.log("fasz");
                 searchCategoryDiv.classList.remove("off");
                 searchInput.classList.add("off");
             } else {
                 searchCategoryDiv.classList.add("off");
                 searchInput.classList.remove("off");
-                categorySearchResultDiv.classList.add("off");
+                positionsSearchResultDiv.classList.add("off");
                 positionsDiv.classList.remove("off");
                 searchCategoryButton.innerText = "Category";
             }
         });
         searchDropdownList.appendChild(li);
     });
-    searchInput.addEventListener("input", async () => {
-        while (positionsDiv.firstChild) {
-            positionsDiv.firstChild.remove();
+    searchInput.addEventListener("input", () => {
+        positionsSearchResultDiv.classList.remove("off");
+        positionsDiv.classList.add("off")
+        while (positionsSearchResultDiv.firstChild) {
+            positionsSearchResultDiv.firstChild.remove();
         }
         let results: PositionH[];
         if (searchDropdown.getAttribute("data-search") === "ITEM") {
@@ -137,9 +138,14 @@ async function initHome() {
         else if (searchDropdown.getAttribute("data-search") === "LOCATION") {
             results = searchLocationInPositions(searchInput.value)
         }
+        positionsSearchResultDiv.innerText = "Results for : \"" + searchInput.value + "\"";
         results.forEach(pos => {
-            positionsDiv.appendChild(createPositionDiv(pos));
+            positionsSearchResultDiv.appendChild(createPositionDiv(pos));
         });
+        if (searchInput.value === "") {
+            positionsSearchResultDiv.classList.add("off");
+            positionsDiv.classList.remove("off");
+        }
     });
     updatePositions(await makePositionRequest(Route.R));
 }

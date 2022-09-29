@@ -25,7 +25,7 @@ export const sortByCategory = <HTMLAnchorElement>$("category");
 export const sortByLoaction = <HTMLAnchorElement>$("location");
 export const sortByUpdate = <HTMLAnchorElement>$("update");
 export const positionsDiv = <HTMLDivElement>$("positions-div");
-export const categorySearchResultDiv = <HTMLDivElement>$("category-search-result");
+export const positionsSearchResultDiv = <HTMLDivElement>$("positions-search-result");
 
 //STATIC - LOCATIONS
 export const toggleInsert = <HTMLButtonElement>$("toggle-insert");

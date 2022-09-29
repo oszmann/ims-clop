@@ -16,7 +16,7 @@ import {
     categoryAddBody,
     categoryAddNode,
     categoryModalBody,
-    categorySearchResultDiv,
+    positionsSearchResultDiv,
     itemsDiv,
     locationsDiv,
     positionPartNoInput,
@@ -115,8 +115,9 @@ export function updateCategories(newCategories: CategoryH[]) {
         searchCategoryDropdown.appendChild(createCategoryLi(categories, (category: CategoryH) => {
             searchCategoryButton.innerText = category.name;
             positionsDiv.classList.add("off");
-            categorySearchResultDiv.firstChild?.remove();
-            categorySearchResultDiv.classList.remove("off");
+            positionsSearchResultDiv.firstChild?.remove();
+            positionsSearchResultDiv.innerText = "Results for category: \"" + category.name + "\"";
+            positionsSearchResultDiv.classList.remove("off");
             function createCategoryResultDiv(category: CategoryH): HTMLDivElement {
                 const div = document.createElement("div");
                 div.id = category.id + "result";
@@ -128,7 +129,7 @@ export function updateCategories(newCategories: CategoryH[]) {
                 category.children.forEach(child => div.appendChild(createCategoryResultDiv(child)));
                 return div;
             }
-            categorySearchResultDiv.appendChild(createCategoryResultDiv(category));
+            positionsSearchResultDiv.appendChild(createCategoryResultDiv(category));
             searchCategoryDropdown.parentElement.classList.remove("visible");
         }));
     }
