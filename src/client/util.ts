@@ -207,7 +207,7 @@ export function unDisable(e: HTMLElement) {
  * Autocompleting dropdown input for searching. can be used with any array.
  * @param inputElement Inputelement Autocomplete is linked to
  * @param array Array of strings to display in Autocomplete
- * @param type !!TO BE CHANGED!! prefix in array strings (e.g. "Location: ")
+ * @param prefix !!TO BE CHANGED!! prefix in array strings (e.g. "Location: ")
  */
 export function autocomplete(inputElement: HTMLInputElement, array: any[], prefix: string) {
     let currentArrowKeyIndex: number;

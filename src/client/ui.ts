@@ -189,7 +189,7 @@ export async function initAutocomplete() {
             prefixA +
             i.partNumber +
             " : " +
-            findCategoryById(getCategories(), i.category).name +
+            findCategoryById(getCategories(), i.category)?.name +
             " : " +
             i.description
         );
