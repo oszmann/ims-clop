@@ -437,6 +437,10 @@ ul {
     text-align: center;
 }
 
+#positions-search-result div {
+    text-align: left;
+}
+
 #positions-search-result > a {
     margin-top: 50%;
 }
