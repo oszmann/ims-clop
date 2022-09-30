@@ -1,4 +1,5 @@
 import { CategoryH, ItemH, LocationH, PositionH } from "../common/util";
+import { searchCategoryInPositions } from "./search-and-sort";
 import { $, categoryAddBody } from "./static";
 import { getCategories, getItems, getLocations, updateItems, updateLocations, updatePositions } from "./ui";
 import {
@@ -6,7 +7,6 @@ import {
     findCategoryById,
     makeItemRequest,
     makeLocationRequest,
-    makePositionRequest,
     Route,
 } from "./util";
 
@@ -533,5 +533,17 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     div.appendChild(dates);
     div.appendChild(deleteButton);
 
+    return div;
+}
+
+export function createCategoryResultDiv(category: CategoryH): HTMLDivElement {
+    const div = document.createElement("div");
+    div.id = category.id + "result";
+    div.classList.add("cat-res-div");
+    const a = document.createElement("a");
+    a.innerText = category.name;
+    div.appendChild(a);
+    searchCategoryInPositions(category).forEach(pos => div.appendChild(createPositionDiv(pos)));
+    category.children.forEach(child => div.appendChild(createCategoryResultDiv(child)));
     return div;
 }

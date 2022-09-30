@@ -1,6 +1,5 @@
 import { CategoryH, ItemH, LocationH, PositionH } from "../common/util";
 import {
-    searchCategoryInPositions,
     sortArrayBy,
     sortItemsByPartNumberLambda,
     sortLocationsByRackLambda,
@@ -26,7 +25,7 @@ import {
     searchCategoryDiv,
     searchCategoryDropdown,
 } from "./static";
-import { createCategoryLi, createItemDiv, createLocationTable, createPositionDiv } from "./ui-create";
+import { createCategoryLi, createCategoryResultDiv, createItemDiv, createLocationTable, createPositionDiv } from "./ui-create";
 import {
     getActivePage,
     Page,
@@ -118,17 +117,6 @@ export function updateCategories(newCategories: CategoryH[]) {
             positionsSearchResultDiv.firstChild?.remove();
             positionsSearchResultDiv.innerText = "Results for category: \"" + category.name + "\"";
             positionsSearchResultDiv.classList.remove("off");
-            function createCategoryResultDiv(category: CategoryH): HTMLDivElement {
-                const div = document.createElement("div");
-                div.id = category.id + "result";
-                div.classList.add("cat-res-div");
-                const a = document.createElement("a");
-                a.innerText = category.name;
-                div.appendChild(a);
-                searchCategoryInPositions(category).forEach(pos => div.appendChild(createPositionDiv(pos)));
-                category.children.forEach(child => div.appendChild(createCategoryResultDiv(child)));
-                return div;
-            }
             positionsSearchResultDiv.appendChild(createCategoryResultDiv(category));
             searchCategoryDropdown.parentElement.classList.remove("visible");
         }));
