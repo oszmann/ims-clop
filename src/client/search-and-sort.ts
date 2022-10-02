@@ -1,5 +1,5 @@
 import { CategoryH, ItemH, LocationH, PositionH } from "../common/util";
-import { positionsDiv, sortByCategory, sortByItem, sortByLoaction, sortByUpdate } from "./static";
+import { $, positionsDiv, sortByCategory, sortByItem, sortByLoaction, sortByStock, sortByUpdate } from "./static";
 import { getItems, getLocations, getPositions } from "./ui";
 import { sanitize } from "string-sanitizer";
 import { findCategoryById } from "./util";
@@ -117,6 +117,30 @@ export const sortPositionsByShelfLambda = (a: PositionH, b: PositionH) => {
 export const sortPositionsByUpdatedAt = (a: PositionH, b: PositionH) => {
     return Intl.Collator().compare(a.updated_at.toString(), b.updated_at.toString());
 };
+
+export const sortPositionsByStock = (a: PositionH, b: PositionH) => {
+    const aItem = getItems().find(x => x.id === a.itemId);
+    const bItem = getItems().find(x => x.id === b.itemId);
+    const aItemStock = getPositions().filter(x => x.itemId === aItem.id).reduce((acc, toadd) => {
+        acc.amount += toadd.amount;
+        return acc;
+    }).amount;
+    const bItemStock = getPositions().filter(x => x.itemId === bItem.id).reduce((acc, toadd) => {
+        acc.amount += toadd.amount;
+        return acc;
+    }).amount;
+    if (aItemStock <= aItem.minStock && bItemStock > bItem.minStock ||
+        aItemStock <= aItem.minStock * 1.1 + 1 && bItemStock > bItem.minStock * 1.1 + 1) {
+        return -1;
+    }
+    else if (bItemStock <= bItem.minStock && aItemStock > aItem.minStock ||
+        bItemStock <= bItem.minStock * 1.1 + 1 && aItemStock > aItem.minStock * 1.1 + 1) {
+        return 1
+    }
+    else {
+        return 0
+    }
+}
 
 /**
  * Insert a "0" if the opposing object to be sorted is one or more magnitudes larger.
@@ -238,6 +262,11 @@ export function initSortByButtons() {
         }
         orderPositionDivs();
     });
+    sortByStock.addEventListener("click", () => {
+        sortArrayBy(getPositions(), [sortPositionsByStock]);
+        orderPositionDivs();
+        colorPositionDivs();
+    });
 }
 
 function removeAllEms() {
@@ -257,6 +286,23 @@ function orderPositionDivs() {
             }
         }
     });
+}
+
+function colorPositionDivs() {
+    const positions = getPositions();
+    const items = getItems();
+    positions.forEach(pos => {
+        const item = items.find(x => x.id === pos.itemId);
+        const amount = positions.filter(x => x.itemId === pos.itemId).reduce((acc, toadd) => {
+            acc.amount += toadd.amount;
+            return acc;
+        }).amount;
+        if (amount <= item.minStock) {
+            (<HTMLDivElement>$(pos.id)).classList.add("red-pos");
+        } else if (amount <= item.minStock * 1.1 + 1) {
+            (<HTMLDivElement>$(pos.id)).classList.add("yellow-pos");
+        }
+    })
 }
 
 //------------------------Search

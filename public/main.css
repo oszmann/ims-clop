@@ -444,3 +444,13 @@ ul {
 #positions-search-result > a {
     margin-top: 50%;
 }
+
+.yellow-pos div,
+.yellow-pos a{
+    background-color: yellow;
+}
+
+.red-pos div,
+.red-pos a{
+    background-color: red;
+}

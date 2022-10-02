@@ -25,6 +25,7 @@ export const sortByItem = <HTMLAnchorElement>$("item");
 export const sortByCategory = <HTMLAnchorElement>$("category");
 export const sortByLoaction = <HTMLAnchorElement>$("location");
 export const sortByUpdate = <HTMLAnchorElement>$("update");
+export const sortByStock = <HTMLAnchorElement>$("stock");
 export const positionsDiv = <HTMLDivElement>$("positions-div");
 export const positionsSearchResultDiv = <HTMLDivElement>$("positions-search-result");
 
