@@ -9,7 +9,6 @@ export function itemFromItemH(itemH: ItemH, update: boolean = false): Item {
     //ID IS AUTOMATICALLY SET WITH UUID
     item.partNumber = itemH.partNumber;
     item.description = itemH.description;
-    item.cost = itemH.cost;
     item.minStock = itemH.minStock;
     item.category = itemH.category;
     if (update) {
@@ -27,15 +26,16 @@ export function locationFromLocationH(locationH: LocationH): Location {
     return location;
 }
 
-export function positionFromPositionH(positionH: PositionH, update: boolean = false): Position {
+export function positionFromPositionH(positionH: PositionH): Position {
     const position = new Position();
-    if (update) {
+    if (positionH.id !== "") {
         position.id = positionH.id;
         position.position = positionH.position;
     }
     position.itemId = positionH.itemId;
     position.locationId = positionH.locationId;
     position.amount = positionH.amount;
+    position.cost = positionH.cost;
     return position;
 }
 

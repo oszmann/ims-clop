@@ -22,6 +22,9 @@ export class Position {
     @Column("int")
     position!: number;
 
+    @Column("double precision", {default: 0.0})
+    cost: number;
+
     @CreateDateColumn()
     created_at: Date;
 

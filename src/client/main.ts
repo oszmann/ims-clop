@@ -2,7 +2,6 @@ import { CategoryH, PositionH } from "../common/util";
 import { initSortByButtons, searchLocationInPositions, searchNameInPositions } from "./search-and-sort";
 import {
     $,
-    addCost,
     addDescription,
     addItemButton,
     addLocationButton,
@@ -39,6 +38,7 @@ import {
     toggleInsert,
     toggleRack,
     toggleShelf,
+    positionValueInput,
 } from "./static";
 import { getCategories, getItems, getLocations, getPositions, initAutocomplete, updateCategories, updateItems, updateLocations, updatePositions } from "./ui";
 import { createCategoryLi, createPositionDiv } from "./ui-create";
@@ -82,7 +82,8 @@ async function initHome() {
                     positionWarehouseInput.value,
                     positionRackInput.value,
                     positionShelfInput.value,
-                    positionAmountInput.value
+                    positionAmountInput.value,
+                    positionValueInput.value
                 )
             )
         ).then(resp => {
@@ -177,7 +178,6 @@ async function initItems() {
                 createItem(
                     addPartNo.value,
                     addDescription.value,
-                    addCost.value,
                     addMinStock.value,
                     categoriesDropdown.getAttribute("data-category")
                 )
@@ -188,7 +188,6 @@ async function initItems() {
         });
         addPartNo.value = "";
         addDescription.value = "";
-        addCost.value = "";
         addMinStock.value = "";
         categoriesDropdown.innerText = "Category";
         categoriesDropdown.setAttribute("data-category", "00000000-0000-0000-0000-000000000000");

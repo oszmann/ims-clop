@@ -19,14 +19,11 @@ export class Item extends BaseEntity {
     //
     @Column("text")
     description: string;
-    //
-    @Column("double precision")
-    cost: number;
 
     @Column("int")
     minStock: number;
 
-    @Column("text", { nullable: true })
+    @Column("text")
     category: string;
 
     @CreateDateColumn()

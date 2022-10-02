@@ -7,6 +7,7 @@ import {
     findCategoryById,
     makeItemRequest,
     makeLocationRequest,
+    makePositionRequest,
     Route,
 } from "./util";
 
@@ -28,7 +29,6 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
 
     const partNumber: HTMLInputElement = document.createElement("input");
     const description: HTMLInputElement = document.createElement("input");
-    const cost: HTMLInputElement = document.createElement("input");
     const minStock: HTMLInputElement = document.createElement("input");
 
     const dates: HTMLAnchorElement = document.createElement("a");
@@ -43,31 +43,26 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     id.id = item.id + "id";
     partNumber.id = item.id + "part-number";
     description.id = item.id + "desc";
-    cost.id = item.id + "cost";
     minStock.id = item.id + "min-stock";
     datesSpan.id = item.id + "dates-span";
 
     partNumber.type = "text";
     description.type = "text";
-    cost.type = "number";
     minStock.type = "number";
 
     partNumber.classList.add("form-control");
     partNumber.style.minWidth = "20%";
     description.classList.add("form-control");
     description.style.minWidth = "30%";
-    cost.classList.add("form-control");
     minStock.classList.add("form-control");
 
     partNumber.placeholder = "part-number";
     description.placeholder = "desc";
-    cost.placeholder = "cost";
 
     id.innerText = "ID:";
     id.style.padding = "5px";
     partNumber.value = item.partNumber;
     description.value = item.description;
-    cost.value = item.cost.toString();
     minStock.value = item.minStock.toString();
     dates.innerText = "Dates";
     dates.style.padding = "5px";
@@ -93,7 +88,6 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
         const temp = createItem(
             partNumber.value,
             description.value,
-            cost.value,
             minStock.value,
             categoryA.getAttribute("data-category")
         );
@@ -109,7 +103,6 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
     div.appendChild(id);
     div.appendChild(partNumber);
     div.appendChild(description);
-    div.appendChild(cost);
     div.appendChild(minStock);
     div.appendChild(editButton);
     div.appendChild(categoryDropdown);
@@ -423,8 +416,6 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     const category = document.createElement("a");
     const d = document.createElement("a");
     const desc = document.createElement("a");
-    const dollar = document.createElement("a");
-    const cost = document.createElement("a");
 
     const locationDiv = document.createElement("div");
     const locationDec = document.createElement("a");
@@ -434,7 +425,9 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     const shelf = document.createElement("a");
 
     const amountDec = document.createElement("a");
-    const amount = document.createElement("input");
+    const amount = document.createElement("a");
+    const dollar = document.createElement("a");
+    const cost = document.createElement("a");
     // const posDec = document.createElement("a");
     // const pos = document.createElement("a");
     const dates = document.createElement("a");
@@ -442,11 +435,9 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     const deleteButton = document.createElement("button");
 
     amount.id = position.id + "amount";
+    cost.id = position.id + "cost";
     // pos.id = position.id + "position";
     dates.id = position.id + "dates";
-
-    amount.type = "number";
-    amount.placeholder = "Amount:";
 
     itemDiv.classList.add("form-control", "overflow-barless", "pos-loc-div", "-w30");
     locationDiv.classList.add("form-control", "overflow-barless", "pos-loc-div", "-w15");
@@ -454,6 +445,10 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     amountDec.style.maxWidth = "82px";
     amount.classList.add("form-control");
     amount.style.maxWidth = "75px";
+    dollar.classList.add("form-control", "dec");
+    dollar.style.maxWidth = "40px";
+    cost.classList.add("form-control");
+    cost.style.maxWidth = "150px"
     // posDec.classList.add("form-control", "dec");
     // posDec.style.maxWidth = "85px";
     // pos.classList.add("form-control");
@@ -470,9 +465,6 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     d.classList.add("border-0", "dec");
     d.innerText = "D:";
     desc.innerText = item.description;
-    dollar.classList.add("border-0", "dec");
-    dollar.innerText = "$:";
-    cost.innerText = item.cost.toString();
 
     itemDiv.appendChild(itemDec);
     itemDiv.appendChild(partNo);
@@ -480,8 +472,6 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     itemDiv.appendChild(category);
     itemDiv.appendChild(d);
     itemDiv.appendChild(desc);
-    itemDiv.appendChild(dollar);
-    itemDiv.appendChild(cost);
 
     locationDec.innerText = "Location:";
     locationDec.classList.add("border-0", "underline");
@@ -497,7 +487,10 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     locationDiv.appendChild(shelf);
 
     amountDec.innerText = "Amount:";
-    amount.value = position.amount.toString();
+    amount.innerText = position.amount.toString();
+
+    dollar.innerText = "$:";
+    cost.innerText = position.cost.toString();
 
     dates.innerText = "Dates";
     datesSpan.classList.add("tooltip-dates");
@@ -522,12 +515,14 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     //     updatePositions(await makePositionRequest(Route.U, JSON.stringify(temp)));
     // });
     deleteButton.addEventListener("click", async () => {
-        updateItems(await makeItemRequest(Route.D, position.id));
+        updatePositions(await makePositionRequest(Route.D, position.id));
     });
     div.appendChild(itemDiv);
     div.appendChild(locationDiv);
     div.appendChild(amountDec);
     div.appendChild(amount);
+    div.appendChild(dollar);
+    div.appendChild(cost);
     // div.appendChild(posDec);
     // div.appendChild(pos);
     div.appendChild(dates);

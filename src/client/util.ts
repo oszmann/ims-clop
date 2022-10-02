@@ -36,7 +36,6 @@ export enum SearchBy {
 export function createItem(
     partNumber: string,
     desc: string,
-    cost: string,
     minStock: string,
     category: string
 ): ItemH {
@@ -46,9 +45,6 @@ export function createItem(
     if (desc === "") {
         desc = "This is a dummy item.";
     }
-    if (cost === "") {
-        cost = "0";
-    }
     if (minStock === "") {
         minStock = "0";
     }
@@ -57,10 +53,8 @@ export function createItem(
 
     itemH.partNumber = partNumber.toUpperCase();
     itemH.description = desc;
-    itemH.cost = parseInt(cost);
     itemH.minStock = parseInt(minStock);
     itemH.category = category;
-    // console.log("aaaaaaaaaaaaaaaaa",category);
 
     return itemH;
 }
@@ -104,7 +98,8 @@ export function createPosition(
     warehouse: string,
     rack: string,
     shelf: string,
-    amount: string
+    amount: string,
+    value: string
 ): PositionH {
     //Check if item and location enetered exist
     const items = getItems();
@@ -130,6 +125,7 @@ export function createPosition(
         positionH.itemId = item.id;
         positionH.locationId = loc.id;
         positionH.amount = parseInt(amount);
+        positionH.cost = parseInt(value) / positionH.amount;
         return positionH;
     }
 }
@@ -321,7 +317,7 @@ export function findCategoryById(categories: CategoryH, id: string): CategoryH {
         return categories;
     } else { 
         let a: CategoryH;
-        categories.children.forEach(category => {
+        categories.children?.forEach(category => {
             const temp = findCategoryById(category, id);
             if (temp) {
                 a = temp;

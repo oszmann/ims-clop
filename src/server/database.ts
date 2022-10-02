@@ -83,7 +83,7 @@ export async function readRequest(source: DataSource, req: Request): Promise<any
 
 //-------------------------U
 /**
- * Update Items, except for location (cant be updated)
+ * Update Database entries, except for locations and categories.
  * @param source
  * @param req HTML request
  * @returns Updated Entity[] to be sent to client
@@ -92,14 +92,13 @@ export async function updateRequest(source: DataSource, req: Request): Promise<a
     if (req.query.item) {
         return await updateItem(source, itemFromItemH(JSON.parse(req.query.item.toString()), true));
     } else if (req.query.cat) {
-        console.warn("NOT YET IMPLEMENTED");
-        //TODO
+        console.warn("CAN NOT UPDATE CATEGORY");
         return await getEntities(source, Objects.CATEGORIES);
     } else if (req.query.loc) {
-        console.warn("CANNOT UPDATE LOCATION");
+        console.warn("CAN NOT UPDATE LOCATION");
         return await getEntities(source, Objects.LOCATIONS);
     } else if (req.query.pos) {
-        return await updatePosition(source, positionFromPositionH(JSON.parse(req.query.pos.toString()), true));
+        return await updatePosition(source, positionFromPositionH(JSON.parse(req.query.pos.toString())));
     }
 }
 
@@ -118,9 +117,7 @@ export async function deleteRequest(source: DataSource, req: Request): Promise<a
     } else if (req.query.loc) {
         return await deleteLocation(source, req.query.loc.toString());
     } else if (req.query.pos) {
-        console.warn("NOT YET IMPLEMENTED");
-        //TODO
-        return await getEntities(source, Objects.POSITIONS);
+        return await deletePosition(source, req.query.pos.toString());
     }
 }
 
@@ -181,7 +178,12 @@ async function getOrCreateLocation(source: DataSource, location: Location): Prom
 }
 
 async function createPosition(source: DataSource, position: Position): Promise<Position[]> {
-    console.log("doing wizardry");
+    const found = await source.manager.findOneBy(Position, { locationId: position.locationId, itemId: position.itemId });
+    if (found) {
+        position.id = found.id;
+        console.log("switching to update");
+        return await updatePosition(source, position);
+    }
     position.position = await source.manager.countBy(Position, { locationId: position.locationId });
     position.item = await source.manager.findOneBy(Item, { id: position.itemId });
     position.location = await source.manager.findOneBy(Location, { id: position.locationId });
@@ -208,6 +210,8 @@ async function updatePosition(source: DataSource, position: Position) {
         id: position.id,
     });
     if (found) {
+        position.cost = Math.round((found.cost * found.amount + position.cost * position.amount)/(found.amount + position.amount) * 100)/100;
+        position.amount += found.amount;
         await source.manager.save(Position, position);
         return getEntities(source, Objects.POSITIONS);
     } else {
@@ -274,6 +278,7 @@ async function deleteLocation(source: DataSource, locId: string): Promise<Locati
 
 async function deletePosition(source: DataSource, posId: string): Promise<Position[]> {
     const pos = await source.manager.findOneBy(Position, { id: posId });
+    await source.manager.remove(Position, pos);
     updatePositionPositions(source, pos.locationId);
     return await getEntities(source, Objects.POSITIONS);
 }
@@ -302,35 +307,6 @@ export async function getEntities(source: DataSource, type: Objects): Promise<an
     }
 }
 
-/**
- * TEMP FUNCTION TO ARTIFICIALLY INSERT POSITION
- * @param source
- * @returns
- */
-export async function insertPosition(source: DataSource) {
-    console.log("hi");
-    const pos = new Position();
-    const item = new Item();
-    item.cost = 0;
-    item.partNumber = "123";
-    item.description = "abc";
-    let location = new Location();
-    // location.row = 0;
-    location.rack = 0;
-    location.shelf = 0;
-    console.log("hi1");
-    const i = await source.manager.save(item);
-    console.log("hi2");
-    const l = await getOrCreateLocation(source, location);
-    pos.itemId = i.id;
-    pos.locationId = l.id;
-    pos.item = i;
-    pos.position = 0; //should count positions with locations, then add 1
-    pos.location = l;
-    console.log(await source.manager.save(pos));
-    return await source.manager.find(Position);
-}
-
 export async function setDefaultCategories(source: DataSource) {
     await source.manager.remove(Category, await source.manager.find(Category));
     const root = new Category();
@@ -338,10 +314,10 @@ export async function setDefaultCategories(source: DataSource) {
     root.description = "";
     root.id = "00000000-0000-0000-0000-000000000000";
     await source.manager.save(Category, root);
-    const a = categoryFromCategoryH({ name: "a", description: "a", id: "", children: [] });
-    const b = categoryFromCategoryH({ name: "b", description: "b", id: "", children: [] });
-    await createCategory(source, a, root.id);
-    await createCategory(source, b, root.id);
+    // const a = categoryFromCategoryH({ name: "a", description: "a", id: "", children: [] });
+    // const b = categoryFromCategoryH({ name: "b", description: "b", id: "", children: [] });
+    // await createCategory(source, a, root.id);
+    // await createCategory(source, b, root.id);
     console.log(JSON.stringify(await source.manager.getTreeRepository(Category).findTrees()));
     return await source.manager.getTreeRepository(Category).findTrees();
 }
