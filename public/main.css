@@ -58,7 +58,7 @@
     margin-right: 5%;
     height: 62px;
 }
-.right{
+.right {
     float: right;
 }
 
@@ -412,7 +412,7 @@ ul {
     display: none;
 }
 
-#boobs{
+#boobs {
     cursor: grab;
 }
 
@@ -446,11 +446,11 @@ ul {
 }
 
 .yellow-pos div,
-.yellow-pos a{
+.yellow-pos a {
     background-color: yellow;
 }
 
 .red-pos div,
-.red-pos a{
+.red-pos a {
     background-color: red;
 }

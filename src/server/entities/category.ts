@@ -15,6 +15,6 @@ export class Category {
     @TreeChildren()
     children: Category[];
 
-    @TreeParent({ onDelete: 'CASCADE' })
+    @TreeParent({ onDelete: "CASCADE" })
     parent: Category;
 }

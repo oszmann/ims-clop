@@ -6,7 +6,7 @@
         <link href="/bs/dist/css/bootstrap.min.css" rel="stylesheet" />
         <script src="/bs/dist/js/bootstrap.bundle.min.js"></script>
         <link rel="stylesheet" href="/fa/css/all.css" />
-        <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+        <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
     </head>
     <body>
         <nav class="navbar navbar-expand-lg sticky-top" id="navbar">
@@ -90,7 +90,13 @@
                     </div>
                 </div>
                 <div class="input-group nav-item toolbar">
-                    <button class="btn btn-secondary rounded" data-bs-toggle="modal" data-bs-target="#add-position-modal">Add Position</button>
+                    <button
+                        class="btn btn-secondary rounded"
+                        data-bs-toggle="modal"
+                        data-bs-target="#add-position-modal"
+                    >
+                        Add Position
+                    </button>
                 </div>
                 <div id="sort-bar">
                     <a href="#" class="btn btn-secondary sort-button" id="item" type="button"
@@ -108,35 +114,22 @@
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div id="insert-position-container" class="rounded ">
+                        <div id="insert-position-container" class="rounded">
                             <div class="-w50 modal-row">
                                 <a>Part Number:</a>
-                                <input
-                                    type="text"
-                                    class="form-control rounded-start"
-                                    id="position-part-no-input"
-                                />
+                                <input type="text" class="form-control rounded-start" id="position-part-no-input" />
                             </div>
                             <div class="-w50 modal-row">
                                 <a>Warehouse:</a>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="position-warehouse-input"
-                                />
+                                <input type="text" class="form-control" id="position-warehouse-input" />
                             </div>
                             <div class="-w50 modal-row">
                                 <a>Rack:</a>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="position-rack-input"
-                                    disabled
-                                />
+                                <input type="text" class="form-control" id="position-rack-input" disabled />
                             </div>
                             <!-- <div class="-w50 modal-row">
                                 <a>Row:</a>
@@ -149,34 +142,21 @@
                             </div> -->
                             <div class="-w50 modal-row">
                                 <a>Shelf:</a>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="position-shelf-input"
-                                    disabled
-                                />
+                                <input type="text" class="form-control" id="position-shelf-input" disabled />
                             </div>
                             <div class="-w50 modal-row">
                                 <a>Amount:</a>
-                                <input
-                                    type="number"
-                                    class="form-control"
-                                    id="position-amount-input"
-                                />
+                                <input type="number" class="form-control" id="position-amount-input" />
                             </div>
                             <div class="-w50 modal-row">
                                 <a>Value of position:</a>
-                                <input
-                                    type="number"
-                                    class="form-control"
-                                    id="position-value-input"
-                                />
+                                <input type="number" class="form-control" id="position-value-input" />
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" id="position-add-button" class="btn btn-primary">Add Position</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" id="position-add-button" class="btn btn-primary">Add Position</button>
                     </div>
                 </div>
             </div>

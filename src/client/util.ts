@@ -33,12 +33,7 @@ export enum SearchBy {
 }
 
 //Create a new ItemH item
-export function createItem(
-    partNumber: string,
-    desc: string,
-    minStock: string,
-    category: string
-): ItemH {
+export function createItem(partNumber: string, desc: string, minStock: string, category: string): ItemH {
     if (partNumber === "") {
         partNumber = "test item";
     }
@@ -315,7 +310,7 @@ export function autocomplete(inputElement: HTMLInputElement, array: any[], prefi
 export function findCategoryById(categories: CategoryH, id: string): CategoryH {
     if (categories.id === id) {
         return categories;
-    } else { 
+    } else {
         let a: CategoryH;
         categories.children?.forEach(category => {
             const temp = findCategoryById(category, id);
@@ -324,7 +319,7 @@ export function findCategoryById(categories: CategoryH, id: string): CategoryH {
             }
         });
         if (a) {
-            return a
-        };
+            return a;
+        }
     }
 }

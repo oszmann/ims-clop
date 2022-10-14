@@ -40,7 +40,17 @@ import {
     toggleShelf,
     positionValueInput,
 } from "./static";
-import { getCategories, getItems, getLocations, getPositions, initAutocomplete, updateCategories, updateItems, updateLocations, updatePositions } from "./ui";
+import {
+    getCategories,
+    getItems,
+    getLocations,
+    getPositions,
+    initAutocomplete,
+    updateCategories,
+    updateItems,
+    updateLocations,
+    updatePositions,
+} from "./ui";
 import { createCategoryLi, createPositionDiv } from "./ui-create";
 import {
     Route,
@@ -63,7 +73,7 @@ let doUpdate: boolean = true;
 let toggleDropdown: string = "rack";
 
 /**
- * 
+ *
  */
 async function initHome() {
     //BUTTON LISTENERS
@@ -101,7 +111,7 @@ async function initHome() {
     searchCategoryButton.addEventListener("click", () => {
         searchCategoryDropdown.parentElement.classList.toggle("visible");
         searchCategoryDropdown.focus();
-    })
+    });
     Object.values(SearchBy).forEach((value, index) => {
         const li: HTMLLIElement = document.createElement("li");
         const a: HTMLAnchorElement = document.createElement("a");
@@ -128,23 +138,22 @@ async function initHome() {
     });
     searchInput.addEventListener("input", () => {
         positionsSearchResultDiv.classList.remove("off");
-        positionsDiv.classList.add("off")
+        positionsDiv.classList.add("off");
         while (positionsSearchResultDiv.firstChild) {
             positionsSearchResultDiv.firstChild.remove();
         }
         let results: PositionH[];
         if (searchDropdown.getAttribute("data-search") === "ITEM") {
-            positionsSearchResultDiv.innerText = "Results for itemname: \"" + searchInput.value + "\"";
-            results = searchNameInPositions(searchInput.value)
-        }
-        else if (searchDropdown.getAttribute("data-search") === "LOCATION") {
-            positionsSearchResultDiv.innerText = "Results for location: \"" + searchInput.value + "\"";
-            results = searchLocationInPositions(searchInput.value)
+            positionsSearchResultDiv.innerText = 'Results for itemname: "' + searchInput.value + '"';
+            results = searchNameInPositions(searchInput.value);
+        } else if (searchDropdown.getAttribute("data-search") === "LOCATION") {
+            positionsSearchResultDiv.innerText = 'Results for location: "' + searchInput.value + '"';
+            results = searchLocationInPositions(searchInput.value);
         }
         if (results.length === 0) {
             const a = document.createElement("a");
             a.innerText = "No positions found.";
-            positionsSearchResultDiv.appendChild(document.createElement("p"))
+            positionsSearchResultDiv.appendChild(document.createElement("p"));
             positionsSearchResultDiv.appendChild(a);
         }
         results.forEach(pos => {
@@ -159,7 +168,7 @@ async function initHome() {
 }
 
 /**
- * 
+ *
  */
 async function initItems() {
     updateCategories(await makeCategoryRequest(Route.R));
@@ -207,18 +216,17 @@ async function initItems() {
     });
     categoryAddRemove.addEventListener("click", () => {
         //TODO CONFIGURE TEXT IN
-        categoryConfirmHeader.innerText = `Delete the "${categoryAddNode.getAttribute("data-name")}" category?`
-        categoryConfirmBody.innerText = "This will also permanently delete all children categories."
+        categoryConfirmHeader.innerText = `Delete the "${categoryAddNode.getAttribute("data-name")}" category?`;
+        categoryConfirmBody.innerText = "This will also permanently delete all children categories.";
         categoryConfirmYes.innerText = `Yes, delete "${categoryAddNode.getAttribute("data-name")}"`;
     });
     categoryConfirmYes.addEventListener("click", async () => {
-        updateCategories(await makeCategoryRequest(Route.D, categoryAddNode.getAttribute("data-parent-id")))
-    })
-
+        updateCategories(await makeCategoryRequest(Route.D, categoryAddNode.getAttribute("data-parent-id")));
+    });
 }
 
 /**
- * 
+ *
  */
 async function initLocations() {
     updateLocations(await makeLocationRequest(Route.R));
@@ -294,13 +302,15 @@ function init() {
 }
 
 function initItemDropdown() {
-    categoriesDropdownList.appendChild(createCategoryLi(getCategories(), (category: CategoryH) => {
-        categoriesDropdownList.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
-        $(category.id).classList.add("cat-active");
-        categoriesDropdown.innerText = category.name;
-        categoriesDropdown.setAttribute("data-category", category.id);
-        categoriesDropdown.click();
-    }));
+    categoriesDropdownList.appendChild(
+        createCategoryLi(getCategories(), (category: CategoryH) => {
+            categoriesDropdownList.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
+            $(category.id).classList.add("cat-active");
+            categoriesDropdown.innerText = category.name;
+            categoriesDropdown.setAttribute("data-category", category.id);
+            categoriesDropdown.click();
+        })
+    );
 }
 
 async function main() {

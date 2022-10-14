@@ -121,26 +121,32 @@ export const sortPositionsByUpdatedAt = (a: PositionH, b: PositionH) => {
 export const sortPositionsByStock = (a: PositionH, b: PositionH) => {
     const aItem = getItems().find(x => x.id === a.itemId);
     const bItem = getItems().find(x => x.id === b.itemId);
-    const aItemStock = getPositions().filter(x => x.itemId === aItem.id).reduce((acc, toadd) => {
-        acc.amount += toadd.amount;
-        return acc;
-    }).amount;
-    const bItemStock = getPositions().filter(x => x.itemId === bItem.id).reduce((acc, toadd) => {
-        acc.amount += toadd.amount;
-        return acc;
-    }).amount;
-    if (aItemStock <= aItem.minStock && bItemStock > bItem.minStock ||
-        aItemStock <= aItem.minStock * 1.1 + 1 && bItemStock > bItem.minStock * 1.1 + 1) {
+    const aItemStock = getPositions()
+        .filter(x => x.itemId === aItem.id)
+        .reduce((acc, toadd) => {
+            acc.amount += toadd.amount;
+            return acc;
+        }).amount;
+    const bItemStock = getPositions()
+        .filter(x => x.itemId === bItem.id)
+        .reduce((acc, toadd) => {
+            acc.amount += toadd.amount;
+            return acc;
+        }).amount;
+    if (
+        (aItemStock <= aItem.minStock && bItemStock > bItem.minStock) ||
+        (aItemStock <= aItem.minStock * 1.1 + 1 && bItemStock > bItem.minStock * 1.1 + 1)
+    ) {
         return -1;
+    } else if (
+        (bItemStock <= bItem.minStock && aItemStock > aItem.minStock) ||
+        (bItemStock <= bItem.minStock * 1.1 + 1 && aItemStock > aItem.minStock * 1.1 + 1)
+    ) {
+        return 1;
+    } else {
+        return 0;
     }
-    else if (bItemStock <= bItem.minStock && aItemStock > aItem.minStock ||
-        bItemStock <= bItem.minStock * 1.1 + 1 && aItemStock > aItem.minStock * 1.1 + 1) {
-        return 1
-    }
-    else {
-        return 0
-    }
-}
+};
 
 /**
  * Insert a "0" if the opposing object to be sorted is one or more magnitudes larger.
@@ -293,16 +299,18 @@ function colorPositionDivs() {
     const items = getItems();
     positions.forEach(pos => {
         const item = items.find(x => x.id === pos.itemId);
-        const amount = positions.filter(x => x.itemId === pos.itemId).reduce((acc, toadd) => {
-            acc.amount += toadd.amount;
-            return acc;
-        }).amount;
+        const amount = positions
+            .filter(x => x.itemId === pos.itemId)
+            .reduce((acc, toadd) => {
+                acc.amount += toadd.amount;
+                return acc;
+            }).amount;
         if (amount <= item.minStock) {
             (<HTMLDivElement>$(pos.id)).classList.add("red-pos");
         } else if (amount <= item.minStock * 1.1 + 1) {
             (<HTMLDivElement>$(pos.id)).classList.add("yellow-pos");
         }
-    })
+    });
 }
 
 //------------------------Search
@@ -336,7 +344,9 @@ export function searchLocationInPositions(keyword: string): PositionH[] {
     let results: PositionH[] = [];
     positions.forEach(pos => {
         const location = locations.find(l => l.id === pos.locationId);
-        if ((location.warehouse + location.rack + location.shelf).substring(0, keyword.length) === keyword.toUpperCase()) {
+        if (
+            (location.warehouse + location.rack + location.shelf).substring(0, keyword.length) === keyword.toUpperCase()
+        ) {
             results.push(pos);
         }
     });

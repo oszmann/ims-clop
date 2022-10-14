@@ -2,14 +2,7 @@ import { CategoryH, ItemH, LocationH, PositionH } from "../common/util";
 import { searchCategoryInPositions } from "./search-and-sort";
 import { $, categoryAddBody } from "./static";
 import { getCategories, getItems, getLocations, updateItems, updateLocations, updatePositions } from "./ui";
-import {
-    createItem,
-    findCategoryById,
-    makeItemRequest,
-    makeLocationRequest,
-    makePositionRequest,
-    Route,
-} from "./util";
+import { createItem, findCategoryById, makeItemRequest, makeLocationRequest, makePositionRequest, Route } from "./util";
 
 /**
  * Here you can find functions, that are used for creating UI-Elements.
@@ -120,7 +113,7 @@ export function createItemDiv(item: ItemH): HTMLDivElement {
  */
 export function createCategoryDropdownDiv(id: string, categoryID: string, editable: boolean = false): HTMLDivElement {
     const div = document.createElement("div");
-    div.classList.add("dropdown")
+    div.classList.add("dropdown");
     div.id = id + "dropdown";
     const a = document.createElement("a");
     const ul = document.createElement("ul");
@@ -136,20 +129,25 @@ export function createCategoryDropdownDiv(id: string, categoryID: string, editab
     div2.classList.add("dropdown-menu", "category-dropdown");
     div2.tabIndex = 0;
     if (editable) {
-        ul.appendChild(createCategoryLi(getCategories(), (category: CategoryH) => {
-            a.setAttribute("data-category", category.id);
-            a.innerText = category.name;
-            div.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
-            $(category.id + id).classList.add("cat-active");
-            div2.blur();
-        }, id));
-    }
-    else {
+        ul.appendChild(
+            createCategoryLi(
+                getCategories(),
+                (category: CategoryH) => {
+                    a.setAttribute("data-category", category.id);
+                    a.innerText = category.name;
+                    div.getElementsByClassName("cat-active")[0]?.classList.remove("cat-active");
+                    $(category.id + id).classList.add("cat-active");
+                    div2.blur();
+                },
+                id
+            )
+        );
+    } else {
         ul.appendChild(createCategoryLi(getCategories(), () => {}, id));
     }
 
     activatePath(ul, categoryID + id);
-    
+
     function activatePath(ul: HTMLUListElement, idToFind: string): boolean {
         if (!ul) {
             return false;
@@ -159,16 +157,15 @@ export function createCategoryDropdownDiv(id: string, categoryID: string, editab
             if (lis[i].children[0].children[1] && lis[i].children[0].children[1].id === idToFind) {
                 lis[i].children[0].children[1].classList.add("cat-active");
                 return true;
-            }
-            else if (lis[i].children[0].children[0].id === idToFind) {
+            } else if (lis[i].children[0].children[0].id === idToFind) {
                 lis[i].children[0].children[0].classList.add("cat-active");
                 return true;
             }
             if (activatePath(<HTMLUListElement>lis[i].children[1], idToFind)) {
                 console.log("clicking for", categoryID);
-                (<HTMLElement>lis[i].children[0].children[0])
+                <HTMLElement>lis[i].children[0].children[0];
                 lis[i].children[1].classList.add("active");
-                lis[i].children[0].children[0].classList.add("caret-down");;
+                lis[i].children[0].children[0].classList.add("caret-down");
                 return true;
             }
         }
@@ -191,7 +188,11 @@ export function createCategoryDropdownDiv(id: string, categoryID: string, editab
  * @param itemId optional Parameter, to be used to find the li-s when many of these lists are created
  * @returns li element
  */
-export function createCategoryLi(category: CategoryH, callback: (category: CategoryH) => any, itemId?: string): HTMLLIElement {
+export function createCategoryLi(
+    category: CategoryH,
+    callback: (category: CategoryH) => any,
+    itemId?: string
+): HTMLLIElement {
     const li = document.createElement("li");
     const span = document.createElement("span");
     const div = document.createElement("div");
@@ -221,13 +222,12 @@ export function createCategoryLi(category: CategoryH, callback: (category: Categ
 
     if (ul.firstChild) {
         const emR = document.createElement("em");
-        emR.classList.add("btn","btn-secondary","fa-solid", "fa-caret-right");
+        emR.classList.add("btn", "btn-secondary", "fa-solid", "fa-caret-right");
         emR.classList.add("category-em", "border");
         emR.addEventListener("click", e => {
             if (ul.classList.contains("active")) {
                 resetBranch(li);
-            }
-            else {
+            } else {
                 const a = <HTMLElement>li.parentElement.getElementsByClassName("active")[0];
                 if (a) {
                     resetBranch(a.parentElement);
@@ -239,17 +239,16 @@ export function createCategoryLi(category: CategoryH, callback: (category: Categ
         });
         div.prepend(emR);
         li.appendChild(ul);
-    }
-    else {
-        span.classList.add("no-ul")
+    } else {
+        span.classList.add("no-ul");
     }
     return li;
 
     /**
      * remove all "active" classes from element and children
-     * @param e 
+     * @param e
      */
-     function resetBranch(e: HTMLElement) {
+    function resetBranch(e: HTMLElement) {
         const a = e.getElementsByClassName("active");
         for (let i = 0; i < a.length; i++) {
             a[i].classList.remove("active");
@@ -448,7 +447,7 @@ export function createPositionDiv(position: PositionH): HTMLDivElement {
     dollar.classList.add("form-control", "dec");
     dollar.style.maxWidth = "40px";
     cost.classList.add("form-control");
-    cost.style.maxWidth = "150px"
+    cost.style.maxWidth = "150px";
     // posDec.classList.add("form-control", "dec");
     // posDec.style.maxWidth = "85px";
     // pos.classList.add("form-control");

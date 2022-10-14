@@ -5,7 +5,16 @@ import { DataSource } from "typeorm";
 import { Item } from "./entities/item";
 import { Location } from "./entities/location";
 import { Position } from "./entities/position";
-import { init, createRequest, readRequest, deleteRequest, updateRequest, setDefaultCategories, getEntities, Objects } from "./database";
+import {
+    init,
+    createRequest,
+    readRequest,
+    deleteRequest,
+    updateRequest,
+    setDefaultCategories,
+    getEntities,
+    Objects,
+} from "./database";
 import { toNumber } from "./util";
 import { Category } from "./entities/category";
 
